@@ -1,0 +1,39 @@
+<div>
+  <mat-card class="p-3">
+    <mat-card-header class="mb-3 card-header">
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayout.xs="column" class="w-100">
+        <h3 class="text-capitalize title">Danh Sách nhân viên</h3>
+        <button mat-raised-button color="primary" (click)="toCreate()">Thêm mới nhân viên</button>
+      </div>
+    </mat-card-header>
+    <mat-card-content class="">
+      <div class="">
+        <div class="row">
+          <wj-flex-grid #flex [itemsSource]="paginationData" class="empList">
+            <wj-flex-grid-column
+              *ngFor="let item of column"
+              [binding]="item.dataKey"
+              [width]="item.width"
+              [header]="item.header"
+              [visible]="!item.hidden"
+              [aggregate]="item.aggregate || 'None'"
+              [dataType]="item.dataType"
+              [format]="item.format"
+              >
+            </wj-flex-grid-column>
+          </wj-flex-grid>
+        </div>
+      </div>
+      <div>
+        <!-- <mat-paginator
+          [length]="ListEmployee.length"
+          [pageIndex]="page - 1"
+          [pageSize]="limit"
+          [pageSizeOptions]="pageSizeOption"
+          (page)="paginator($event)"
+          aria-label="Select page">
+        </mat-paginator> -->
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

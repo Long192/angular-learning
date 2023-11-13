@@ -1,0 +1,65 @@
+@import '@grapecity/activereports/styles/ar-js-ui.css';
+@import '@grapecity/activereports/styles/ar-js-viewer.css';
+@import '@grapecity/activereports/styles/ar-js-designer.css';
+@import url('https://cdn.materialdesignicons.com/2.8.94/css/materialdesignicons.min.css');
+
+$gray-100: #f8f9fa;
+$gray-600: #6c757d;
+
+.bg-light {
+  background-color: $gray-100;
+}
+
+.bg-secondary {
+  background-color: $gray-600;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.title {
+  font-weight: bold !important;
+  margin: 0 !important;
+}
+
+.content-warper {
+  margin: 20px;
+  max-width: 1320px;
+  @media (max-width: 1400px) {
+    max-width: 100%;
+  }
+}
+
+.card-header {
+  margin-bottom: 20px;
+}
+
+.wj-cell.wj-header {
+  background: cornsilk;
+  justify-content: center !important;
+  text-align: center;
+}
+
+.wj-flexgrid {
+  max-height: 500px;
+}
+
+.wj-cell.wj-alt {
+  background: unset;
+}
+
+.wj-cell {
+  word-wrap: break-word;
+  white-space: break-spaces;
+  padding: 4px 6px 3px 6px !important;
+  // height: 50px;
+}
+
+.wj-cell.wj-group {
+  background-color: wheat;
+}

@@ -1,0 +1,141 @@
+<div>
+  <mat-card class="p-3">
+    <mat-card-header class="text-capitalize card-header">
+      <h3 class="title">thêm mới thông tin nhân viên</h3>
+    </mat-card-header>
+    <mat-card-content class="m-auto">
+      <form (ngSubmit)="submitAndCreateEmployee()" [formGroup]="employeeForm">
+        <div
+          class="employee-form"
+          fxLayout="column"
+          fxLayoutAlign.sm="center"
+          fxLayoutAlign="space-between"
+          fxLayoutGap.sm="30px">
+          <!-- <div class="form-item">
+            <mat-form-field class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">mã</mat-label>
+              <input matInput formControlName="Code" />
+            </mat-form-field>
+            <div class="error-message" *ngIf="validationService.showErrorCondition(employeeForm, 'Code')">
+              {{ validationService.getErrorMessages('Code', employeeForm) }}
+            </div>
+          </div>
+          <div class="form-item">
+            <mat-form-field class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">họ và tên</mat-label>
+              <input matInput formControlName="Name" />
+            </mat-form-field>
+            <div class="error-message" *ngIf="validationService.showErrorCondition(employeeForm, 'Name')">
+              {{ validationService.getErrorMessages('Name', employeeForm) }}
+            </div>
+          </div>
+          <div class="form-item">
+            <mat-form-field class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">ngày sinh</mat-label>
+              <input matInput readonly formControlName="BirthDate" [matDatepicker]="BirthDate" />
+              <mat-datepicker-toggle matIconSuffix [for]="BirthDate"></mat-datepicker-toggle>
+              <mat-datepicker #BirthDate></mat-datepicker>
+            </mat-form-field>
+            <div class="error-message" *ngIf="validationService.showErrorCondition(employeeForm, 'BirthDate')">
+              {{ this.validationService.getErrorMessages('BirthDate', employeeForm) }}
+            </div>
+          </div>
+          <div class="form-item">
+            <mat-form-field class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">giới tính</mat-label>
+              <mat-select formControlName="GenderName">
+                <mat-option value="nam">nam</mat-option>
+                <mat-option value="nữ">nữ</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="error-message" *ngIf="validationService.showErrorCondition(employeeForm, 'GenderName')">
+              {{ this.validationService.getErrorMessages('GenderName', employeeForm) }}
+            </div>
+          </div>
+          <div class="form-item">
+            <mat-form-field class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">di động</mat-label>
+              <input matInput formControlName="Mobile" />
+            </mat-form-field>
+            <div class="error-message" *ngIf="validationService.showErrorCondition(employeeForm, 'Mobile')">
+              {{ this.validationService.getErrorMessages('Mobile', employeeForm) }}
+            </div>
+          </div>
+          <div class="form-item">
+            <mat-form-field class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">email</mat-label>
+              <input matInput formControlName="Email" />
+            </mat-form-field>
+            <div class="error-message" *ngIf="validationService.showErrorCondition(employeeForm, 'Email')">
+              {{ this.validationService.getErrorMessages('Email', employeeForm) }}
+            </div>
+          </div>
+          <div class="form-item">
+            <mat-form-field class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">địa chỉ</mat-label>
+              <input matInput formControlName="Address" />
+            </mat-form-field>
+            <div *ngIf="validationService.showErrorCondition(employeeForm, 'Address')"></div>
+          </div>
+          <div class="form-item">
+            <mat-form-field class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">ngày vào làm</mat-label>
+              <input
+                matInput
+                readonly
+                (ngModelChange)="manualValidate()"
+                [matDatepicker]="FirstWorkingDate"
+                formControlName="FirstWorkingDate" />
+              <mat-datepicker-toggle matIconSuffix [for]="FirstWorkingDate"></mat-datepicker-toggle>
+              <mat-datepicker #FirstWorkingDate></mat-datepicker>
+            </mat-form-field>
+            <div *ngIf="validationService.showErrorCondition(employeeForm, 'FirstWorkingDate')"></div>
+          </div>
+          <div class="form-item">
+            <mat-form-field class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">ngày nghỉ việc</mat-label>
+              <input matInput readonly [matDatepicker]="ResignDate" formControlName="ResignDate" />
+              <mat-datepicker-toggle matIconSuffix [for]="ResignDate"></mat-datepicker-toggle>
+              <mat-datepicker #ResignDate></mat-datepicker>
+            </mat-form-field>
+            <div
+              class="error-message position-absolute"
+              *ngIf="validationService.showErrorCondition(employeeForm, 'ResignDate')">
+              {{ validationService.getErrorMessages('ResignDate', employeeForm) }}
+            </div>
+          </div> -->
+          <div class="form-item" *ngFor="let item of formJson">
+            <mat-form-field *ngIf="item.type === 'text'" class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">{{ item.label }}</mat-label>
+              <input matInput [formControlName]="item.name" />
+            </mat-form-field>
+            <mat-form-field *ngIf="item.type === 'date'" class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">{{ item.label }}</mat-label>
+              <input matInput readonly [matDatepicker]="datePicker" [formControlName]="item.name" />
+              <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+              <mat-datepicker #datePicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field *ngIf="item.type === 'select'" class="form-input" appearance="outline">
+              <mat-label class="text-capitalize">{{ item.label }}</mat-label>
+              <mat-select formControlName="GenderName">
+                <mat-option *ngFor="let option of item.option" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="error-message" *ngIf="validationService.showErrorCondition(employeeForm, item.name)">
+              {{ validationService.getErrorMessages(item.name, employeeForm) }}
+            </div>
+          </div>
+        </div>
+        <div
+          fxLayout="row"
+          fxLayout.lt-sm="row wrap"
+          fxLayoutGap.gt-sm="50px"
+          fxLayoutAlign="space-between center"
+          fxLayoutAlign.lt-sm="center center">
+          <button mat-raised-button (click)="toEmployeeList()" class="form-button w-100">Danh sách nhân viên</button>
+          <button mat-raised-button color="primary" type="submit" class="form-button w-100">Tạo mới nhân viên</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

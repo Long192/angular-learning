@@ -1,0 +1,76 @@
+{
+  "columns": [
+    {
+      "header": "Mã số",
+      "binding": "GroupCode",
+      "width": 70
+    },
+    {
+      "header": "Chỉ tiêu",
+      "binding": "GroupName",
+      "width": 200
+    },
+    {
+      "header": "Dvt",
+      "binding": "Unit",
+      "width": 60
+    },
+    {
+      "header": "Số lượng",
+      "binding": "Quantity",
+      "width": 70,
+      "align": "right"
+    },
+    {
+      "binding": "date",
+      "format": "dd/MM/yyyy",
+      "align": "right",
+      "width": 90
+    },
+    {
+      "binding": "checkBox",
+      "width": 70,
+      "align": "center"
+    },
+    {
+      "header": "Doanh số (chưa thuế)",
+      "binding": "Amount2",
+      "aggregate": "Sum"
+    },
+    {
+      "header": "Tiền thanh toán",
+      "columns": [
+        {
+          "header": "Tổng cộng",
+          "binding": "TotalAmount",
+          "aggregate": "Sum"
+        },
+        {
+          "header": "Thu tiền ngay",
+          "binding": "Amount111",
+          "aggregate": "Sum"
+        },
+        {
+          "header": "Công nợ",
+          "binding": "Amount131",
+          "aggregate": "Sum"
+        }
+      ]
+    },
+    {
+      "header": "Lãi gộp (Doanh số - tiền vốn)",
+      "binding": "Profit",
+      "aggregate": "Sum"
+    },
+    {
+      "header": "Chiết khấu",
+      "binding": "DiscountAmount",
+      "aggregate": "Sum"
+    },
+    {
+      "binding": "SubTotalName",
+      "visible": false
+    }
+  ],
+  "collumnGroup": ["SubTotalName"]
+}

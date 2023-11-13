@@ -1,0 +1,12 @@
+.content-height {
+  min-height: calc(100vh - 70px);
+}
+
+.content {
+  min-height: calc(100vh - (70px * 2));
+}
+
+.footer {
+  height: 70px;
+}
+

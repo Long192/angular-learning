@@ -1,0 +1,67 @@
+[
+  {
+    "header": "Mã",
+    "dataKey": "Code",
+    "width": 100,
+    "dataType": "String"
+  },
+  {
+    "header": "Họ Và Tên",
+    "dataKey": "Name",
+    "width": 200,
+    "dataType": "String"
+  },
+  {
+    "header": "Ngày Sinh",
+    "dataKey": "BirthDate",
+    "format": "dd/MM/yyyy",
+    "width": 100,
+    "dataType": "Date"
+  },
+  {
+    "header": "Giới Tính",
+    "dataKey": "GenderName",
+    "width": 80,
+    "dataType": "String",
+    "hidden": true
+  },
+  {
+    "header": "Di Động",
+    "dataKey": "Mobile",
+    "width": 120,
+    "dataType": "String"
+  },
+  {
+    "header": "Email",
+    "dataKey": "Email",
+    "width": 200,
+    "dataType": "String"
+  },
+  {
+    "header": "Địa Chỉ",
+    "dataKey": "Address",
+    "width": 450,
+    "dataType": "String"
+  },
+  {
+    "header": "Ngày Vào Làm",
+    "dataKey": "FirstWorkingDate",
+    "format": "dd/MM/yyyy",
+    "width": 150,
+    "dataType": "Date"
+  },
+  {
+    "header": "Ngày Nghỉ Việc",
+    "dataKey": "ResignDate",
+    "format": "dd/MM/yyyy",
+    "width": 150,
+    "dataType": "Date"
+  },
+  {
+    "header": "TestPrice",
+    "dataKey": "Price",
+    "width": 150,
+    "dataType": "Number",
+    "aggregate": "Sum"
+  }
+]

@@ -1,0 +1,29 @@
+.employee-form {
+  max-width: 800px;
+}
+
+.title {
+  line-height: 1.3;
+}
+
+.form-input {
+  display: flex;
+  width: 100%;
+  @media (min-width: 768px) {
+    width: 500px;
+  }
+}
+
+.error-message {
+  color: red;
+  top: 60px;
+  position: absolute;
+}
+
+.form-item {
+  height: 110px;
+  position: relative;
+}
+.form-button {
+  margin-bottom: 20px;
+}

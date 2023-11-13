@@ -1,0 +1,1610 @@
+{
+  "Name": "multisectionreport1",
+  "Width": "0in",
+  "Layers": [
+    {
+      "Name": "default"
+    }
+  ],
+  "CustomProperties": [
+    {
+      "Name": "DisplayType",
+      "Value": "Page"
+    },
+    {
+      "Name": "SizeType",
+      "Value": "Default"
+    },
+    {
+      "Name": "PaperOrientation",
+      "Value": "Portrait"
+    }
+  ],
+  "Page": {
+    "PageWidth": "11in",
+    "PageHeight": "8.5in",
+    "RightMargin": "0in",
+    "LeftMargin": "0in",
+    "TopMargin": "0in",
+    "BottomMargin": "0in",
+    "Columns": 1,
+    "ColumnSpacing": "0.5in"
+  },
+  "DataSources": [
+    {
+      "Name": "DataSource",
+      "ConnectionProperties": {
+        "DataProvider": "JSON",
+        "ConnectString": "endpoint=http://localhost:4200"
+      }
+    }
+  ],
+  "ReportSections": [
+    {
+      "Type": "Continuous",
+      "Name": "ContinuousSection1",
+      "Page": {
+        "PageWidth": "11in",
+        "PageHeight": "8.5in",
+        "RightMargin": "0.25in",
+        "LeftMargin": "0.25in",
+        "TopMargin": "1in",
+        "BottomMargin": "1in",
+        "Columns": 1,
+        "ColumnSpacing": "0in"
+      },
+      "Width": "10.4957in",
+      "Body": {
+        "Height": "1.5021in",
+        "ReportItems": [
+          {
+            "Type": "table",
+            "Name": "Table1",
+            "DataSetName": "Employees",
+            "Style": {
+              "Border": {
+                "Style": "Solid"
+              },
+              "TopBorder": {
+                "Style": "Solid"
+              },
+              "BottomBorder": {
+                "Style": "Solid"
+              },
+              "LeftBorder": {
+                "Style": "Solid"
+              },
+              "RightBorder": {
+                "Style": "Solid"
+              }
+            },
+            "TableColumns": [
+              {
+                "Width": "0.8166in"
+              },
+              {
+                "Width": "1.1583in"
+              },
+              {
+                "Width": "0.8709in"
+              },
+              {
+                "Width": "0.6827in"
+              },
+              {
+                "Width": "1.1368in"
+              },
+              {
+                "Width": "1.7674in"
+              },
+              {
+                "Width": "2.0555in"
+              },
+              {
+                "Width": "0.9749in"
+              },
+              {
+                "Width": "1.0326in"
+              }
+            ],
+            "Header": {
+              "TableRows": [
+                {
+                  "Height": "0.25in",
+                  "TableCells": [
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox1",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "Code",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0.8166in",
+                        "Height": "0.5in"
+                      },
+                      "RowSpan": 2
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox46",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "1.1583in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox47",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "0.8709in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox48",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "0.6827in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox49",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "1.1368in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox50",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "1.7674in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox51",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "2.0555in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox52",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "0.9749in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox53",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "1.0326in",
+                        "Height": "0.25in"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Height": "0.25in",
+                  "TableCells": [
+                    null,
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox10",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "Name",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "1.1583in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox11",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "Birth Date",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0.8709in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox12",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "Gender Name",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0.6827in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox13",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "Mobile",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "1.1368in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox14",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "Email",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "1.7674in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox15",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "Address",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "2.0555in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox2",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "First Working Date",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0.9749in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox3",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "Resign Date",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "1.0326in",
+                        "Height": "0.25in"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "RepeatOnNewPage": true
+            },
+            "TableGroups": [
+              {
+                "Group": {
+                  "Name": "Table1_TableGroup1",
+                  "GroupExpressions": [
+                    "=Fields!GenderName.Value"
+                  ]
+                },
+                "Header": {
+                  "TableRows": [
+                    {
+                      "Height": "0.25in",
+                      "TableCells": [
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox28",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "0.8166in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox29",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "1.1583in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox30",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "0.8709in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox32",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Value": "=Fields!GenderName.Value",
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "1.8195in",
+                            "Height": "0.25in"
+                          },
+                          "ColSpan": 2
+                        },
+                        null,
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox33",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "1.7674in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox34",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "2.0555in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox35",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "0.9749in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox36",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "1.0326in",
+                            "Height": "0.25in"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "Footer": {
+                  "TableRows": [
+                    {
+                      "Height": "0.25in",
+                      "TableCells": [
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox37",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "0.8166in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox38",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "1.1583in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox39",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "0.8709in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox40",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "0.6827in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox41",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "1.1368in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox42",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "1.7674in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox43",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "2.0555in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox44",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "0.9749in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "TextBox45",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Style": {
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt"
+                            },
+                            "Width": "1.0326in",
+                            "Height": "0.25in"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ],
+            "Details": {
+              "TableRows": [
+                {
+                  "Height": "0.25in",
+                  "TableCells": [
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox4",
+                        "DataElementName": "Code",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!Code.Value",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0.8166in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox16",
+                        "DataElementName": "Name",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!Name.Value",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "1.1583in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox17",
+                        "DataElementName": "BirthDate",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!BirthDate.Value",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Format": "d",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0.8709in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox18",
+                        "DataElementName": "GenderName",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!GenderName.Value",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0.6827in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox19",
+                        "DataElementName": "Mobile",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!Mobile.Value",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "1.1368in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox20",
+                        "DataElementName": "Email",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!Email.Value",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "1.7674in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox21",
+                        "DataElementName": "Address",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!Address.Value",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "2.0555in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox5",
+                        "DataElementName": "FirstWorkingDate",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!FirstWorkingDate.Value",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Format": "d",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0.9749in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox6",
+                        "DataElementName": "ResignDate",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!ResignDate.Value",
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Format": "d",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "1.0326in",
+                        "Height": "0.25in"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "Footer": {
+              "TableRows": [
+                {
+                  "Height": "0.25in",
+                  "TableCells": [
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox7",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "0.8166in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox22",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "1.1583in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox23",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "0.8709in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox24",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "0.6827in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox25",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "1.1368in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox26",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "1.7674in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox27",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "2.0555in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox8",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "0.9749in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "TextBox9",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Style": {
+                          "Border": {
+                            "Style": "Solid"
+                          },
+                          "TopBorder": {
+                            "Style": "Solid"
+                          },
+                          "BottomBorder": {
+                            "Style": "Solid"
+                          },
+                          "LeftBorder": {
+                            "Style": "Solid"
+                          },
+                          "RightBorder": {
+                            "Style": "Solid"
+                          },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt"
+                        },
+                        "Width": "1.0326in",
+                        "Height": "0.25in"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "Top": "0.0021in",
+            "Width": "10.4957in",
+            "Height": "1.5in"
+          }
+        ]
+      }
+    }
+  ],
+  "DataSets": [
+    {
+      "Name": "Employees",
+      "Fields": [
+        {
+          "Name": "Id",
+          "DataField": "Id"
+        },
+        {
+          "Name": "Code",
+          "DataField": "Code"
+        },
+        {
+          "Name": "ParentId",
+          "DataField": "ParentId"
+        },
+        {
+          "Name": "IsGroup",
+          "DataField": "IsGroup"
+        },
+        {
+          "Name": "Name",
+          "DataField": "Name"
+        },
+        {
+          "Name": "BirthDate",
+          "DataField": "BirthDate"
+        },
+        {
+          "Name": "FileNo",
+          "DataField": "FileNo"
+        },
+        {
+          "Name": "GenderName",
+          "DataField": "GenderName"
+        },
+        {
+          "Name": "Mobile",
+          "DataField": "Mobile"
+        },
+        {
+          "Name": "Tel",
+          "DataField": "Tel"
+        },
+        {
+          "Name": "Email",
+          "DataField": "Email"
+        },
+        {
+          "Name": "Domicile",
+          "DataField": "Domicile"
+        },
+        {
+          "Name": "Address",
+          "DataField": "Address"
+        },
+        {
+          "Name": "DeptName0",
+          "DataField": "DeptName0"
+        },
+        {
+          "Name": "FirstWorkingDate",
+          "DataField": "FirstWorkingDate"
+        },
+        {
+          "Name": "ResignDate",
+          "DataField": "ResignDate"
+        },
+        {
+          "Name": "BranchCode",
+          "DataField": "BranchCode"
+        },
+        {
+          "Name": "IsActive",
+          "DataField": "IsActive"
+        },
+        {
+          "Name": "CreatedBy",
+          "DataField": "CreatedBy"
+        },
+        {
+          "Name": "CreatedAt",
+          "DataField": "CreatedAt"
+        },
+        {
+          "Name": "ModifiedBy",
+          "DataField": "ModifiedBy"
+        },
+        {
+          "Name": "ModifiedAt",
+          "DataField": "ModifiedAt"
+        },
+        {
+          "Name": "_SelectKey__lde9wl",
+          "DataField": "_SelectKey__lde9wl"
+        },
+        {
+          "Name": "_RowNumber__b8dqzh",
+          "DataField": "_RowNumber__b8dqzh"
+        }
+      ],
+      "Query": {
+        "DataSourceName": "DataSource",
+        "CommandText": "uri=/assets/employee.json;jpath=$.[*]"
+      },
+      "CaseSensitivity": "Auto",
+      "KanatypeSensitivity": "Auto",
+      "AccentSensitivity": "Auto",
+      "WidthSensitivity": "Auto"
+    }
+  ]
+}

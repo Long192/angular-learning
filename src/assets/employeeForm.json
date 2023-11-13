@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Code",
+    "label": "Mã",
+    "value": "",
+    "type": "text",
+    "validators": [
+      {
+        "rule": "required",
+        "message": "mã nhân viên không được để trống"
+      }
+    ]
+  },
+  {
+    "name": "Name",
+    "label": "Họ Và Tên",
+    "value": "",
+    "type": "text",
+    "validators": [
+      {
+        "rule": "required",
+        "message": "mã nhân viên không được để trống"
+      }
+    ]
+  },
+  {
+    "name": "BirthDate",
+    "label": "Ngày Sinh",
+    "value": "",
+    "type": "date",
+    "validators": [
+      {
+        "rule": "required",
+        "message": "mã nhân viên không được để trống"
+      }
+    ]
+  },
+  {
+    "name": "GenderName",
+    "label": "Giới Tính",
+    "value": "",
+    "type": "select",
+    "option": ["nam", "nữ"],
+    "validators": [
+      {
+        "rule": "required",
+        "message": "mã nhân viên không được để trống"
+      }
+    ]
+  },
+  {
+    "name": "Email",
+    "label": "Email",
+    "value": "",
+    "type": "text",
+    "validators": [
+      {
+        "rule": "email",
+        "message": "yêu cầu nhập đúng định dạng email"
+      }
+    ]
+  },
+  {
+    "name": "Mobile",
+    "label": "Số Điện Thoại",
+    "value": "",
+    "type": "text",
+    "validators": [
+      {
+        "rule": "pattern",
+        "validateParam": "^[0-9]*$",
+        "message": "vui lòng nhập đúng định dạng số điện thoại"
+      },
+      {
+        "rule": "minlength",
+        "validateParam": 10,
+        "message": "nhập tối thiểu 10 số"
+      },
+      {
+        "rule": "maxlength",
+        "validateParam": 11,
+        "message": "nhập đa thiểu 11 số"
+      }
+    ]
+  },
+  {
+    "name": "Address",
+    "label": "Địa chỉ",
+    "value": "",
+    "type": "text"
+  },
+  {
+    "name": "FirstWorkingDate",
+    "label": "ngày bắt đầu làm việc",
+    "value": "",
+    "type": "date"
+  },
+  {
+    "name": "ResignDate",
+    "label": "Ngày Nghỉ Việc",
+    "value": "",
+    "type": "date",
+    "validators": [
+      {
+        "rule": "dateRangeValidator",
+        "validateParam": "FirstWorkingDate",
+        "message": "ngày nghỉ việc phải lớn hơn ngày vào làm",
+        "custom": true
+      }
+    ]
+  }
+]
