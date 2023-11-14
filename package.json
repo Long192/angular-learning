@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
     "@fortawesome/fontawesome-free": "^6.0.0",
+    "@grapecity/activereports": "^4.1.1",
     "@grapecity/activereports-angular": "^4.1.0",
     "@grapecity/wijmo.angular2.all": "^5.20231.904",
     "@ngrx/effects": "^16.3.0",

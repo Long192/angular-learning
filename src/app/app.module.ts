@@ -34,7 +34,7 @@ import { EffectsModule } from '@ngrx/effects';
 // import { EmployeeEffect } from 'src/effect/employeeEffect';
 import { EmployeeService } from 'src/service/EmployeeService';
 import { ReportTestingComponent } from './report-testing/report-testing.component';
-import { AR_EXPORTS, ActiveReportsModule, HtmlExportService, PdfExportService, TabularDataExportService } from '@grapecity/activereports-angular';
+import { ActiveReportsModule } from '@grapecity/activereports-angular';
 import { SaleReportComponent } from './sale-report/sale-report.component';
 
 @NgModule({

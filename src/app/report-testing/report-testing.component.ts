@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 import { DesignerComponent, ViewerComponent } from '@grapecity/activereports-angular';
 
+import * as activeReport from "@grapecity/activereports"
+
 // import { dataSources } from '../../utils/constantVar';
 
 @Component({
@@ -109,6 +111,6 @@ export class ReportTestingComponent implements OnInit {
 
     // this.reportDesigner.report = await
 
-    console.log();
+    console.log(activeReport.Core.Rdl);
   }
 }
