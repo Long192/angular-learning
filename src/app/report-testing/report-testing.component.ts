@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { DesignerComponent, ViewerComponent } from '@grapecity/activereports-angular';
 
-import * as activeReport from "@grapecity/activereports"
+import * as activeReport from '@grapecity/activereports';
 
 // import { dataSources } from '../../utils/constantVar';
 
@@ -20,28 +20,28 @@ import * as activeReport from "@grapecity/activereports"
 export class ReportTestingComponent implements OnInit {
   @ViewChild(ViewerComponent, { static: false }) reportViewer!: ViewerComponent;
   @ViewChild(DesignerComponent, { static: false })
-  reportDesigner!: DesignerComponent;
+  reportDesigner: DesignerComponent = new DesignerComponent();
   designerHidden = false;
   firstPreview = true;
   reportStorage = new Map();
   counter = 0;
   // initialReport: any = { id: '../../assets/report.rdlx-json' };
-  dataSources: any;
+  // dataSources: any;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
-    this.dataSources = fetch('../../assets/dataResource.json')
+    console.log(this.reportDesigner);
+    fetch('../../assets/dataResource.json')
       .then(res => res.json())
-      .then(data => (this.dataSources = data));
+      .then(data => (this.reportDesigner.dataSources = data));
 
     fetch('../../assets/report.rdlx-json')
       .then(res => res.json())
-      .then(
-        data =>
-          (this.reportDesigner.report = {
-            definition: data,
-            displayName: 'test',
-          })
-      );
+      .then(data => {
+        this.reportDesigner.report = {
+          definition: data,
+          displayName: 'test',
+        };
+      });
   }
 
   updateToolbar(): void {
@@ -106,11 +106,11 @@ export class ReportTestingComponent implements OnInit {
   async ngOnInit() {
     // this.reportDesigner.open(this.initialReport.definition)
     // const data = await
-
     // this.changeDetectorRef.detectChanges();
-
     // this.reportDesigner.report = await
-
-    console.log(activeReport.Core.Rdl);
+    // console.log(activeReport.Core.Rdl);
+    setTimeout(() => {
+      console.log(this.reportDesigner);
+    }, 5000);
   }
 }

@@ -35,10 +35,11 @@ import { EffectsModule } from '@ngrx/effects';
 import { EmployeeService } from 'src/service/EmployeeService';
 import { ReportTestingComponent } from './report-testing/report-testing.component';
 import { ActiveReportsModule } from '@grapecity/activereports-angular';
+import { SaleListComponent } from './sale-list/sale-list.component';
 import { SaleReportComponent } from './sale-report/sale-report.component';
 
 @NgModule({
-  declarations: [AppComponent, ListEmployeeComponent, EmployeeFormComponent, ReportTestingComponent, SaleReportComponent],
+  declarations: [AppComponent, ListEmployeeComponent, EmployeeFormComponent, ReportTestingComponent, SaleListComponent, SaleReportComponent],
   imports: [
     DialogComponent,
     BrowserModule,

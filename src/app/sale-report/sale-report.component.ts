@@ -1,71 +1,108 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import * as wjGrid from '@grapecity/wijmo.grid';
-import * as wjCore from '@grapecity/wijmo';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { DesignerComponent, ViewerComponent } from '@grapecity/activereports-angular';
+import * as activeReportCore from '@grapecity/activereports';
+import { createReportSection, createTable } from 'src/utils/commonFunc';
 
 @Component({
   selector: 'app-sale-report',
   templateUrl: './sale-report.component.html',
   styleUrls: ['./sale-report.component.scss'],
 })
-export class SaleReportComponent implements OnInit, OnDestroy {
-  @ViewChild('reportGrid', { static: true }) reportGrid!: wjGrid.FlexGrid;
+export class SaleReportComponent implements OnInit {
+  @ViewChild(DesignerComponent, { static: true }) reportDesigner!: DesignerComponent;
+  @ViewChild(ViewerComponent, { static: true }) reportViewer!: ViewerComponent;
 
-  async initGrid() {
-    this.reportGrid.headersVisibility = wjGrid.HeadersVisibility.Column;
+  designerHidden = false;
+  firstPreview = true;
 
-    const data = await fetch('../../assets/saleReportData.json')
+  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+
+  updateToolbar() {
+    const designButton = {
+      key: '$desingerButton',
+      text: 'Open Designer',
+      iconCssClass: 'mdi mdi-pencil',
+      enable: true,
+      action: () => {
+        this.designerHidden = true;
+        this.changeDetectorRef.detectChanges();
+      },
+    };
+
+    this.reportViewer.toolbar.addItem(designButton);
+
+    this.reportViewer.toolbar.updateLayout({
+      default: [
+        '$openDesigner',
+        '$split',
+        '$navigation',
+        '$split',
+        '$refresh',
+        '$split',
+        '$history',
+        '$split',
+        '$zoom',
+        '$fullscreen',
+        '$split',
+        '$print',
+        '$split',
+        '$singlepagemode',
+        '$continuousmode',
+        '$galleymode',
+      ],
+    });
+  }
+
+  onReportPreview(report: any) {
+    if ((this.firstPreview = true)) {
+      this.updateToolbar();
+      this.firstPreview = false;
+    }
+    return Promise.resolve();
+  }
+
+  onSaveReport = (info: any) => {
+    console.log(JSON.stringify(info.definition));
+    // const reportId = info.id || `NewReport${++this.counter}`;
+    // this.reportStorage.set(reportId, info.definition);
+    return Promise.resolve({ displayName: 'report' });
+  };
+
+  onSaveAsReport = (info: any) => {
+    console.log(JSON.stringify(info.definition));
+    // const reportId = `NewReport${++this.counter}`;
+    // this.reportStorage.set(reportId, info.definition);
+    return Promise.resolve({ id: 'report', displayName: 'report' });
+  };
+
+  async ngOnInit() {
+    console.log('run');
+    await fetch('../../assets/reportExample.json')
       .then(res => res.json())
-      .then(data =>
-        data.Table1.map((item: any) => ({
-          ...item,
-          Quantity: item.Quantity * 1000,
-          date: this.getRandomDate(new Date(2023, 0, 1), new Date()),
-          checkBox: this.randomBool(),
-        }))
-      );
+      .then(data => {
+        data.ReportSections = createReportSection({
+          Name: 'sale report',
+          Type: 'Continuous',
+          Page: {
+            PageWidth: '11in',
+            PageHeight: '8.5in',
+            RightMargin: '0.5in',
+            LeftMargin: '0.5in',
+            TopMargin: '0.5in',
+            BottomMargin: '0.5in',
+            Columns: 1,
+            ColumnSpacing: '0.5in',
+          },
+        });
+        data.Page.PageWidth = '11in';
+        data.Page.PageHeight = '8in';
 
-    const column = await fetch('../../assets/saleReportColumn.json').then(res => res.json());
+        createTable("../../assets/saleReportColumn.json")
 
-    this.reportGrid.initialize({
-      itemsSource: new wjCore.CollectionView(data, {
-        groupDescriptions: column.collumnGroup,
-      }),
-      autoGenerateColumns: false,
-      columns: column.columns,
-    });
-
-    this.reportGrid.autoSizeRows();
-  }
-
-  formatItem() {
-    this.reportGrid.formatItem.addHandler((sender: wjGrid.FlexGrid, event: wjGrid.FormatItemEventArgs) => {
-      if (event.cell.innerText == '0' && !event.cell.classList.contains('wj-group')) {
-        event.cell.innerText = '';
-      }
-    });
-  }
-
-  addGridEvent() {
-    this.reportGrid.copied.addHandler((sender: wjCore.Control, event: wjCore.EventArgs) => {
-      console.log('controll', sender), console.log('event', event);
-    });
-  }
-
-  getRandomDate(from: Date, to: Date) {
-    return new Date(to.getTime() + Math.random() * (to.getTime() - from.getTime()));
-  }
-
-  randomBool(): Boolean {
-    return Math.random() >= 0.5;
-  }
-
-  ngOnInit(): void {
-    this.initGrid();
-    this.formatItem();
-    this.addGridEvent();
-  }
-
-  ngOnDestroy(): void {
-    this.reportGrid.dispose();
+        this.reportDesigner.report = {
+          displayName: 'saleReport',
+          definition: data,
+        };
+      });
   }
 }

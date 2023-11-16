@@ -39,23 +39,8 @@
     },
     {
       "header": "Tiền thanh toán",
-      "columns": [
-        {
-          "header": "Tổng cộng",
-          "binding": "TotalAmount",
-          "aggregate": "Sum"
-        },
-        {
-          "header": "Thu tiền ngay",
-          "binding": "Amount111",
-          "aggregate": "Sum"
-        },
-        {
-          "header": "Công nợ",
-          "binding": "Amount131",
-          "aggregate": "Sum"
-        }
-      ]
+      "group": "price",
+      "colSpan": 2
     },
     {
       "header": "Lãi gộp (Doanh số - tiền vốn)",
@@ -68,9 +53,32 @@
       "aggregate": "Sum"
     },
     {
-      "binding": "SubTotalName",
-      "visible": false
+      "header": "Tổng cộng",
+      "binding": "TotalAmount",
+      "aggregate": "Sum",
+      "parent": "price",
+      "level": 1
+    },
+    {
+      "header": "Thu tiền ngay",
+      "binding": "Amount111",
+      "aggregate": "Sum",
+      "parent": "price",
+      "level": 1
+    },
+    {
+      "header": "Công nợ",
+      "binding": "Amount131",
+      "aggregate": "Sum",
+      "parent": "price",
+      "level": 1
     }
   ],
-  "collumnGroup": ["SubTotalName"]
+  "collumnGroup": ["SubTotalName"],
+  "report": {
+    "Name": "sale Report",
+    "ReportTable": {
+      "name": "sale list"
+    }
+  }
 }

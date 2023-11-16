@@ -1,0 +1,40 @@
+{
+  "Name": "saleReportMultipleSection",
+  "Width": "0in",
+  "Layers": [{ "Name": "default" }],
+  "CustomProperties": [
+    { "Name": "DisplayType", "Value": "Page" },
+    { "Name": "SizeType", "Value": "Default" },
+    { "Name": "PaperOrientation", "Value": "Portrait" }
+  ],
+  "Page": {
+    "PageWidth": "11in",
+    "PageHeight": "8.5in",
+    "RightMargin": "0in",
+    "LeftMargin": "0in",
+    "TopMargin": "0in",
+    "BottomMargin": "0in",
+    "Columns": 1,
+    "ColumnSpacing": "0.5in"
+  },
+  "ReportSections": [
+    {
+      "Type": "Continuous",
+      "Name": "saleReportSection1",
+      "Page": {
+        "PageWidth": "11in",
+        "PageHeight": "8.5in",
+        "RightMargin": "1in",
+        "LeftMargin": "1in",
+        "TopMargin": "1in",
+        "BottomMargin": "1in",
+        "Columns": 1,
+        "ColumnSpacing": "0in"
+      },
+      "Width": "2pt",
+      "PageHeader": {},
+      "Body": {},
+      "PageFooter": {}
+    }
+  ]
+}
