@@ -77,7 +77,7 @@ export class SaleReportComponent implements OnInit {
 
   async ngOnInit() {
     console.log('run');
-    await fetch('../../assets/reportExample.json')
+    const definition = await fetch('../../assets/reportExample.json')
       .then(res => res.json())
       .then(data => {
         data.ReportSections = createReportSection({
@@ -97,12 +97,19 @@ export class SaleReportComponent implements OnInit {
         data.Page.PageWidth = '11in';
         data.Page.PageHeight = '8in';
 
-        createTable("../../assets/saleReportColumn.json")
-
-        this.reportDesigner.report = {
-          displayName: 'saleReport',
-          definition: data,
-        };
+        return data;
       });
+
+    const table = await createTable('../../assets/saleReportColumn.json');
+
+    definition.ReportSections[0].Body.ReportItems.push(table);
+    console.log(JSON.stringify(definition));
+
+    this.reportDesigner.report = {
+      displayName: 'saleReport',
+      definition: definition,
+    };
+
+    console.log(table);
   }
 }

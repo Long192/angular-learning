@@ -86,9 +86,10 @@ export class SaleListComponent implements OnInit, OnDestroy {
           }
         });
 
-        const { group, ...newItem } = columnItem;
-
         delete columnItem.colSpan;
+        delete columnItem.rowSpan;
+
+        const { group, ...newItem } = columnItem;
 
         return newItem;
       });

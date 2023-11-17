@@ -76,8 +76,8 @@
   ],
   "collumnGroup": ["SubTotalName"],
   "report": {
-    "Name": "sale Report",
-    "ReportTable": {
+    "name": "sale Report",
+    "reportTable": {
       "name": "sale list"
     }
   }
