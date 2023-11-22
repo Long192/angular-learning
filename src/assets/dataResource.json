@@ -42,6 +42,59 @@
           ]
         },
         "canEdit": false
+      },
+      {
+        "id": "Sales",
+        "title": "sales",
+        "template": {
+          "Name": "Sales",
+          "Query": { "DataSourceName": "DataSource", "CommandText": "uri=/assets/saleReportData.json;jpath=$.[*]" },
+          "Fields": [
+            { "Name": "Id", "DataField": "Id" },
+            { "Name": "ParentId", "DataField": "ParentId" },
+            { "Name": "IsGroup", "DataField": "IsGroup" },
+            { "Name": "Level", "DataField": "Level" },
+            { "Name": "_GroupOrder", "DataField": "_GroupOrder" },
+            { "Name": "GroupCode", "DataField": "GroupCode" },
+            { "Name": "GroupName", "DataField": "GroupName" },
+            { "Name": "Ten_Vt", "DataField": "Ten_Vt" },
+            { "Name": "Unit", "DataField": "Unit" },
+            { "Name": "Quantity", "DataField": "Quantity" },
+            { "Name": "Amount", "DataField": "Amount" },
+            { "Name": "Amount2", "DataField": "Amount2" },
+            { "Name": "OriginalAmount", "DataField": "OriginalAmount" },
+            { "Name": "OriginalAmount2", "DataField": "OriginalAmount2" },
+            { "Name": "TotalAmount", "DataField": "TotalAmount" },
+            { "Name": "OriginalTotalAmount", "DataField": "OriginalTotalAmount" },
+            { "Name": "Amount111", "DataField": "Amount111" },
+            { "Name": "OriginalAmount111", "DataField": "OriginalAmount111" },
+            { "Name": "Amount131", "DataField": "Amount131" },
+            { "Name": "OriginalAmount131", "DataField": "OriginalAmount131" },
+            { "Name": "Amount3", "DataField": "Amount3" },
+            { "Name": "OriginalAmount3", "DataField": "OriginalAmount3" },
+            { "Name": "Profit", "DataField": "Profit" },
+            { "Name": "OriginalProfit", "DataField": "OriginalProfit" },
+            { "Name": "DiscountAmount", "DataField": "DiscountAmount" },
+            { "Name": "OriginalDiscountAmount", "DataField": "OriginalDiscountAmount" },
+            { "Name": "CustomerId", "DataField": "CustomerId" },
+            { "Name": "ItemId", "DataField": "ItemId" },
+            { "Name": "ItemCode", "DataField": "ItemCode" },
+            { "Name": "TransCode", "DataField": "TransCode" },
+            { "Name": "WarehouseId", "DataField": "WarehouseId" },
+            { "Name": "JobCode", "DataField": "JobCode" },
+            { "Name": "BizDocId_SO", "DataField": "BizDocId_SO" },
+            { "Name": "EmployeeId", "DataField": "EmployeeId" },
+            { "Name": "TerritoryCode", "DataField": "TerritoryCode" },
+            { "Name": "_FormatStyleKey", "DataField": "_FormatStyleKey" },
+            { "Name": "SubTotalName", "DataField": "SubTotalName" },
+            { "Name": "_LinkCommand", "DataField": "_LinkCommand" },
+            { "Name": "_______idxr", "DataField": "_______idxr" },
+            { "Name": "Date", "DataField": "Date" },
+            { "Name": "Checkbox", "DataField": "Checkbox" }
+          ],
+          "Filters": { "Type": "filter", "items": [], "operator": "and" }
+        },
+        "canEdit": false
       }
     ]
   }

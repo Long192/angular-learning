@@ -1,6 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as wjGrid from '@grapecity/wijmo.grid';
 import * as wjCore from '@grapecity/wijmo';
+import { Store } from '@ngrx/store';
+import { setReport } from 'src/slices/ReportSlice';
+import { ReportService } from 'src/service/ReportService';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sale-report',
@@ -10,18 +14,23 @@ import * as wjCore from '@grapecity/wijmo';
 export class SaleListComponent implements OnInit, OnDestroy {
   @ViewChild('reportGrid', { static: true }) reportGrid!: wjGrid.FlexGrid;
 
+  dataSource: any;
+  column: any;
+
+  constructor(
+    private router: Router,
+    private store: Store<{ report: any }>
+  ) {}
+
   async initGrid() {
     this.reportGrid.headersVisibility = wjGrid.HeadersVisibility.Column;
 
-    const column = await this.getColumn();
-    const data = await this.getData();
-
     this.reportGrid.initialize({
-      itemsSource: new wjCore.CollectionView(data, {
-        groupDescriptions: column.columnGroup,
+      itemsSource: new wjCore.CollectionView(this.dataSource, {
+        groupDescriptions: this.column.columnGroup,
       }),
       autoGenerateColumns: false,
-      columns: column.column,
+      columns: this.column.column,
     });
 
     this.reportGrid.autoSizeRows();
@@ -52,14 +61,13 @@ export class SaleListComponent implements OnInit, OnDestroy {
   }
 
   async getData() {
-    return await fetch('../../assets/saleReportData.json')
+    this.dataSource = await fetch('../../assets/saleReportData.json')
       .then(res => res.json())
       .then(data =>
-        data.Table1.map((item: any) => ({
+        data.map((item: any) => ({
           ...item,
           Quantity: item.Quantity * 1000,
-          date: this.getRandomDate(new Date(2023, 0, 1), new Date()),
-          checkBox: this.randomBool(),
+          Date: new Date(item.Date),
         }))
       );
   }
@@ -75,6 +83,12 @@ export class SaleListComponent implements OnInit, OnDestroy {
       const listItemLevel = column.columns.filter((item: any) => item.level && item.level == maxLevel);
 
       newColumnList = column.columns.map((columnItem: any) => {
+        delete columnItem.rowSpan;
+        delete columnItem.colSpan;
+        delete columnItem.checkBox;
+        delete columnItem.type;
+        delete columnItem.date;
+
         if (!columnItem.group) {
           return columnItem;
         }
@@ -86,22 +100,42 @@ export class SaleListComponent implements OnInit, OnDestroy {
           }
         });
 
-        delete columnItem.colSpan;
-        delete columnItem.rowSpan;
-
         const { group, ...newItem } = columnItem;
 
         return newItem;
       });
     }
 
-    return {
+    this.column = {
       columnGroup: column.collumnGroup,
       column: newColumnList.filter(item => !item.level),
     };
   }
 
-  ngOnInit(): void {
+  toReportPage() {
+    const report = new ReportService(this.reportGrid, {
+      reportName: 'Sale Report',
+      reportSectionName: 'Sale Report Section',
+      Page: {
+        PageHeight: '10in',
+        PageWidth: '12.5in',
+        LeftMargin: '0.25in',
+        RightMargin: '0.25in',
+      },
+      dataSource: {
+        dataSourceName: "SaleData",
+        data: this.dataSource
+      },
+    });
+
+    this.store.dispatch(setReport({ report: report.report }));
+
+    this.router.navigate(['/sale-report']);
+  }
+
+  async ngOnInit() {
+    await this.getData();
+    await this.getColumn();
     this.initGrid();
     this.formatItem();
     this.addGridEvent();

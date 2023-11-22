@@ -3,54 +3,65 @@
     {
       "header": "Mã số",
       "binding": "GroupCode",
-      "width": 70
+      "width": 70,
+      "rowSpan": 2
     },
     {
       "header": "Chỉ tiêu",
       "binding": "GroupName",
-      "width": 200
+      "width": 195,
+      "rowSpan": 2
     },
     {
       "header": "Dvt",
       "binding": "Unit",
-      "width": 60
+      "width": 60,
+      "rowSpan": 2
     },
     {
       "header": "Số lượng",
       "binding": "Quantity",
       "width": 70,
-      "align": "right"
+      "align": "right",
+      "rowSpan": 2
     },
     {
-      "binding": "date",
+      "binding": "Date",
       "format": "dd/MM/yyyy",
       "align": "right",
-      "width": 90
+      "width": 90,
+      "rowSpan": 2,
+      "date": true
     },
     {
-      "binding": "checkBox",
+      "binding": "CheckBox",
       "width": 70,
-      "align": "center"
+      "align": "center",
+      "rowSpan": 2,
+      "type": "checkbox"
     },
     {
       "header": "Doanh số (chưa thuế)",
       "binding": "Amount2",
-      "aggregate": "Sum"
+      "aggregate": "Sum",
+      "rowSpan": 2
     },
     {
       "header": "Tiền thanh toán",
       "group": "price",
-      "colSpan": 2
+      "colSpan": 3
     },
     {
       "header": "Lãi gộp (Doanh số - tiền vốn)",
       "binding": "Profit",
-      "aggregate": "Sum"
+      "aggregate": "Sum",
+      "rowSpan": 2
     },
     {
       "header": "Chiết khấu",
       "binding": "DiscountAmount",
-      "aggregate": "Sum"
+      "aggregate": "Sum",
+      "rowSpan": 2
     },
     {
       "header": "Tổng cộng",
@@ -79,6 +90,12 @@
     "name": "sale Report",
     "reportTable": {
       "name": "sale list"
-    }
+    },
+    "dataSource": [
+      {
+        "dataSourceName": "DataSource",
+        "dataSetName": "Sales"
+      }
+    ]
   }
 }

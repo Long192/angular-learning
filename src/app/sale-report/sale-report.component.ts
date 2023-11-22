@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { DesignerComponent, ViewerComponent } from '@grapecity/activereports-angular';
 import * as activeReportCore from '@grapecity/activereports';
-import { createReportSection, createTable } from 'src/utils/commonFunc';
+import { createReport } from 'src/utils/createReportFunc';
+import { Store } from '@ngrx/store';
+import { reportSelector } from 'src/slices/ReportSlice';
 
 @Component({
   selector: 'app-sale-report',
@@ -15,7 +17,10 @@ export class SaleReportComponent implements OnInit {
   designerHidden = false;
   firstPreview = true;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private store: Store<{ report: any }>
+  ) {}
 
   updateToolbar() {
     const designButton = {
@@ -24,7 +29,7 @@ export class SaleReportComponent implements OnInit {
       iconCssClass: 'mdi mdi-pencil',
       enable: true,
       action: () => {
-        this.designerHidden = true;
+        this.designerHidden = false;
         this.changeDetectorRef.detectChanges();
       },
     };
@@ -33,7 +38,7 @@ export class SaleReportComponent implements OnInit {
 
     this.reportViewer.toolbar.updateLayout({
       default: [
-        '$openDesigner',
+        '$desingerButton',
         '$split',
         '$navigation',
         '$split',
@@ -53,13 +58,17 @@ export class SaleReportComponent implements OnInit {
     });
   }
 
-  onReportPreview(report: any) {
-    if ((this.firstPreview = true)) {
+  onReportPreview = (report: any) => {
+    if (this.firstPreview) {
       this.updateToolbar();
       this.firstPreview = false;
     }
+
+    this.designerHidden = true;
+    this.reportViewer.open(report.definition);
+    this.changeDetectorRef.detectChanges();
     return Promise.resolve();
-  }
+  };
 
   onSaveReport = (info: any) => {
     console.log(JSON.stringify(info.definition));
@@ -76,40 +85,29 @@ export class SaleReportComponent implements OnInit {
   };
 
   async ngOnInit() {
-    console.log('run');
-    const definition = await fetch('../../assets/reportExample.json')
-      .then(res => res.json())
-      .then(data => {
-        data.ReportSections = createReportSection({
-          Name: 'sale report',
-          Type: 'Continuous',
-          Page: {
-            PageWidth: '11in',
-            PageHeight: '8.5in',
-            RightMargin: '0.5in',
-            LeftMargin: '0.5in',
-            TopMargin: '0.5in',
-            BottomMargin: '0.5in',
-            Columns: 1,
-            ColumnSpacing: '0.5in',
-          },
-        });
-        data.Page.PageWidth = '11in';
-        data.Page.PageHeight = '8in';
+    // const definition: any = await createReport('../../assets/saleReportColumn.json', 'sale report');
 
-        return data;
-      });
+    // console.log(definition);
 
-    const table = await createTable('../../assets/saleReportColumn.json');
+    let definition;
+    this.store
+      .select(reportSelector)
+      .subscribe((data: any) => (definition = data.report))
+      .unsubscribe();
 
-    definition.ReportSections[0].Body.ReportItems.push(table);
-    console.log(JSON.stringify(definition));
+    console.log();
 
-    this.reportDesigner.report = {
-      displayName: 'saleReport',
-      definition: definition,
-    };
+    if (definition  && Object.keys(definition)) {
+      this.reportDesigner.report = {
+        displayName: 'saleReport',
+        definition: definition,
+      };
+    }
 
-    console.log(table);
+    // setTimeout(async () => {
+    //   const report = await this.reportDesigner.getReport();
+
+    //   console.log(report.definition);
+    // }, 5000);
   }
 }

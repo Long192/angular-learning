@@ -7,10 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { DesignerComponent, ViewerComponent } from '@grapecity/activereports-angular';
-
-import * as activeReport from '@grapecity/activereports';
-
-// import { dataSources } from '../../utils/constantVar';
+import * as active from '@grapecity/activereports';
 
 @Component({
   selector: 'app-report-testing',
@@ -42,6 +39,8 @@ export class ReportTestingComponent implements OnInit {
           displayName: 'test',
         };
       });
+
+    // let data: active.Core.Rdl.
   }
 
   updateToolbar(): void {

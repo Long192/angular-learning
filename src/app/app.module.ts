@@ -37,9 +37,18 @@ import { ReportTestingComponent } from './report-testing/report-testing.componen
 import { ActiveReportsModule } from '@grapecity/activereports-angular';
 import { SaleListComponent } from './sale-list/sale-list.component';
 import { SaleReportComponent } from './sale-report/sale-report.component';
+import { ReportReducer } from 'src/slices/ReportSlice';
+import { ReportService } from 'src/service/ReportService';
 
 @NgModule({
-  declarations: [AppComponent, ListEmployeeComponent, EmployeeFormComponent, ReportTestingComponent, SaleListComponent, SaleReportComponent],
+  declarations: [
+    AppComponent,
+    ListEmployeeComponent,
+    EmployeeFormComponent,
+    ReportTestingComponent,
+    SaleListComponent,
+    SaleReportComponent,
+  ],
   imports: [
     DialogComponent,
     BrowserModule,
@@ -64,7 +73,7 @@ import { SaleReportComponent } from './sale-report/sale-report.component';
     WjGridFilterModule,
     WjGridGrouppanelModule,
     ActiveReportsModule,
-    StoreModule.forRoot({ employee: EmployeeReducer }),
+    StoreModule.forRoot({ employee: EmployeeReducer, report: ReportReducer }),
     // EffectsModule.forRoot([EmployeeEffect])
   ],
   providers: [
@@ -77,6 +86,7 @@ import { SaleReportComponent } from './sale-report/sale-report.component';
     { provide: MAT_DATE_FORMATS, useValue: dateFormat },
     CustomValidationService,
     EmployeeService,
+    ReportService
   ],
   bootstrap: [AppComponent],
 })
