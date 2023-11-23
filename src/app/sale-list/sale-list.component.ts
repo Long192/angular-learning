@@ -20,7 +20,9 @@ export class SaleListComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private store: Store<{ report: any }>
-  ) {}
+  ) {
+    wjCore.culture.Globalize
+  }
 
   async initGrid() {
     this.reportGrid.headersVisibility = wjGrid.HeadersVisibility.Column;
@@ -116,6 +118,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
     const report = new ReportService(this.reportGrid, {
       reportName: 'Sale Report',
       reportSectionName: 'Sale Report Section',
+      tableName: 'sale list',
       Page: {
         PageHeight: '10in',
         PageWidth: '12.5in',
@@ -123,8 +126,8 @@ export class SaleListComponent implements OnInit, OnDestroy {
         RightMargin: '0.25in',
       },
       dataSource: {
-        dataSourceName: "SaleData",
-        data: this.dataSource
+        dataSourceName: 'SaleData',
+        data: this.dataSource,
       },
     });
 

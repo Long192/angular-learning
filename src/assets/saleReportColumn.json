@@ -27,7 +27,7 @@
     },
     {
       "binding": "Date",
-      "format": "dd/MM/yyyy",
+      "format": "d",
       "align": "right",
       "width": 90,
       "rowSpan": 2,

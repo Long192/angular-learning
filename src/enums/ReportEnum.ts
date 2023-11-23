@@ -3,9 +3,3 @@ export enum rowTypeEnum {
   detail = 'detail',
   group = 'group',
 }
-
-export enum aggregateEnum {
-  'Avg' = 'Avg',
-  'Cnt' = 'Count',
-  'Sum' = 'Sum',
-}

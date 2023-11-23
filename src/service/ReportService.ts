@@ -1,6 +1,6 @@
 import { Inject, Injectable, inject } from '@angular/core';
 import { Core } from '@grapecity/activereports';
-import { aggregateEnum, rowTypeEnum } from 'src/enums/ReportEnum';
+import { rowTypeEnum } from 'src/enums/ReportEnum';
 import * as wjGrid from '@grapecity/wijmo.grid';
 import * as wjCore from '@grapecity/wijmo';
 import { constructorReportService } from 'src/types/reportServiceParameter';
@@ -9,16 +9,16 @@ import { constructorReportService } from 'src/types/reportServiceParameter';
 export class ReportService {
   report!: Core.Rdl.Report;
   private count = 1;
+  private groupArray: any[] = [];
 
   constructor(grid: wjGrid.FlexGrid, @Inject('constructParam') constructParam: constructorReportService) {
     this.report = this.createReport(grid, constructParam);
+    console.log(grid.collectionView.groups);
   }
 
   createReport = (grid: wjGrid.FlexGrid, constructParam: constructorReportService) => {
-    const column = grid.columns;
-
     return {
-      Name: constructParam.reportName || 'Report',
+      Name: constructParam.reportName,
       Width: '0in',
       Layers: this.createLayer(constructParam.layers),
       // CustomProperties: ,
@@ -26,18 +26,18 @@ export class ReportService {
       DataSources: this.getDataSource(constructParam.dataSource),
       ReportSections: [
         {
-          Name: 'section',
+          Name: constructParam.reportSectionName,
           Type: 'Continuous' as 'Continuous',
           Page: this.createPage(constructParam.Page),
           Body: {
             Height: '1in',
-            ReportItems: [],
+            ReportItems: [this.createTable(grid, constructParam.tableName)],
           },
           PageHeader: {},
           PageFooter: {},
         },
       ],
-      // DataSets: ,
+      DataSets: [this.getDataSet(constructParam.dataSource.dataSourceName, constructParam.dataSource.data)],
     };
   };
 
@@ -55,68 +55,55 @@ export class ReportService {
     ...page,
   });
 
-  createTable = (column: any) => {
-    const header = this.createHeader(column);
-    const columnWidth = this.getHeaderRow(column.columns)
+  createTable = (grid: wjGrid.FlexGrid, tableName: string) => {
+    const header = this.createHeader(grid);
+    const columnWidth = this.getHeaderRow(grid.columnHeaders.columns)
       .filter((item: any) => !item?.level)
       .map((item: any) => ({
         Width: `${(item?.width || 99) * 0.0104166667}in`,
       }));
 
+    // this.createGroup(grid, header.TableRows);
+
+    // console.log(columnWidth);
+
     return {
-      Type: 'table',
-      Name: column.report.reportTable.name,
+      Type: 'table' as 'table',
+      Name: tableName,
       TableColumns: columnWidth,
       Header: header,
-      TableGroups: this.createGroup(column, header.TableRows),
-      Details: this.createDetail(column, header.TableRows),
+      TableGroups: this.createGroup(grid),
+      Details: this.createDetail(grid.columns),
       Top: '0in',
       Height: '0.25in',
     };
   };
 
-  createHeader = (column: any) => {
+  createHeader = (grid: wjGrid.FlexGrid) => {
     const header: any = {
       TableRows: [],
       RepeatOnNewPage: true,
     };
 
-    const firstRow = this.getHeaderRow(column.columns);
+    const firstRow = this.getHeaderRow(grid.columnHeaders.columns);
 
     header.TableRows.push({
       Height: '0.25in',
       TableCells: this.createRow(firstRow, rowTypeEnum.header),
     });
 
-    const levelList = column.columns.filter((item: any) => item.level).map((item: any) => item.level);
+    const levelList = grid.columns.filter((item: any) => item.level).map((item: any) => item.level);
 
     const maxlevel = Math.max(...(levelList || 0));
 
     if (maxlevel) {
       let preLevelRow = firstRow;
       for (let level = 1; level <= maxlevel; level++) {
-        const levelList = column.columns.filter((item: any) => item.level && item.level === level);
-        const parentIndexList = preLevelRow.reduce((storage: any, current: any, index: number) => {
-          if (current && current.group && levelList.find((levelItem: any) => levelItem.parent === current.group)) {
-            return [
-              ...storage,
-              {
-                parent: current.group,
-                index: index,
-                level,
-              },
-            ];
-          }
-
-          return storage;
-        }, []);
-
+        const levelList = grid.columns.filter((item: any) => item.level === level);
         const newRow = new Array(header.TableRows[0].TableCells.length).fill(null);
 
-        parentIndexList.forEach((item: any) => {
-          const startItem = levelList.filter((levelItem: any) => item.parent === levelItem.parent);
-
-          newRow.splice(item.index, startItem.length, ...startItem);
+        levelList.forEach((item: any) => {
+          newRow.splice(item._rng.col, 1, item);
         });
 
         header.TableRows.push({
@@ -139,17 +126,14 @@ export class ReportService {
 
       if (rowType === rowTypeEnum.detail) {
         if (current.binding === 'Quantity') {
-          return [
-            ...storage,
-            this.createCell(`=Fields!${current.binding}.Value * 1000`, current.type || 'textbox', style),
-          ];
+          return [...storage, this.createCell(`=Fields!${current.binding}.Value`, current.type || 'textbox', style)];
         }
 
         return [
           ...storage,
           this.createCell(`=Fields!${current.binding}.Value`, current.type || 'textbox', {
             ...style,
-            Format: current.date ? 'd' : 'n0',
+            Format: current.format || 'n0',
           }),
         ];
       }
@@ -159,20 +143,21 @@ export class ReportService {
       }
 
       if (current.aggregate && rowType === rowTypeEnum.group) {
+        console.log(current);
         return [
           ...storage,
-          this.createCell(
-            `=${aggregateEnum[current.aggregate as keyof typeof aggregateEnum]}(Fields!${current.binding}.Value)`
-          ),
+          this.createCell(`=${this.getAggrateType(current.aggregate)}(Fields!${current.binding}.Value)`),
         ];
       }
+
+      // console.log(current);
 
       const cell = this.createCell(
         current.header || current.binding,
         rowType === rowTypeEnum.header ? 'textbox' : current.type,
         style,
-        current.colSpan,
-        current.rowSpan
+        current._rng.col2 - current._rng.col + 1,
+        current._rng.row2 - current._rng.row + 1
       );
 
       return [...storage, cell];
@@ -214,20 +199,25 @@ export class ReportService {
     return item;
   };
 
-  getHeaderRow = (columns: any) => {
-    const firstRowArray = columns.filter((item: any) => !item.level);
-
-    const firstRow: any = [];
-
-    firstRowArray.map((item: any) => {
-      if (item.colSpan) {
-        firstRow.push(...[item].concat(new Array(item.colSpan - 1).fill(null)));
-        return;
+  getHeaderRow = (columns: wjGrid.ColumnCollection) => {
+    // const firstRowArray = new Array(columns.length).fill(null)
+    const firstRow = columns.map((item: any) => {
+      if (item.level) {
+        return item.parentGroup;
       }
-      firstRow.push(item);
+
+      return item;
     });
 
-    return firstRow;
+    let prevHeader: string;
+
+    return firstRow.map((item: any) => {
+      if (prevHeader === item.header) {
+        return null;
+      }
+      prevHeader = item.header;
+      return item;
+    });
   };
 
   getDataSource = (dataSource: any) => [
@@ -240,66 +230,63 @@ export class ReportService {
     },
   ];
 
-  getDataSet = async (sourceName: any, data: any) => {
-    const dataSource = sourceName.map((nameItem: any) =>
-      data.map((dataItem: any) => {
-        const template = dataItem.datasets.find((templateItem: any) => {
-          return templateItem.id === nameItem.dataSetName;
-        });
-
-        if (dataItem.id === nameItem.dataSourceName && template) {
-          delete template.template.Filters;
-          return {
-            ...template.template,
-            CaseSensitivity: 'Auto',
-            KanatypeSensitivity: 'Auto',
-            AccentSensitivity: 'Auto',
-            WidthSensitivity: 'Auto',
-          };
-        }
-
-        return null;
-      })
-    );
-
-    return dataSource.flat(1).filter((item: any) => item);
+  getDataSet = (sourceName: string, data: any, datasetName?: string) => {
+    return {
+      Name: datasetName || 'dataset',
+      Fields: Object.keys(data[0]).map((item: string) => ({ Name: item, DataField: item })),
+      Query: {
+        DataSourceName: sourceName,
+        CommandText: 'jpath=$.[*]',
+      },
+    };
   };
 
-  createGroup = (column: any, header: any) => {
-    const groupRow: any = [
-      {
+  createGroup = (grid: wjGrid.FlexGrid) => {
+    const group = grid.collectionView.groups;
+    this.processGroup(group);
+    const groupRows: any = [];
+
+    this.groupArray.forEach(item => {
+      const aggregateRow = this.createAggregate(grid.columns);
+
+      aggregateRow[0].Item.Value = `=Fields!${item}.Value`;
+
+      const mergeRow = aggregateRow.map((item: any) => {
+        if (!item.Item.Value) {
+          return null;
+        }
+
+        return item;
+      });
+
+      const colSpan = mergeRow.filter((item: any) => item === null);
+
+      mergeRow[0].ColSpan = colSpan + 1;
+
+      groupRows.push({
         Group: {
-          Name: 'tableGroup',
-          GroupExpressions: [],
+          Name: item,
+          GroupExpressions: [`=Fields!${item}.Value`],
         },
         Header: {
           TableRows: [
             {
               Height: '0.25in',
-              TableCells: [],
+              TableCells: mergeRow,
             },
           ],
         },
-      },
-    ];
-
-    const aggregateRow = this.createAggregate(column, header);
-
-    column.collumnGroup.forEach((item: string, index: number) => {
-      aggregateRow[index + 1].Item.Value = `=Fields!${item}.Value`;
-      groupRow[0].Group.GroupExpressions.push(`=Fields!${item}.Value`);
+      });
     });
 
-    groupRow[0].Header.TableRows[0].TableCells.push(...aggregateRow);
-
-    return groupRow;
+    return groupRows;
   };
 
-  createAggregate = (column: any, header: any) => {
-    const aggregateList = column.columns.filter((item: any) => item.aggregate);
+  createAggregate = (column: any) => {
+    const aggregateList = column.filter((item: any) => item.aggregate);
 
-    const aggregateRow = this.getBindingList(header).map((item: any) => {
-      const aggregateCell = aggregateList.find((aggregateItem: any) => aggregateItem.header === item.Item.Value);
+    const aggregateRow = column.map((item: any) => {
+      const aggregateCell = aggregateList.find((aggregateItem: any) => aggregateItem.header === item.header);
 
       if (aggregateCell) {
         return aggregateCell;
@@ -308,39 +295,31 @@ export class ReportService {
       return 'default';
     });
 
+    console.log(aggregateRow);
+
     return this.createRow(aggregateRow, rowTypeEnum.group);
   };
 
-  getBindingList = (header: any) => {
-    const bindingList: any[] = [];
+  // getBindingList = (header: any) => {
+  //   const bindingList: any[] = [];
 
-    for (let index = header.length - 1; index >= 0; index--) {
-      if (!bindingList.length) {
-        bindingList.push(...header[index].TableCells);
-      }
+  //   for (let index = header.length - 1; index >= 0; index--) {
+  //     if (!bindingList.length) {
+  //       bindingList.push(...header[index].TableCells);
+  //     }
 
-      header[index].TableCells.forEach((item: any, cellIndex: number) => {
-        if (!bindingList[cellIndex] || bindingList[cellIndex].group) {
-          bindingList.splice(cellIndex, 1, item);
-        }
-      });
-    }
+  //     header[index].TableCells.forEach((item: any, cellIndex: number) => {
+  //       if (!bindingList[cellIndex] || bindingList[cellIndex].group) {
+  //         bindingList.splice(cellIndex, 1, item);
+  //       }
+  //     });
+  //   }
 
-    return bindingList;
-  };
+  //   return bindingList;
+  // };
 
-  createDetail = (column: any, header: any) => {
-    const bindingList = this.getBindingList(header);
-
-    // console.log(bindingList);
-
-    const bindingColumn = bindingList.map((item: any) =>
-      column.columns.find(
-        (columnItem: any) => columnItem.header === item.Item.Value || columnItem.binding === item.Item.Value
-      )
-    );
-
-    const detailRow = this.createRow(bindingColumn, rowTypeEnum.detail);
+  createDetail = (column: any) => {
+    const detailRow = this.createRow(column, rowTypeEnum.detail);
 
     return {
       TableRows: [
@@ -351,4 +330,27 @@ export class ReportService {
       ],
     };
   };
+
+  private processGroup(group: any[]) {
+    group.forEach((item: any) => {
+      // console.log(!!this.groupArray.indexOf(item.groupDescription.propertyName))
+      if (!this.groupArray.includes(item.groupDescription.propertyName)) {
+        this.groupArray.push(item.groupDescription.propertyName);
+      }
+
+      if (!item.isBottomLevel) {
+        this.processGroup(item.groups);
+      }
+    });
+  }
+
+  getAggrateType(key: number) {
+    const agrateType = [
+      { key: 1, value: 'Sum' },
+      { key: 2, value: 'Count' },
+      { key: 3, value: 'Avg' },
+    ];
+
+    return agrateType.find(item => item.key === key)?.value;
+  }
 }

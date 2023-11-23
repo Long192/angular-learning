@@ -95,9 +95,7 @@ export class SaleReportComponent implements OnInit {
       .subscribe((data: any) => (definition = data.report))
       .unsubscribe();
 
-    console.log();
-
-    if (definition  && Object.keys(definition)) {
+    if (definition && Object.keys(definition).length) {
       this.reportDesigner.report = {
         displayName: 'saleReport',
         definition: definition,
