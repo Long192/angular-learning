@@ -65,7 +65,7 @@ export class ReportService {
 
     // this.createGroup(grid, header.TableRows);
 
-    // console.log(columnWidth);
+    // console.log(this.createGroup(grid));
 
     return {
       Type: 'table' as 'table',
@@ -259,7 +259,7 @@ export class ReportService {
         return item;
       });
 
-      const colSpan = mergeRow.filter((item: any) => item === null);
+      const colSpan = mergeRow.filter((item: any) => item === null).length;
 
       mergeRow[0].ColSpan = colSpan + 1;
 
