@@ -30,7 +30,7 @@ export class SaleReportComponent implements OnInit {
       enable: true,
       action: () => {
         this.designerHidden = false;
-        this.changeDetectorRef.detectChanges();
+        
       },
     };
 
@@ -66,7 +66,7 @@ export class SaleReportComponent implements OnInit {
 
     this.designerHidden = true;
     this.reportViewer.open(report.definition);
-    this.changeDetectorRef.detectChanges();
+    
     return Promise.resolve();
   };
 

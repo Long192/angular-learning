@@ -16,13 +16,12 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
   dataSource: any;
   column: any;
+  hiddenButton = true;
 
   constructor(
     private router: Router,
     private store: Store<{ report: any }>
-  ) {
-    wjCore.culture.Globalize
-  }
+  ) {}
 
   async initGrid() {
     this.reportGrid.headersVisibility = wjGrid.HeadersVisibility.Column;
@@ -34,6 +33,8 @@ export class SaleListComponent implements OnInit, OnDestroy {
       autoGenerateColumns: false,
       columns: this.column.column,
     });
+
+    this.reportGrid.columnFooters.rows.push(new wjGrid.GroupRow())
 
     this.reportGrid.autoSizeRows();
   }
@@ -137,11 +138,14 @@ export class SaleListComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.reportGrid.beginUpdate();
     await this.getData();
     await this.getColumn();
     this.initGrid();
     this.formatItem();
     this.addGridEvent();
+    this.reportGrid.endUpdate();
+    this.hiddenButton = false;
   }
 
   ngOnDestroy(): void {

@@ -4,7 +4,8 @@
       "header": "Mã số",
       "binding": "GroupCode",
       "width": 70,
-      "rowSpan": 2
+      "rowSpan": 2,
+      "align": "left"
     },
     {
       "header": "Chỉ tiêu",
@@ -27,7 +28,7 @@
     },
     {
       "binding": "Date",
-      "format": "d",
+      "format": "dd/MM/yyyy",
       "align": "right",
       "width": 90,
       "rowSpan": 2,

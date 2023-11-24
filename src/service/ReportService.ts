@@ -2,7 +2,6 @@ import { Inject, Injectable, inject } from '@angular/core';
 import { Core } from '@grapecity/activereports';
 import { rowTypeEnum } from 'src/enums/ReportEnum';
 import * as wjGrid from '@grapecity/wijmo.grid';
-import * as wjCore from '@grapecity/wijmo';
 import { constructorReportService } from 'src/types/reportServiceParameter';
 
 @Injectable()
@@ -16,7 +15,7 @@ export class ReportService {
     console.log(grid.collectionView.groups);
   }
 
-  createReport = (grid: wjGrid.FlexGrid, constructParam: constructorReportService) => {
+  createReport = (grid: wjGrid.FlexGrid, constructParam: constructorReportService): Core.Rdl.Report => {
     return {
       Name: constructParam.reportName,
       Width: '0in',
@@ -34,16 +33,34 @@ export class ReportService {
             ReportItems: [this.createTable(grid, constructParam.tableName)],
           },
           PageHeader: {},
-          PageFooter: {},
+          PageFooter: {
+            ReportItems: [
+              {
+                Type: 'textbox',
+                Name: `textbox${++this.count}`,
+                Value: '="Trang " & Globals!PageNumber & " / " & Globals!TotalPages',
+                CanGrow: true,
+                KeepTogether: true,
+                Style: {
+                  PaddingLeft: '2pt',
+                  PaddingRight: '2pt',
+                  PaddingBottom: '2pt',
+                  PaddingTop: '2pt',
+                },
+                Width: '1in',
+                Height: '0.25in',
+              },
+            ],
+          },
         },
       ],
       DataSets: [this.getDataSet(constructParam.dataSource.dataSourceName, constructParam.dataSource.data)],
     };
   };
 
-  createLayer = (layers?: Core.Rdl.Layer[]) => layers || [{ Name: 'default' }];
+  private createLayer = (layers?: Core.Rdl.Layer[]) => layers || [{ Name: 'default' }];
 
-  createPage = (page?: Core.Rdl.Page) => ({
+  private createPage = (page?: Core.Rdl.Page) => ({
     PageWidth: '8.5in',
     PageHeight: '11in',
     RightMargin: '1in',
@@ -55,7 +72,7 @@ export class ReportService {
     ...page,
   });
 
-  createTable = (grid: wjGrid.FlexGrid, tableName: string) => {
+  private createTable = (grid: wjGrid.FlexGrid, tableName: string) => {
     const header = this.createHeader(grid);
     const columnWidth = this.getHeaderRow(grid.columnHeaders.columns)
       .filter((item: any) => !item?.level)
@@ -67,29 +84,43 @@ export class ReportService {
 
     // console.log(this.createGroup(grid));
 
-    return {
+    // console.log(grid.collectionView.groups);
+
+    const table: Core.Rdl.Table = {
       Type: 'table' as 'table',
       Name: tableName,
       TableColumns: columnWidth,
       Header: header,
-      TableGroups: this.createGroup(grid),
       Details: this.createDetail(grid.columns),
       Top: '0in',
       Height: '0.25in',
     };
+
+    if (grid.collectionView.groups) {
+      table.TableGroups = this.createGroup(grid);
+    }
+
+    return table;
   };
 
-  createHeader = (grid: wjGrid.FlexGrid) => {
+  private createHeader = (grid: wjGrid.FlexGrid) => {
     const header: any = {
       TableRows: [],
       RepeatOnNewPage: true,
     };
 
+    const style = {
+      BackgroundColor: getComputedStyle(grid.columnHeaders.getCellElement(0, 0)).getPropertyValue('background-color'),
+      TextAlign: 'Center',
+    };
+
+    // console.log(getComputedStyle(grid.columnHeaders.getCellElement(0, 0)).getPropertyValue('background-color'));
+
     const firstRow = this.getHeaderRow(grid.columnHeaders.columns);
 
     header.TableRows.push({
       Height: '0.25in',
-      TableCells: this.createRow(firstRow, rowTypeEnum.header),
+      TableCells: this.createRow(firstRow, rowTypeEnum.header, style),
     });
 
     const levelList = grid.columns.filter((item: any) => item.level).map((item: any) => item.level);
@@ -106,9 +137,11 @@ export class ReportService {
           newRow.splice(item._rng.col, 1, item);
         });
 
+        // console.log(newROw)
+
         header.TableRows.push({
           Height: '0.25in',
-          TableCells: this.createRow(newRow, rowTypeEnum.header),
+          TableCells: this.createRow(newRow, rowTypeEnum.header, style),
         });
 
         preLevelRow = newRow;
@@ -118,22 +151,22 @@ export class ReportService {
     return header;
   };
 
-  createRow = (column: any[], rowType: string, style?: any) =>
+  private createRow = (column: any[], rowType: string, style?: any) =>
     column.reduce((storage: any, current: any) => {
       if (current === 'default') {
         return [...storage, this.createCell()];
       }
 
       if (rowType === rowTypeEnum.detail) {
-        if (current.binding === 'Quantity') {
-          return [...storage, this.createCell(`=Fields!${current.binding}.Value`, current.type || 'textbox', style)];
+        if (this.getDataType(current.dataType)?.value === 'boolean') {
+          current.type = 'checkbox';
         }
 
         return [
           ...storage,
           this.createCell(`=Fields!${current.binding}.Value`, current.type || 'textbox', {
             ...style,
-            Format: current.format || 'n0',
+            Format: this.getDataType(current.dataType)?.format || '',
           }),
         ];
       }
@@ -143,10 +176,10 @@ export class ReportService {
       }
 
       if (current.aggregate && rowType === rowTypeEnum.group) {
-        console.log(current);
+        // console.log(current);
         return [
           ...storage,
-          this.createCell(`=${this.getAggrateType(current.aggregate)}(Fields!${current.binding}.Value)`),
+          this.createCell(`=${this.getAggrateType(current.aggregate)}(Fields!${current.binding}.Value)`, '', style),
         ];
       }
 
@@ -163,7 +196,7 @@ export class ReportService {
       return [...storage, cell];
     }, []);
 
-  createCell = (value?: any, type?: string, style?: any, colSpan?: number, rowSpan?: number) => {
+  private createCell = (value?: any, type?: string, style?: any, colSpan?: number, rowSpan?: number) => {
     let item: any = {
       Item: {
         Type: type || 'textbox',
@@ -179,7 +212,6 @@ export class ReportService {
           PaddingRight: '2pt',
           PaddingTop: '2pt',
           PaddingBottom: '2pt',
-          TextAlign: 'Center',
           VerticalAlign: 'Middle',
           Format: 'n0',
           ...style,
@@ -199,7 +231,7 @@ export class ReportService {
     return item;
   };
 
-  getHeaderRow = (columns: wjGrid.ColumnCollection) => {
+  private getHeaderRow = (columns: wjGrid.ColumnCollection) => {
     // const firstRowArray = new Array(columns.length).fill(null)
     const firstRow = columns.map((item: any) => {
       if (item.level) {
@@ -220,7 +252,7 @@ export class ReportService {
     });
   };
 
-  getDataSource = (dataSource: any) => [
+  private getDataSource = (dataSource: any) => [
     {
       Name: dataSource.dataSourceName || 'DataSource',
       ConnectionProperties: {
@@ -230,24 +262,33 @@ export class ReportService {
     },
   ];
 
-  getDataSet = (sourceName: string, data: any, datasetName?: string) => {
+  private getDataSet = (sourceName: string, data: any, datasetName?: string) => {
     return {
       Name: datasetName || 'dataset',
       Fields: Object.keys(data[0]).map((item: string) => ({ Name: item, DataField: item })),
       Query: {
-        DataSourceName: sourceName,
+        DataSourceName: sourceName || 'DataSource',
         CommandText: 'jpath=$.[*]',
       },
     };
   };
 
-  createGroup = (grid: wjGrid.FlexGrid) => {
+  private createGroup = (grid: wjGrid.FlexGrid) => {
     const group = grid.collectionView.groups;
     this.processGroup(group);
     const groupRows: any = [];
 
+    // console.log(getComputedStyle(grid.cells.getCellElement(0, 0)).getPropertyValue("background-color"));
+    const style = {
+      BackgroundColor: getComputedStyle(grid.cells.getCellElement(0, 0)).getPropertyValue('background-color'),
+    };
+
+    console.log(style);
+
     this.groupArray.forEach(item => {
-      const aggregateRow = this.createAggregate(grid.columns);
+      const aggregateRow = this.createAggregate(grid.columns, style);
+
+      console.log(aggregateRow);
 
       aggregateRow[0].Item.Value = `=Fields!${item}.Value`;
 
@@ -262,6 +303,10 @@ export class ReportService {
       const colSpan = mergeRow.filter((item: any) => item === null).length;
 
       mergeRow[0].ColSpan = colSpan + 1;
+      mergeRow[0].Item.Style = {
+        ...mergeRow[0].Item.Style,
+        ...style,
+      };
 
       groupRows.push({
         Group: {
@@ -282,7 +327,7 @@ export class ReportService {
     return groupRows;
   };
 
-  createAggregate = (column: any) => {
+  private createAggregate = (column: any, style: any) => {
     const aggregateList = column.filter((item: any) => item.aggregate);
 
     const aggregateRow = column.map((item: any) => {
@@ -297,7 +342,7 @@ export class ReportService {
 
     console.log(aggregateRow);
 
-    return this.createRow(aggregateRow, rowTypeEnum.group);
+    return this.createRow(aggregateRow, rowTypeEnum.group, style);
   };
 
   // getBindingList = (header: any) => {
@@ -318,7 +363,7 @@ export class ReportService {
   //   return bindingList;
   // };
 
-  createDetail = (column: any) => {
+  private createDetail = (column: any) => {
     const detailRow = this.createRow(column, rowTypeEnum.detail);
 
     return {
@@ -344,7 +389,7 @@ export class ReportService {
     });
   }
 
-  getAggrateType(key: number) {
+  private getAggrateType(key: number) {
     const agrateType = [
       { key: 1, value: 'Sum' },
       { key: 2, value: 'Count' },
@@ -352,5 +397,16 @@ export class ReportService {
     ];
 
     return agrateType.find(item => item.key === key)?.value;
+  }
+
+  private getDataType(key: number) {
+    const dataType = [
+      { key: 1, value: 'string', format: '' },
+      { key: 2, value: 'number', format: 'n0' },
+      { key: 3, value: 'boolean', format: '' },
+      { key: 4, value: 'date', format: 'd' },
+    ];
+
+    return dataType.find(item => item.key === key);
   }
 }
