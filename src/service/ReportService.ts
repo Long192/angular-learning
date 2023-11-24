@@ -128,7 +128,6 @@ export class ReportService {
     const maxlevel = Math.max(...(levelList || 0));
 
     if (maxlevel) {
-      let preLevelRow = firstRow;
       for (let level = 1; level <= maxlevel; level++) {
         const levelList = grid.columns.filter((item: any) => item.level === level);
         const newRow = new Array(header.TableRows[0].TableCells.length).fill(null);
@@ -143,8 +142,6 @@ export class ReportService {
           Height: '0.25in',
           TableCells: this.createRow(newRow, rowTypeEnum.header, style),
         });
-
-        preLevelRow = newRow;
       }
     }
 
@@ -154,7 +151,7 @@ export class ReportService {
   private createRow = (column: any[], rowType: string, style?: any) =>
     column.reduce((storage: any, current: any) => {
       if (current === 'default') {
-        return [...storage, this.createCell()];
+        return [...storage, this.createCell('', '', style)];
       }
 
       if (rowType === rowTypeEnum.detail) {
@@ -287,14 +284,18 @@ export class ReportService {
 
     this.groupArray.forEach(item => {
       const aggregateRow = this.createAggregate(grid.columns, style);
-
-      console.log(aggregateRow);
-
       aggregateRow[0].Item.Value = `=Fields!${item}.Value`;
 
-      const mergeRow = aggregateRow.map((item: any) => {
-        if (!item.Item.Value) {
+      let meetValue = false;
+
+      const mergeRow = aggregateRow.map((item: any, index: number) => {
+        console.log(item);
+        if (!item.Item.Value && !meetValue) {
           return null;
+        }
+
+        if (index != 0) {
+          meetValue = true;
         }
 
         return item;
@@ -307,6 +308,8 @@ export class ReportService {
         ...mergeRow[0].Item.Style,
         ...style,
       };
+
+      // console.log(mergeRow)
 
       groupRows.push({
         Group: {
@@ -378,7 +381,6 @@ export class ReportService {
 
   private processGroup(group: any[]) {
     group.forEach((item: any) => {
-      // console.log(!!this.groupArray.indexOf(item.groupDescription.propertyName))
       if (!this.groupArray.includes(item.groupDescription.propertyName)) {
         this.groupArray.push(item.groupDescription.propertyName);
       }
