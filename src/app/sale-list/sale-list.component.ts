@@ -34,14 +34,22 @@ export class SaleListComponent implements OnInit, OnDestroy {
       columns: this.column.column,
     });
 
-    this.reportGrid.columnFooters.rows.push(new wjGrid.GroupRow())
+    const newRow = new wjGrid.GroupRow();
+
+    newRow.align = 'right';
+
+    this.reportGrid.columnFooters.rows.push(newRow);
 
     this.reportGrid.autoSizeRows();
   }
 
   formatItem() {
     this.reportGrid.formatItem.addHandler((sender: wjGrid.FlexGrid, event: wjGrid.FormatItemEventArgs) => {
-      if (event.cell.innerText == '0' && !event.cell.classList.contains('wj-group')) {
+      if (
+        event.cell.innerText == '0' &&
+        !event.cell.classList.contains('wj-header') &&
+        !event.cell.classList.contains('wj-group')
+      ) {
         event.cell.innerText = '';
       }
     });
@@ -51,7 +59,8 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
   addGridEvent() {
     this.reportGrid.copied.addHandler((sender: wjCore.Control, event: wjCore.EventArgs) => {
-      console.log('controll', sender), console.log('event', event);
+      console.log('controll', sender);
+      console.log('event', event);
     });
   }
 
@@ -134,7 +143,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(setReport({ report: report.report }));
 
-    this.router.navigate(['/sale-report']);
+    // this.router.navigate(['/sale-report']);
   }
 
   async ngOnInit() {

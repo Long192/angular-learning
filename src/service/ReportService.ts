@@ -20,7 +20,6 @@ export class ReportService {
       Name: constructParam.reportName,
       Width: '0in',
       Layers: this.createLayer(constructParam.layers),
-      // CustomProperties: ,
       Page: this.createPage(constructParam.Page),
       DataSources: this.getDataSource(constructParam.dataSource),
       ReportSections: [
@@ -80,11 +79,7 @@ export class ReportService {
         Width: `${(item?.width || 99) * 0.0104166667}in`,
       }));
 
-    // this.createGroup(grid, header.TableRows);
-
-    // console.log(this.createGroup(grid));
-
-    // console.log(grid.collectionView.groups);
+    this.createFooter(grid);
 
     const table: Core.Rdl.Table = {
       Type: 'table' as 'table',
@@ -92,6 +87,7 @@ export class ReportService {
       TableColumns: columnWidth,
       Header: header,
       Details: this.createDetail(grid.columns),
+      // Footer: this.createFooter(grid.columns),
       Top: '0in',
       Height: '0.25in',
     };
@@ -113,8 +109,6 @@ export class ReportService {
       BackgroundColor: getComputedStyle(grid.columnHeaders.getCellElement(0, 0)).getPropertyValue('background-color'),
       TextAlign: 'Center',
     };
-
-    // console.log(getComputedStyle(grid.columnHeaders.getCellElement(0, 0)).getPropertyValue('background-color'));
 
     const firstRow = this.getHeaderRow(grid.columnHeaders.columns);
 
@@ -180,8 +174,6 @@ export class ReportService {
         ];
       }
 
-      // console.log(current);
-
       const cell = this.createCell(
         current.header || current.binding,
         rowType === rowTypeEnum.header ? 'textbox' : current.type,
@@ -229,7 +221,6 @@ export class ReportService {
   };
 
   private getHeaderRow = (columns: wjGrid.ColumnCollection) => {
-    // const firstRowArray = new Array(columns.length).fill(null)
     const firstRow = columns.map((item: any) => {
       if (item.level) {
         return item.parentGroup;
@@ -280,8 +271,6 @@ export class ReportService {
       BackgroundColor: getComputedStyle(grid.cells.getCellElement(0, 0)).getPropertyValue('background-color'),
     };
 
-    console.log(style);
-
     this.groupArray.forEach(item => {
       const aggregateRow = this.createAggregate(grid.columns, style);
       aggregateRow[0].Item.Value = `=Fields!${item}.Value`;
@@ -289,7 +278,6 @@ export class ReportService {
       let meetValue = false;
 
       const mergeRow = aggregateRow.map((item: any, index: number) => {
-        console.log(item);
         if (!item.Item.Value && !meetValue) {
           return null;
         }
@@ -308,8 +296,6 @@ export class ReportService {
         ...mergeRow[0].Item.Style,
         ...style,
       };
-
-      // console.log(mergeRow)
 
       groupRows.push({
         Group: {
@@ -343,28 +329,8 @@ export class ReportService {
       return 'default';
     });
 
-    console.log(aggregateRow);
-
     return this.createRow(aggregateRow, rowTypeEnum.group, style);
   };
-
-  // getBindingList = (header: any) => {
-  //   const bindingList: any[] = [];
-
-  //   for (let index = header.length - 1; index >= 0; index--) {
-  //     if (!bindingList.length) {
-  //       bindingList.push(...header[index].TableCells);
-  //     }
-
-  //     header[index].TableCells.forEach((item: any, cellIndex: number) => {
-  //       if (!bindingList[cellIndex] || bindingList[cellIndex].group) {
-  //         bindingList.splice(cellIndex, 1, item);
-  //       }
-  //     });
-  //   }
-
-  //   return bindingList;
-  // };
 
   private createDetail = (column: any) => {
     const detailRow = this.createRow(column, rowTypeEnum.detail);
@@ -410,5 +376,53 @@ export class ReportService {
     ];
 
     return dataType.find(item => item.key === key);
+  }
+
+  private createFooter(grid: wjGrid.FlexGrid) {
+    const aggregate = this.createAggregate(grid.columns, {});
+
+    const groupRows: any = [];
+
+    // console.log(getComputedStyle(grid.cells.getCellElement(0, 0)).getPropertyValue("background-color"));
+    const style = {
+      BackgroundColor: getComputedStyle(grid.cells.getCellElement(0, 0)).getPropertyValue('background-color'),
+    };
+
+    this.groupArray.forEach(item => {
+      const aggregateRow = this.createAggregate(grid.columns, style);
+
+      let meetValue = false;
+
+      const mergeRow = aggregateRow.map((item: any, index: number) => {
+        if (!item.Item.Value && !meetValue) {
+          return null;
+        }
+
+        if (index != 0) {
+          meetValue = true;
+        }
+
+        return item;
+      });
+
+      const colSpan = mergeRow.filter((item: any) => item === null).length;
+
+      mergeRow[0].ColSpan = colSpan + 1;
+      mergeRow[0].Item.Style = {
+        ...mergeRow[0].Item.Style,
+        ...style,
+      };
+
+      groupRows.push({
+        Header: {
+          TableRows: [
+            {
+              Height: '0.25in',
+              TableCells: mergeRow,
+            },
+          ],
+        },
+      });
+    });
   }
 }
