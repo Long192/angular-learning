@@ -22,7 +22,7 @@
     {
       "header": "Số lượng",
       "binding": "Quantity",
-      "width": 70,
+      "width": 65,
       "align": "right",
       "rowSpan": 2
     },
@@ -36,7 +36,7 @@
     },
     {
       "binding": "CheckBox",
-      "width": 70,
+      "width": 75,
       "align": "center",
       "rowSpan": 2,
       "type": "checkbox"

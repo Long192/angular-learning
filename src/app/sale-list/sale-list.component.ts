@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { setReport } from 'src/slices/ReportSlice';
 import { ReportService } from 'src/service/ReportService';
 import { Router } from '@angular/router';
+import { MergeManagerService } from 'src/service/MergeManagerService';
 
 @Component({
   selector: 'app-sale-report',
@@ -17,6 +18,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
   dataSource: any;
   column: any;
   hiddenButton = true;
+  groupCellElement!: HTMLElement;
 
   constructor(
     private router: Router,
@@ -36,11 +38,16 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
     const newRow = new wjGrid.GroupRow();
 
+    newRow.cssClassAll = 'grid-footer';
     newRow.align = 'right';
 
     this.reportGrid.columnFooters.rows.push(newRow);
+    this.reportGrid.columnFooters.setCellData(0, 0, 'Tổng cộng:');
 
-    this.reportGrid.autoSizeRows();
+    this.reportGrid.mergeManager = new MergeManagerService(
+      0,
+      this.reportGrid.columnFooters.columns.findIndex(item => item.aggregate) - 1
+    );
   }
 
   formatItem() {
@@ -55,13 +62,6 @@ export class SaleListComponent implements OnInit, OnDestroy {
     });
 
     this.reportGrid.groupHeaderFormat = '{value}';
-  }
-
-  addGridEvent() {
-    this.reportGrid.copied.addHandler((sender: wjCore.Control, event: wjCore.EventArgs) => {
-      console.log('controll', sender);
-      console.log('event', event);
-    });
   }
 
   getRandomDate(from: Date, to: Date) {
@@ -124,11 +124,22 @@ export class SaleListComponent implements OnInit, OnDestroy {
     };
   }
 
-  toReportPage() {
+  async toReportPage() {
+    this.reportGrid.scrollIntoView(0, 0);
+    this.reportGrid.isDisabled = true;
+
+    if (!this.reportGrid.cells.getCellElement(0, 0)) {
+      await this.sleep(1000);
+    }
+
     const report = new ReportService(this.reportGrid, {
       reportName: 'Sale Report',
       reportSectionName: 'Sale Report Section',
+      title: 'Phân tích bán hàng',
+      subTitle: 'ngày 06/11/2023',
       tableName: 'sale list',
+      companyName: 'CÔNG TY THƯƠNG MẠI BRAVO',
+      address: 'Tầng 7 tòa 311-313 Trường Chinh, Thanh Xuân, Hà Nội',
       Page: {
         PageHeight: '10in',
         PageWidth: '12.5in',
@@ -139,11 +150,16 @@ export class SaleListComponent implements OnInit, OnDestroy {
         dataSourceName: 'SaleData',
         data: this.dataSource,
       },
+      reportSectionWidth: '12in',
     });
 
     this.store.dispatch(setReport({ report: report.report }));
 
-    // this.router.navigate(['/sale-report']);
+    this.router.navigate(['/sale-report']);
+  }
+
+  async sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async ngOnInit() {
@@ -152,8 +168,8 @@ export class SaleListComponent implements OnInit, OnDestroy {
     await this.getColumn();
     this.initGrid();
     this.formatItem();
-    this.addGridEvent();
     this.reportGrid.endUpdate();
+    this.reportGrid.autoSizeRows();
     this.hiddenButton = false;
   }
 

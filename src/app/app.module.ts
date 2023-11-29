@@ -39,6 +39,7 @@ import { SaleListComponent } from './sale-list/sale-list.component';
 import { SaleReportComponent } from './sale-report/sale-report.component';
 import { ReportReducer } from 'src/slices/ReportSlice';
 import { ReportService } from 'src/service/ReportService';
+import { MergeManagerService } from 'src/service/MergeManagerService';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { ReportService } from 'src/service/ReportService';
     { provide: MAT_DATE_FORMATS, useValue: dateFormat },
     CustomValidationService,
     EmployeeService,
-    ReportService
+    ReportService,
+    MergeManagerService
   ],
   bootstrap: [AppComponent],
 })

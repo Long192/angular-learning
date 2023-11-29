@@ -42,7 +42,7 @@ $gray-600: #6c757d;
 .wj-cell.wj-header {
   background: cornsilk;
   justify-content: center !important;
-  &:not(.wj-align-right, .wj-align-left){
+  &:not(.grid-footer) {
     text-align: center;
   }
 }
@@ -64,4 +64,5 @@ $gray-600: #6c757d;
 
 .wj-cell.wj-group {
   background-color: wheat;
+  font-weight: bold;
 }

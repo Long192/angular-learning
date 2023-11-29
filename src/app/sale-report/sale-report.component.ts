@@ -30,7 +30,6 @@ export class SaleReportComponent implements OnInit {
       enable: true,
       action: () => {
         this.designerHidden = false;
-        
       },
     };
 
@@ -66,7 +65,7 @@ export class SaleReportComponent implements OnInit {
 
     this.designerHidden = true;
     this.reportViewer.open(report.definition);
-    
+
     return Promise.resolve();
   };
 
@@ -85,10 +84,6 @@ export class SaleReportComponent implements OnInit {
   };
 
   async ngOnInit() {
-    // const definition: any = await createReport('../../assets/saleReportColumn.json', 'sale report');
-
-    // console.log(definition);
-
     let definition;
     this.store
       .select(reportSelector)
@@ -101,11 +96,5 @@ export class SaleReportComponent implements OnInit {
         definition: definition,
       };
     }
-
-    // setTimeout(async () => {
-    //   const report = await this.reportDesigner.getReport();
-
-    //   console.log(report.definition);
-    // }, 5000);
   }
 }

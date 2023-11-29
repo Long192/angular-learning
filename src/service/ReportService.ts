@@ -12,7 +12,6 @@ export class ReportService {
 
   constructor(grid: wjGrid.FlexGrid, @Inject('constructParam') constructParam: constructorReportService) {
     this.report = this.createReport(grid, constructParam);
-    console.log(grid.collectionView.groups);
   }
 
   createReport = (grid: wjGrid.FlexGrid, constructParam: constructorReportService): Core.Rdl.Report => {
@@ -20,35 +19,103 @@ export class ReportService {
       Name: constructParam.reportName,
       Width: '0in',
       Layers: this.createLayer(constructParam.layers),
+      CustomProperties: [
+        {
+          Name: 'DisplayType',
+          Value: 'Page',
+        },
+        {
+          Name: 'SizeType',
+          Value: 'Default',
+        },
+        {
+          Name: 'PaperOrientation',
+          Value: 'Portrait',
+        },
+      ],
       Page: this.createPage(constructParam.Page),
       DataSources: this.getDataSource(constructParam.dataSource),
       ReportSections: [
         {
           Name: constructParam.reportSectionName,
           Type: 'Continuous' as 'Continuous',
+          Width: constructParam.reportSectionWidth,
           Page: this.createPage(constructParam.Page),
           Body: {
             Height: '1in',
-            ReportItems: [this.createTable(grid, constructParam.tableName)],
+            ReportItems: [
+              this.createTable(grid, constructParam.tableName),
+              this.createTextBox(
+                'Nguời lập',
+                { Left: '1.5098in', Top: '1.802in', Width: '1in', Height: '0.25in' },
+                {
+                  FontWeight: 'Bold',
+                  TextAlign: 'Center',
+                  VerticalAlign: 'Middle',
+                }
+              ),
+              this.createTextBox(
+                '(ký, họ tên)',
+                { Left: '1.5132in', Top: '2.0708in', Width: '1in', Height: '0.25in' },
+                {
+                  FontStyle: 'Italic',
+                  TextAlign: 'Center',
+                  VerticalAlign: 'Middle',
+                }
+              ),
+              this.createTextBox(
+                'Ngày ..... tháng ..... năm .....',
+                { Left: '7.9035in', Top: '1.5354in', Width: '2.7146in', Height: '0.25in' },
+                {
+                  FontStyle: 'Italic',
+                  TextAlign: 'Center',
+                  VerticalAlign: 'Middle',
+                }
+              ),
+              this.createTextBox(
+                'Kế toán trưởng',
+                { Left: '8.609in', Top: '1.7917in', Width: '1.2563in', Height: '0.25in' },
+                {
+                  FontWeight: 'Bold',
+                  TextAlign: 'Center',
+                  VerticalAlign: 'Middle',
+                }
+              ),
+              this.createTextBox(
+                '(Ký, họ tên)',
+                { Left: '8.7368in', Top: '2.0799in', Width: '1in', Height: '0.25in' },
+                {
+                  FontStyle: 'Italic',
+                  TextAlign: 'Center',
+                  VerticalAlign: 'Middle',
+                }
+              ),
+            ],
           },
-          PageHeader: {},
+          PageHeader: {
+            Height: '1.25in',
+            ReportItems: [
+              this.createTextBox(constructParam.companyName || '', { Width: '5in', Height: '0.25in' }, {}),
+              this.createTextBox(constructParam.address || '', { Top: '0.25in', Width: '5in', Height: '0.25in' }, {}),
+              this.createTextBox(
+                constructParam.title || '',
+                { Top: '0.5in', Width: '12in', Height: '0.4042in' },
+                { FontSize: '20pt', TextAlign: 'Center', VerticalAlign: 'Center' }
+              ),
+              this.createTextBox(
+                constructParam.subTitle || '',
+                { Top: '0.9201in', Width: '12in', Height: '0.25in' },
+                { TextAlign: 'Center', VerticalAlign: 'Center' }
+              ),
+            ],
+          },
           PageFooter: {
             ReportItems: [
-              {
-                Type: 'textbox',
-                Name: `textbox${++this.count}`,
-                Value: '="Trang " & Globals!PageNumber & " / " & Globals!TotalPages',
-                CanGrow: true,
-                KeepTogether: true,
-                Style: {
-                  PaddingLeft: '2pt',
-                  PaddingRight: '2pt',
-                  PaddingBottom: '2pt',
-                  PaddingTop: '2pt',
-                },
-                Width: '1in',
-                Height: '0.25in',
-              },
+              this.createTextBox(
+                '="Trang " & Globals!PageNumber & " / " & Globals!TotalPages',
+                { Width: '1in', Height: '0.25in' },
+                {}
+              ),
             ],
           },
         },
@@ -79,7 +146,7 @@ export class ReportService {
         Width: `${(item?.width || 99) * 0.0104166667}in`,
       }));
 
-    this.createFooter(grid);
+    // this.createFooter(grid);
 
     const table: Core.Rdl.Table = {
       Type: 'table' as 'table',
@@ -87,8 +154,8 @@ export class ReportService {
       TableColumns: columnWidth,
       Header: header,
       Details: this.createDetail(grid.columns),
-      // Footer: this.createFooter(grid.columns),
-      Top: '0in',
+      Footer: this.createFooter(grid),
+      Width: '0in',
       Height: '0.25in',
     };
 
@@ -105,8 +172,12 @@ export class ReportService {
       RepeatOnNewPage: true,
     };
 
+    const computedStyle = getComputedStyle(grid.columnHeaders.getCellElement(0, 0));
+
     const style = {
-      BackgroundColor: getComputedStyle(grid.columnHeaders.getCellElement(0, 0)).getPropertyValue('background-color'),
+      BackgroundColor: computedStyle.getPropertyValue('background-color'),
+      FontWeight: computedStyle.getPropertyValue('font-weight') ? 'Bold' : '',
+      Color: computedStyle.getPropertyValue('color') || 'Black',
       TextAlign: 'Center',
     };
 
@@ -130,8 +201,6 @@ export class ReportService {
           newRow.splice(item._rng.col, 1, item);
         });
 
-        // console.log(newROw)
-
         header.TableRows.push({
           Height: '0.25in',
           TableCells: this.createRow(newRow, rowTypeEnum.header, style),
@@ -144,8 +213,17 @@ export class ReportService {
 
   private createRow = (column: any[], rowType: string, style?: any) =>
     column.reduce((storage: any, current: any) => {
+      if (!current) {
+        return [...storage, null];
+      }
+
+      const cellStyle = {
+        ...style,
+        TextAlign: current.align,
+      };
+
       if (current === 'default') {
-        return [...storage, this.createCell('', '', style)];
+        return [...storage, this.createCell('', '', cellStyle)];
       }
 
       if (rowType === rowTypeEnum.detail) {
@@ -156,30 +234,25 @@ export class ReportService {
         return [
           ...storage,
           this.createCell(`=Fields!${current.binding}.Value`, current.type || 'textbox', {
-            ...style,
+            ...cellStyle,
             Format: this.getDataType(current.dataType)?.format || '',
           }),
         ];
       }
 
-      if (!current) {
-        return [...storage, null];
-      }
-
       if (current.aggregate && rowType === rowTypeEnum.group) {
-        // console.log(current);
         return [
           ...storage,
-          this.createCell(`=${this.getAggrateType(current.aggregate)}(Fields!${current.binding}.Value)`, '', style),
+          this.createCell(`=${this.getAggrateType(current.aggregate)}(Fields!${current.binding}.Value)`, '', cellStyle),
         ];
       }
 
       const cell = this.createCell(
         current.header || current.binding,
         rowType === rowTypeEnum.header ? 'textbox' : current.type,
-        style,
-        current._rng.col2 - current._rng.col + 1,
-        current._rng.row2 - current._rng.row + 1
+        rowType === rowTypeEnum.header ? style : cellStyle,
+        current._rng.col2 != current._rng.col ? current._rng.col2 - current._rng.col + 1 : 0,
+        current._rng.row2 != current._rng.row ? current._rng.row2 - current._rng.row + 1 : 0
       );
 
       return [...storage, cell];
@@ -193,6 +266,7 @@ export class ReportService {
         CanGrow: true,
         KeepTogether: true,
         Value: value || '',
+        Width: '0in',
         Style: {
           Border: {
             Style: 'Solid',
@@ -266,9 +340,12 @@ export class ReportService {
     this.processGroup(group);
     const groupRows: any = [];
 
-    // console.log(getComputedStyle(grid.cells.getCellElement(0, 0)).getPropertyValue("background-color"));
+    const computedStyle = getComputedStyle(grid.cells.getCellElement(0, 0));
+
     const style = {
-      BackgroundColor: getComputedStyle(grid.cells.getCellElement(0, 0)).getPropertyValue('background-color'),
+      BackgroundColor: computedStyle.getPropertyValue('background-color'),
+      FontWeight: computedStyle.getPropertyValue('font-weight') ? 'Bold' : '',
+      Color: computedStyle.getPropertyValue('color') || 'Black',
     };
 
     this.groupArray.forEach(item => {
@@ -379,50 +456,63 @@ export class ReportService {
   }
 
   private createFooter(grid: wjGrid.FlexGrid) {
-    const aggregate = this.createAggregate(grid.columns, {});
+    const computedStyle = getComputedStyle(grid.columnFooters.getCellElement(0, 0));
 
-    const groupRows: any = [];
-
-    // console.log(getComputedStyle(grid.cells.getCellElement(0, 0)).getPropertyValue("background-color"));
     const style = {
-      BackgroundColor: getComputedStyle(grid.cells.getCellElement(0, 0)).getPropertyValue('background-color'),
+      BackgroundColor: computedStyle.getPropertyValue('background-color'),
+      FontWeight: computedStyle.getPropertyValue('font-weight') ? 'Bold' : '',
     };
+    const aggregateRow = this.createAggregate(grid.columns, style);
 
-    this.groupArray.forEach(item => {
-      const aggregateRow = this.createAggregate(grid.columns, style);
+    // console.log(aggregateRow[0])
 
-      let meetValue = false;
+    let meetValue: any;
 
-      const mergeRow = aggregateRow.map((item: any, index: number) => {
-        if (!item.Item.Value && !meetValue) {
-          return null;
-        }
+    grid.columnFooters.columns.forEach((item: any, index) => {
+      if (grid.columnFooters.getCellData(0, index, true) && !aggregateRow[index].Item.Value) {
+        aggregateRow[index].Item.Value = grid.columnFooters.getCellData(0, index, true);
+      }
 
-        if (index != 0) {
-          meetValue = true;
-        }
+      if (grid.columnFooters.getCellData(0, index, true) && index != 0) {
+        meetValue = true;
+      }
 
-        return item;
-      });
+      if (!meetValue && index != 0) {
+        aggregateRow[index] = null;
+      }
 
-      const colSpan = mergeRow.filter((item: any) => item === null).length;
-
-      mergeRow[0].ColSpan = colSpan + 1;
-      mergeRow[0].Item.Style = {
-        ...mergeRow[0].Item.Style,
-        ...style,
-      };
-
-      groupRows.push({
-        Header: {
-          TableRows: [
-            {
-              Height: '0.25in',
-              TableCells: mergeRow,
-            },
-          ],
-        },
-      });
+      if (!meetValue) {
+        aggregateRow[0].ColSpan = index + 1;
+      }
     });
+
+    // console.log(grid.columnFooters.getCellData(0, 0, true));
+
+    return {
+      TableRows: [
+        {
+          Height: '0.25in',
+          TableCells: aggregateRow,
+        },
+      ],
+    };
+  }
+
+  private createTextBox(value: string, option: any, style: any) {
+    return {
+      Type: 'textbox',
+      Name: `TextBox${++this.count}`,
+      CanGrow: true,
+      KeepTogether: true,
+      Value: value,
+      Style: {
+        PaddingLeft: '2pt',
+        PaddingRight: '2pt',
+        PaddingTop: '2pt',
+        PaddingBottom: '2pt',
+        ...style,
+      },
+      ...option,
+    };
   }
 }
