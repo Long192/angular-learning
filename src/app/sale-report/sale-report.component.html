@@ -4,6 +4,6 @@
     </gc-activereports-designer>
   </div>
   <div id="viewer-host" [hidden]="!designerHidden">
-    <gc-activereports-viewer> </gc-activereports-viewer>
+    <gc-activereports-viewer (init)="onInitViewer()"> </gc-activereports-viewer>
   </div>
 </div>

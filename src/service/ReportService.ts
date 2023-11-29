@@ -291,6 +291,18 @@ export class ReportService {
       delete item.Item.Value;
     }
 
+    if (!item.ColSpan) {
+      delete item.ColSpan;
+    }
+
+    if (!item.RowSpan) {
+      delete item.RowSpan;
+    }
+
+    if (!item.Item.Style.Format) {
+      delete item.Item.Style.Format;
+    }
+
     return item;
   };
 

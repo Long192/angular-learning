@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { DesignerComponent, ViewerComponent } from '@grapecity/activereports-angular';
-import * as activeReportCore from '@grapecity/activereports';
+import { Core } from '@grapecity/activereports';
 import { createReport } from 'src/utils/createReportFunc';
 import { Store } from '@ngrx/store';
 import { reportSelector } from 'src/slices/ReportSlice';
@@ -14,13 +14,11 @@ export class SaleReportComponent implements OnInit {
   @ViewChild(DesignerComponent, { static: true }) reportDesigner!: DesignerComponent;
   @ViewChild(ViewerComponent, { static: true }) reportViewer!: ViewerComponent;
 
-  designerHidden = false;
+  designerHidden = true;
   firstPreview = true;
+  definition!: Core.Rdl.Report;
 
-  constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private store: Store<{ report: any }>
-  ) {}
+  constructor(private store: Store<{ report: any }>) {}
 
   updateToolbar() {
     const designButton = {
@@ -32,6 +30,8 @@ export class SaleReportComponent implements OnInit {
         this.designerHidden = false;
       },
     };
+
+    console.log(this.reportViewer);
 
     this.reportViewer.toolbar.addItem(designButton);
 
@@ -70,31 +70,25 @@ export class SaleReportComponent implements OnInit {
   };
 
   onSaveReport = (info: any) => {
-    console.log(JSON.stringify(info.definition));
-    // const reportId = info.id || `NewReport${++this.counter}`;
-    // this.reportStorage.set(reportId, info.definition);
+    // console.log(JSON.stringify(info.definition));
     return Promise.resolve({ displayName: 'report' });
   };
 
   onSaveAsReport = (info: any) => {
-    console.log(JSON.stringify(info.definition));
-    // const reportId = `NewReport${++this.counter}`;
-    // this.reportStorage.set(reportId, info.definition);
+    // console.log(JSON.stringify(info.definition));
     return Promise.resolve({ id: 'report', displayName: 'report' });
   };
 
-  async ngOnInit() {
-    let definition;
-    this.store
-      .select(reportSelector)
-      .subscribe((data: any) => (definition = data.report))
-      .unsubscribe();
+  onInitViewer() {
+    console.log('init View');
+    console.log(JSON.stringify(this.definition));
+    this.reportViewer.open(this.definition);
+  }
 
-    if (definition && Object.keys(definition).length) {
-      this.reportDesigner.report = {
-        displayName: 'saleReport',
-        definition: definition,
-      };
-    }
+  ngOnInit() {
+    this.store
+    .select(reportSelector)
+    .subscribe((data: any) => (this.definition = data.report))
+    .unsubscribe();
   }
 }
