@@ -171,6 +171,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
     this.reportGrid.endUpdate();
     this.reportGrid.autoSizeRows();
     this.hiddenButton = false;
+    // console.log(this.reportGrid.getMergedRange(this.reportGrid.columnFooters, 0, 0));
   }
 
   ngOnDestroy(): void {

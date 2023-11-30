@@ -19,20 +19,6 @@ export class ReportService {
       Name: constructParam.reportName,
       Width: '0in',
       Layers: this.createLayer(constructParam.layers),
-      CustomProperties: [
-        {
-          Name: 'DisplayType',
-          Value: 'Page',
-        },
-        {
-          Name: 'SizeType',
-          Value: 'Default',
-        },
-        {
-          Name: 'PaperOrientation',
-          Value: 'Portrait',
-        },
-      ],
       Page: this.createPage(constructParam.Page),
       DataSources: this.getDataSource(constructParam.dataSource),
       ReportSections: [
@@ -44,6 +30,18 @@ export class ReportService {
           Body: {
             Height: '1in',
             ReportItems: [
+              this.createTextBox(constructParam.companyName || '', { Width: '5in', Height: '0.25in' }, {}),
+              this.createTextBox(constructParam.address || '', { Top: '0.25in', Width: '5in', Height: '0.25in' }, {}),
+              this.createTextBox(
+                constructParam.title || '',
+                { Top: '0.5in', Width: '12in', Height: '0.4042in' },
+                { FontSize: '20pt', TextAlign: 'Center', VerticalAlign: 'Center' }
+              ),
+              this.createTextBox(
+                constructParam.subTitle || '',
+                { Top: '0.9201in', Width: '12in', Height: '0.25in' },
+                { TextAlign: 'Center', VerticalAlign: 'Center', FontStyle: 'Italic' }
+              ),
               this.createTable(grid, constructParam.tableName),
               this.createTextBox(
                 'Nguời lập',
@@ -89,23 +87,6 @@ export class ReportService {
                   TextAlign: 'Center',
                   VerticalAlign: 'Middle',
                 }
-              ),
-            ],
-          },
-          PageHeader: {
-            Height: '1.25in',
-            ReportItems: [
-              this.createTextBox(constructParam.companyName || '', { Width: '5in', Height: '0.25in' }, {}),
-              this.createTextBox(constructParam.address || '', { Top: '0.25in', Width: '5in', Height: '0.25in' }, {}),
-              this.createTextBox(
-                constructParam.title || '',
-                { Top: '0.5in', Width: '12in', Height: '0.4042in' },
-                { FontSize: '20pt', TextAlign: 'Center', VerticalAlign: 'Center' }
-              ),
-              this.createTextBox(
-                constructParam.subTitle || '',
-                { Top: '0.9201in', Width: '12in', Height: '0.25in' },
-                { TextAlign: 'Center', VerticalAlign: 'Center' }
               ),
             ],
           },
@@ -156,6 +137,7 @@ export class ReportService {
       Details: this.createDetail(grid.columns),
       Footer: this.createFooter(grid),
       Width: '0in',
+      Top: '1.25in',
       Height: '0.25in',
     };
 
@@ -360,36 +342,26 @@ export class ReportService {
       Color: computedStyle.getPropertyValue('color') || 'Black',
     };
 
-    this.groupArray.forEach(item => {
+    this.groupArray.forEach((groupItem, groupIndex) => {
       const aggregateRow = this.createAggregate(grid.columns, style);
-      aggregateRow[0].Item.Value = `=Fields!${item}.Value`;
-
-      let meetValue = false;
+      aggregateRow[0].Item.Value = `=Fields!${groupItem}.Value`;
 
       const mergeRow = aggregateRow.map((item: any, index: number) => {
-        if (!item.Item.Value && !meetValue) {
-          return null;
+        const mergeRange = grid.getMergedRange(grid.cells, groupIndex, index);
+        if (mergeRange?.columnSpan) {
+          item.ColSpan = mergeRange.columnSpan;
         }
-
-        if (index != 0) {
-          meetValue = true;
+        if (index > mergeRange?.col) {
+          return null;
         }
 
         return item;
       });
 
-      const colSpan = mergeRow.filter((item: any) => item === null).length;
-
-      mergeRow[0].ColSpan = colSpan + 1;
-      mergeRow[0].Item.Style = {
-        ...mergeRow[0].Item.Style,
-        ...style,
-      };
-
       groupRows.push({
         Group: {
-          Name: item,
-          GroupExpressions: [`=Fields!${item}.Value`],
+          Name: groupItem,
+          GroupExpressions: [`=Fields!${groupItem}.Value`],
         },
         Header: {
           TableRows: [
@@ -476,29 +448,21 @@ export class ReportService {
     };
     const aggregateRow = this.createAggregate(grid.columns, style);
 
-    // console.log(aggregateRow[0])
-
-    let meetValue: any;
-
     grid.columnFooters.columns.forEach((item: any, index) => {
-      if (grid.columnFooters.getCellData(0, index, true) && !aggregateRow[index].Item.Value) {
-        aggregateRow[index].Item.Value = grid.columnFooters.getCellData(0, index, true);
-      }
+      const mergeRange = grid.getMergedRange(grid.columnFooters, 0, index);
 
-      if (grid.columnFooters.getCellData(0, index, true) && index != 0) {
-        meetValue = true;
-      }
-
-      if (!meetValue && index != 0) {
+      if (mergeRange.col < index) {
         aggregateRow[index] = null;
       }
 
-      if (!meetValue) {
-        aggregateRow[0].ColSpan = index + 1;
+      if (aggregateRow[index] && mergeRange.columnSpan) {
+        aggregateRow[index].ColSpan = mergeRange.columnSpan;
+      }
+
+      if (grid.columnFooters.getCellData(0, index, true) && !aggregateRow[index].Item.Value) {
+        aggregateRow[index].Item.Value = grid.columnFooters.getCellData(0, index, true);
       }
     });
-
-    // console.log(grid.columnFooters.getCellData(0, 0, true));
 
     return {
       TableRows: [

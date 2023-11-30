@@ -28,10 +28,12 @@ export class SaleReportComponent implements OnInit {
       enable: true,
       action: () => {
         this.designerHidden = false;
+        this.reportDesigner.report = {
+          definition: this.definition,
+          displayName: 'report',
+        };
       },
     };
-
-    console.log(this.reportViewer);
 
     this.reportViewer.toolbar.addItem(designButton);
 
@@ -70,25 +72,24 @@ export class SaleReportComponent implements OnInit {
   };
 
   onSaveReport = (info: any) => {
-    // console.log(JSON.stringify(info.definition));
+    console.log(JSON.stringify(info.definition));
     return Promise.resolve({ displayName: 'report' });
   };
 
   onSaveAsReport = (info: any) => {
-    // console.log(JSON.stringify(info.definition));
+    console.log(JSON.stringify(info.definition));
     return Promise.resolve({ id: 'report', displayName: 'report' });
   };
 
   onInitViewer() {
-    console.log('init View');
-    console.log(JSON.stringify(this.definition));
+    this.updateToolbar();
     this.reportViewer.open(this.definition);
   }
 
   ngOnInit() {
     this.store
-    .select(reportSelector)
-    .subscribe((data: any) => (this.definition = data.report))
-    .unsubscribe();
+      .select(reportSelector)
+      .subscribe((data: any) => (this.definition = data.report))
+      .unsubscribe();
   }
 }
