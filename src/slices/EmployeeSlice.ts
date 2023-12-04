@@ -23,7 +23,6 @@ export const EmployeeReducer = createReducer(
     };
   }),
   on(getEmployeeSuccess, (state, { data }) => {
-    console.log(data);
     return {
       ...state,
       employeeList: data,

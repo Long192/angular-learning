@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { DesignerComponent, ViewerComponent } from '@grapecity/activereports-angular';
 import { Core } from '@grapecity/activereports';
-import { createReport } from 'src/utils/createReportFunc';
 import { Store } from '@ngrx/store';
 import { reportSelector } from 'src/slices/ReportSlice';
 

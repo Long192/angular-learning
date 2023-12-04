@@ -31,9 +31,7 @@ export class CustomValidationService {
 
     if (control && control.errors) {
       for (const errorKey in control.errors) {
-        console.log(errorKey);
         if (control.errors.hasOwnProperty(errorKey)) {
-          console.log(this.getMessage(controlName, errorKey));
           errorMessages.push(this.getMessage(controlName, errorKey));
         }
       }

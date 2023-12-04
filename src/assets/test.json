@@ -1,24 +1,11 @@
 {
   "Name": "Sale Report",
   "Width": "0in",
-  "Layers": [
-    {
-      "Name": "default"
-    }
-  ],
+  "Layers": [{ "Name": "default" }],
   "CustomProperties": [
-    {
-      "Name": "DisplayType",
-      "Value": "Page"
-    },
-    {
-      "Name": "SizeType",
-      "Value": "Default"
-    },
-    {
-      "Name": "PaperOrientation",
-      "Value": "Portrait"
-    }
+    { "Name": "DisplayType", "Value": "Page" },
+    { "Name": "SizeType", "Value": "Default" },
+    { "Name": "PaperOrientation", "Value": "Portrait" }
   ],
   "Page": {
     "PageWidth": "12.5in",
@@ -54,43 +41,33 @@
         "ColumnSpacing": "0in"
       },
       "Width": "12in",
-      "PageHeader": {
-        "Height": "1.25in",
+      "Body": {
+        "Height": "2.3299in",
         "ReportItems": [
           {
             "Type": "textbox",
-            "Name": "TextBox56",
+            "Name": "TextBox2",
             "CanGrow": true,
             "KeepTogether": true,
             "Value": "CÔNG TY THƯƠNG MẠI BRAVO",
-            "Style": {
-              "PaddingLeft": "2pt",
-              "PaddingRight": "2pt",
-              "PaddingTop": "2pt",
-              "PaddingBottom": "2pt"
-            },
+            "Style": { "PaddingLeft": "2pt", "PaddingRight": "2pt", "PaddingTop": "2pt", "PaddingBottom": "2pt" },
             "Width": "5in",
             "Height": "0.25in"
           },
           {
             "Type": "textbox",
-            "Name": "TextBox57",
+            "Name": "TextBox3",
             "CanGrow": true,
             "KeepTogether": true,
             "Value": "Tầng 7 tòa 311-313 Trường Chinh, Thanh Xuân, Hà Nội",
-            "Style": {
-              "PaddingLeft": "2pt",
-              "PaddingRight": "2pt",
-              "PaddingTop": "2pt",
-              "PaddingBottom": "2pt"
-            },
+            "Style": { "PaddingLeft": "2pt", "PaddingRight": "2pt", "PaddingTop": "2pt", "PaddingBottom": "2pt" },
             "Top": "0.25in",
             "Width": "5in",
             "Height": "0.25in"
           },
           {
             "Type": "textbox",
-            "Name": "TextBox58",
+            "Name": "TextBox4",
             "CanGrow": true,
             "KeepTogether": true,
             "Value": "Phân tích bán hàng",
@@ -104,70 +81,42 @@
             },
             "Top": "0.5in",
             "Width": "12in",
-            "Height": "0.4042in"
+            "Height": "0.4598in"
           },
           {
             "Type": "textbox",
-            "Name": "TextBox59",
+            "Name": "TextBox5",
             "CanGrow": true,
             "KeepTogether": true,
             "Value": "ngày 06/11/2023",
             "Style": {
+              "FontStyle": "Italic",
               "PaddingLeft": "2pt",
               "PaddingRight": "2pt",
               "PaddingTop": "2pt",
               "PaddingBottom": "2pt",
               "TextAlign": "Center"
             },
-            "Top": "0.9201in",
+            "Top": "0.9757in",
             "Width": "12in",
             "Height": "0.25in"
-          }
-        ]
-      },
-      "Body": {
-        "Height": "1in",
-        "ReportItems": [
+          },
           {
             "Type": "table",
             "Name": "sale list",
             "TableColumns": [
-              {
-                "Width": "0.729166669in"
-              },
-              {
-                "Width": "2.0312500065in"
-              },
-              {
-                "Width": "0.625000002in"
-              },
-              {
-                "Width": "0.6770833355in"
-              },
-              {
-                "Width": "0.937500003in"
-              },
-              {
-                "Width": "0.7812500025in"
-              },
-              {
-                "Width": "1.0312500033in"
-              },
-              {
-                "Width": "1.0312500033in"
-              },
-              {
-                "Width": "1.0312500033in"
-              },
-              {
-                "Width": "1.0312500033in"
-              },
-              {
-                "Width": "1.0312500033in"
-              },
-              {
-                "Width": "1.0312500033in"
-              }
+              { "Width": "0.729166669in" },
+              { "Width": "2.0312500065in" },
+              { "Width": "0.625000002in" },
+              { "Width": "0.6770833355in" },
+              { "Width": "0.937500003in" },
+              { "Width": "0.7812500025in" },
+              { "Width": "1.0312500033in" },
+              { "Width": "1.0312500033in" },
+              { "Width": "1.0312500033in" },
+              { "Width": "1.0312500033in" },
+              { "Width": "1.0312500033in" },
+              { "Width": "1.0312500033in" }
             ],
             "Header": {
               "TableRows": [
@@ -177,122 +126,12 @@
                     {
                       "Item": {
                         "Type": "textbox",
-                        "Name": "textbox2",
+                        "Name": "textbox6",
                         "CanGrow": true,
                         "KeepTogether": true,
                         "Value": "Mã số",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
-                          "FontWeight": "Bold",
-                          "PaddingLeft": "2pt",
-                          "PaddingRight": "2pt",
-                          "PaddingTop": "2pt",
-                          "PaddingBottom": "2pt",
-                          "Color": "rgb(68, 68, 68)",
-                          "Format": "n0",
-                          "TextAlign": "Center",
-                          "VerticalAlign": "Middle",
-                          "BackgroundColor": "rgb(255, 248, 220)"
-                        },
-                        "Width": "0in",
-                        "Height": "0.25in"
-                      },
-                      "RowSpan": 2
-                    },
-                    {
-                      "Item": {
-                        "Type": "textbox",
-                        "Name": "textbox3",
-                        "CanGrow": true,
-                        "KeepTogether": true,
-                        "Value": "Chỉ tiêu",
-                        "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
-                          "FontWeight": "Bold",
-                          "PaddingLeft": "2pt",
-                          "PaddingRight": "2pt",
-                          "PaddingTop": "2pt",
-                          "PaddingBottom": "2pt",
-                          "Color": "rgb(68, 68, 68)",
-                          "Format": "n0",
-                          "TextAlign": "Center",
-                          "VerticalAlign": "Middle",
-                          "BackgroundColor": "rgb(255, 248, 220)"
-                        },
-                        "Width": "0in",
-                        "Height": "0.25in"
-                      },
-                      "RowSpan": 2
-                    },
-                    {
-                      "Item": {
-                        "Type": "textbox",
-                        "Name": "textbox4",
-                        "CanGrow": true,
-                        "KeepTogether": true,
-                        "Value": "Dvt",
-                        "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
-                          "FontWeight": "Bold",
-                          "PaddingLeft": "2pt",
-                          "PaddingRight": "2pt",
-                          "PaddingTop": "2pt",
-                          "PaddingBottom": "2pt",
-                          "Color": "rgb(68, 68, 68)",
-                          "Format": "n0",
-                          "TextAlign": "Center",
-                          "VerticalAlign": "Middle",
-                          "BackgroundColor": "rgb(255, 248, 220)"
-                        },
-                        "Width": "0in",
-                        "Height": "0.25in"
-                      },
-                      "RowSpan": 2
-                    },
-                    {
-                      "Item": {
-                        "Type": "textbox",
-                        "Name": "textbox5",
-                        "CanGrow": true,
-                        "KeepTogether": true,
-                        "Value": "Số lượng",
-                        "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
-                          "FontWeight": "Bold",
-                          "PaddingLeft": "2pt",
-                          "PaddingRight": "2pt",
-                          "PaddingTop": "2pt",
-                          "PaddingBottom": "2pt",
-                          "Color": "rgb(68, 68, 68)",
-                          "Format": "n0",
-                          "TextAlign": "Center",
-                          "VerticalAlign": "Middle",
-                          "BackgroundColor": "rgb(255, 248, 220)"
-                        },
-                        "Width": "0in",
-                        "Height": "0.25in"
-                      },
-                      "RowSpan": 2
-                    },
-                    {
-                      "Item": {
-                        "Type": "textbox",
-                        "Name": "textbox6",
-                        "CanGrow": true,
-                        "KeepTogether": true,
-                        "Value": "Date",
-                        "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -315,11 +154,9 @@
                         "Name": "textbox7",
                         "CanGrow": true,
                         "KeepTogether": true,
-                        "Value": "CheckBox",
+                        "Value": "Chỉ tiêu",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -342,11 +179,9 @@
                         "Name": "textbox8",
                         "CanGrow": true,
                         "KeepTogether": true,
-                        "Value": "Doanh số (chưa thuế)",
+                        "Value": "Dvt",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -369,11 +204,9 @@
                         "Name": "textbox9",
                         "CanGrow": true,
                         "KeepTogether": true,
-                        "Value": "Tiền thanh toán",
+                        "Value": "Số lượng",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -388,21 +221,17 @@
                         "Width": "0in",
                         "Height": "0.25in"
                       },
-                      "ColSpan": 3
+                      "RowSpan": 2
                     },
-                    null,
-                    null,
                     {
                       "Item": {
                         "Type": "textbox",
                         "Name": "textbox10",
                         "CanGrow": true,
                         "KeepTogether": true,
-                        "Value": "Lãi gộp (Doanh số - tiền vốn)",
+                        "Value": "Date",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -425,11 +254,111 @@
                         "Name": "textbox11",
                         "CanGrow": true,
                         "KeepTogether": true,
+                        "Value": "CheckBox",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "FontWeight": "Bold",
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Color": "rgb(68, 68, 68)",
+                          "Format": "n0",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle",
+                          "BackgroundColor": "rgb(255, 248, 220)"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      },
+                      "RowSpan": 2
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textbox12",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "Doanh số (chưa thuế)",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "FontWeight": "Bold",
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Color": "rgb(68, 68, 68)",
+                          "Format": "n0",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle",
+                          "BackgroundColor": "rgb(255, 248, 220)"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      },
+                      "RowSpan": 2
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textbox13",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "Tiền thanh toán",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "FontWeight": "Bold",
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Color": "rgb(68, 68, 68)",
+                          "Format": "n0",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle",
+                          "BackgroundColor": "rgb(255, 248, 220)"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      },
+                      "ColSpan": 3
+                    },
+                    null,
+                    null,
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textbox14",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "Lãi gộp (Doanh số - tiền vốn)",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "FontWeight": "Bold",
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Color": "rgb(68, 68, 68)",
+                          "Format": "n0",
+                          "TextAlign": "Center",
+                          "VerticalAlign": "Middle",
+                          "BackgroundColor": "rgb(255, 248, 220)"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      },
+                      "RowSpan": 2
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textbox15",
+                        "CanGrow": true,
+                        "KeepTogether": true,
                         "Value": "Chiết khấu",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -461,14 +390,12 @@
                     {
                       "Item": {
                         "Type": "textbox",
-                        "Name": "textbox12",
+                        "Name": "textbox16",
                         "CanGrow": true,
                         "KeepTogether": true,
                         "Value": "Tổng cộng",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -487,14 +414,12 @@
                     {
                       "Item": {
                         "Type": "textbox",
-                        "Name": "textbox13",
+                        "Name": "textbox17",
                         "CanGrow": true,
                         "KeepTogether": true,
                         "Value": "Thu tiền ngay",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -513,14 +438,12 @@
                     {
                       "Item": {
                         "Type": "textbox",
-                        "Name": "textbox14",
+                        "Name": "textbox18",
                         "CanGrow": true,
                         "KeepTogether": true,
                         "Value": "Công nợ",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -545,12 +468,7 @@
             },
             "TableGroups": [
               {
-                "Group": {
-                  "Name": "SubTotalName",
-                  "GroupExpressions": [
-                    "=Fields!SubTotalName.Value"
-                  ]
-                },
+                "Group": { "Name": "SubTotalName", "GroupExpressions": ["=Fields!SubTotalName.Value"] },
                 "Header": {
                   "TableRows": [
                     {
@@ -559,14 +477,12 @@
                         {
                           "Item": {
                             "Type": "textbox",
-                            "Name": "textBox39",
+                            "Name": "textBox43",
                             "CanGrow": true,
                             "KeepTogether": true,
                             "Value": "=Fields!SubTotalName.Value",
                             "Style": {
-                              "Border": {
-                                "Style": "Solid"
-                              },
+                              "Border": { "Style": "Solid" },
                               "FontWeight": "Bold",
                               "PaddingLeft": "2pt",
                               "PaddingRight": "2pt",
@@ -590,114 +506,12 @@
                         {
                           "Item": {
                             "Type": "textbox",
-                            "Name": "textBox45",
+                            "Name": "textBox49",
                             "CanGrow": true,
                             "KeepTogether": true,
                             "Value": "=Sum(Fields!Amount2.Value)",
                             "Style": {
-                              "Border": {
-                                "Style": "Solid"
-                              },
-                              "FontWeight": "Bold",
-                              "PaddingLeft": "2pt",
-                              "PaddingRight": "2pt",
-                              "PaddingTop": "2pt",
-                              "PaddingBottom": "2pt",
-                              "Color": "rgb(68, 68, 68)",
-                              "Format": "n0",
-                              "VerticalAlign": "Middle",
-                              "BackgroundColor": "rgb(245, 222, 179)"
-                            },
-                            "Width": "0in",
-                            "Height": "0.25in"
-                          }
-                        },
-                        {
-                          "Item": {
-                            "Type": "textbox",
-                            "Name": "textBox46",
-                            "CanGrow": true,
-                            "KeepTogether": true,
-                            "Value": "=Sum(Fields!TotalAmount.Value)",
-                            "Style": {
-                              "Border": {
-                                "Style": "Solid"
-                              },
-                              "FontWeight": "Bold",
-                              "PaddingLeft": "2pt",
-                              "PaddingRight": "2pt",
-                              "PaddingTop": "2pt",
-                              "PaddingBottom": "2pt",
-                              "Color": "rgb(68, 68, 68)",
-                              "Format": "n0",
-                              "VerticalAlign": "Middle",
-                              "BackgroundColor": "rgb(245, 222, 179)"
-                            },
-                            "Width": "0in",
-                            "Height": "0.25in"
-                          }
-                        },
-                        {
-                          "Item": {
-                            "Type": "textbox",
-                            "Name": "textBox47",
-                            "CanGrow": true,
-                            "KeepTogether": true,
-                            "Value": "=Sum(Fields!Amount111.Value)",
-                            "Style": {
-                              "Border": {
-                                "Style": "Solid"
-                              },
-                              "FontWeight": "Bold",
-                              "PaddingLeft": "2pt",
-                              "PaddingRight": "2pt",
-                              "PaddingTop": "2pt",
-                              "PaddingBottom": "2pt",
-                              "Color": "rgb(68, 68, 68)",
-                              "Format": "n0",
-                              "VerticalAlign": "Middle",
-                              "BackgroundColor": "rgb(245, 222, 179)"
-                            },
-                            "Width": "0in",
-                            "Height": "0.25in"
-                          }
-                        },
-                        {
-                          "Item": {
-                            "Type": "textbox",
-                            "Name": "textBox48",
-                            "CanGrow": true,
-                            "KeepTogether": true,
-                            "Value": "=Sum(Fields!Amount131.Value)",
-                            "Style": {
-                              "Border": {
-                                "Style": "Solid"
-                              },
-                              "FontWeight": "Bold",
-                              "PaddingLeft": "2pt",
-                              "PaddingRight": "2pt",
-                              "PaddingTop": "2pt",
-                              "PaddingBottom": "2pt",
-                              "Color": "rgb(68, 68, 68)",
-                              "Format": "n0",
-                              "VerticalAlign": "Middle",
-                              "BackgroundColor": "rgb(245, 222, 179)"
-                            },
-                            "Width": "0in",
-                            "Height": "0.25in"
-                          }
-                        },
-                        {
-                          "Item": {
-                            "Type": "textbox",
-                            "Name": "textBox49",
-                            "CanGrow": true,
-                            "KeepTogether": true,
-                            "Value": "=Sum(Fields!Profit.Value)",
-                            "Style": {
-                              "Border": {
-                                "Style": "Solid"
-                              },
+                              "Border": { "Style": "Solid" },
                               "FontWeight": "Bold",
                               "PaddingLeft": "2pt",
                               "PaddingRight": "2pt",
@@ -718,11 +532,101 @@
                             "Name": "textBox50",
                             "CanGrow": true,
                             "KeepTogether": true,
+                            "Value": "=Sum(Fields!TotalAmount.Value)",
+                            "Style": {
+                              "Border": { "Style": "Solid" },
+                              "FontWeight": "Bold",
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt",
+                              "Color": "rgb(68, 68, 68)",
+                              "Format": "n0",
+                              "VerticalAlign": "Middle",
+                              "BackgroundColor": "rgb(245, 222, 179)"
+                            },
+                            "Width": "0in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "textBox51",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Value": "=Sum(Fields!Amount111.Value)",
+                            "Style": {
+                              "Border": { "Style": "Solid" },
+                              "FontWeight": "Bold",
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt",
+                              "Color": "rgb(68, 68, 68)",
+                              "Format": "n0",
+                              "VerticalAlign": "Middle",
+                              "BackgroundColor": "rgb(245, 222, 179)"
+                            },
+                            "Width": "0in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "textBox52",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Value": "=Sum(Fields!Amount131.Value)",
+                            "Style": {
+                              "Border": { "Style": "Solid" },
+                              "FontWeight": "Bold",
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt",
+                              "Color": "rgb(68, 68, 68)",
+                              "Format": "n0",
+                              "VerticalAlign": "Middle",
+                              "BackgroundColor": "rgb(245, 222, 179)"
+                            },
+                            "Width": "0in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "textBox53",
+                            "CanGrow": true,
+                            "KeepTogether": true,
+                            "Value": "=Sum(Fields!Profit.Value)",
+                            "Style": {
+                              "Border": { "Style": "Solid" },
+                              "FontWeight": "Bold",
+                              "PaddingLeft": "2pt",
+                              "PaddingRight": "2pt",
+                              "PaddingTop": "2pt",
+                              "PaddingBottom": "2pt",
+                              "Color": "rgb(68, 68, 68)",
+                              "Format": "n0",
+                              "VerticalAlign": "Middle",
+                              "BackgroundColor": "rgb(245, 222, 179)"
+                            },
+                            "Width": "0in",
+                            "Height": "0.25in"
+                          }
+                        },
+                        {
+                          "Item": {
+                            "Type": "textbox",
+                            "Name": "textBox54",
+                            "CanGrow": true,
+                            "KeepTogether": true,
                             "Value": "=Sum(Fields!DiscountAmount.Value)",
                             "Style": {
-                              "Border": {
-                                "Style": "Solid"
-                              },
+                              "Border": { "Style": "Solid" },
                               "FontWeight": "Bold",
                               "PaddingLeft": "2pt",
                               "PaddingRight": "2pt",
@@ -751,14 +655,12 @@
                     {
                       "Item": {
                         "Type": "textbox",
-                        "Name": "textbox15",
+                        "Name": "textbox19",
                         "CanGrow": true,
                         "KeepTogether": true,
                         "Value": "=Fields!GroupCode.Value",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
                           "PaddingTop": "2pt",
@@ -773,14 +675,12 @@
                     {
                       "Item": {
                         "Type": "textbox",
-                        "Name": "textbox16",
+                        "Name": "textbox20",
                         "CanGrow": true,
                         "KeepTogether": true,
                         "Value": "=Fields!GroupName.Value",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
                           "PaddingTop": "2pt",
@@ -794,14 +694,12 @@
                     {
                       "Item": {
                         "Type": "textbox",
-                        "Name": "textbox17",
+                        "Name": "textbox21",
                         "CanGrow": true,
                         "KeepTogether": true,
                         "Value": "=Fields!Unit.Value",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
                           "PaddingTop": "2pt",
@@ -815,14 +713,12 @@
                     {
                       "Item": {
                         "Type": "textbox",
-                        "Name": "textbox18",
+                        "Name": "textbox22",
                         "CanGrow": true,
                         "KeepTogether": true,
                         "Value": "=Fields!Quantity.Value",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
                           "PaddingTop": "2pt",
@@ -838,14 +734,12 @@
                     {
                       "Item": {
                         "Type": "textbox",
-                        "Name": "textbox19",
+                        "Name": "textbox23",
                         "CanGrow": true,
                         "KeepTogether": true,
                         "Value": "=Fields!Date.Value",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
                           "PaddingTop": "2pt",
@@ -861,13 +755,11 @@
                     {
                       "Item": {
                         "Type": "checkbox",
-                        "Name": "checkbox20",
+                        "Name": "checkbox24",
                         "CheckAlignment": "MiddleCenter",
                         "Checked": "=Fields!CheckBox.Value",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
                           "PaddingTop": "2pt",
@@ -880,102 +772,12 @@
                     {
                       "Item": {
                         "Type": "textbox",
-                        "Name": "textbox21",
+                        "Name": "textbox25",
                         "CanGrow": true,
                         "KeepTogether": true,
                         "Value": "=Fields!Amount2.Value",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
-                          "PaddingLeft": "2pt",
-                          "PaddingRight": "2pt",
-                          "PaddingTop": "2pt",
-                          "PaddingBottom": "2pt",
-                          "Format": "n0",
-                          "VerticalAlign": "Middle"
-                        },
-                        "Width": "0in",
-                        "Height": "0.25in"
-                      }
-                    },
-                    {
-                      "Item": {
-                        "Type": "textbox",
-                        "Name": "textbox22",
-                        "CanGrow": true,
-                        "KeepTogether": true,
-                        "Value": "=Fields!TotalAmount.Value",
-                        "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
-                          "PaddingLeft": "2pt",
-                          "PaddingRight": "2pt",
-                          "PaddingTop": "2pt",
-                          "PaddingBottom": "2pt",
-                          "Format": "n0",
-                          "VerticalAlign": "Middle"
-                        },
-                        "Width": "0in",
-                        "Height": "0.25in"
-                      }
-                    },
-                    {
-                      "Item": {
-                        "Type": "textbox",
-                        "Name": "textbox23",
-                        "CanGrow": true,
-                        "KeepTogether": true,
-                        "Value": "=Fields!Amount111.Value",
-                        "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
-                          "PaddingLeft": "2pt",
-                          "PaddingRight": "2pt",
-                          "PaddingTop": "2pt",
-                          "PaddingBottom": "2pt",
-                          "Format": "n0",
-                          "VerticalAlign": "Middle"
-                        },
-                        "Width": "0in",
-                        "Height": "0.25in"
-                      }
-                    },
-                    {
-                      "Item": {
-                        "Type": "textbox",
-                        "Name": "textbox24",
-                        "CanGrow": true,
-                        "KeepTogether": true,
-                        "Value": "=Fields!Amount131.Value",
-                        "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
-                          "PaddingLeft": "2pt",
-                          "PaddingRight": "2pt",
-                          "PaddingTop": "2pt",
-                          "PaddingBottom": "2pt",
-                          "Format": "n0",
-                          "VerticalAlign": "Middle"
-                        },
-                        "Width": "0in",
-                        "Height": "0.25in"
-                      }
-                    },
-                    {
-                      "Item": {
-                        "Type": "textbox",
-                        "Name": "textbox25",
-                        "CanGrow": true,
-                        "KeepTogether": true,
-                        "Value": "=Fields!Profit.Value",
-                        "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
                           "PaddingTop": "2pt",
@@ -993,11 +795,89 @@
                         "Name": "textbox26",
                         "CanGrow": true,
                         "KeepTogether": true,
+                        "Value": "=Fields!TotalAmount.Value",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Format": "n0",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textbox27",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!Amount111.Value",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Format": "n0",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textbox28",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!Amount131.Value",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Format": "n0",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textbox29",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Fields!Profit.Value",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Format": "n0",
+                          "VerticalAlign": "Middle"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textbox30",
+                        "CanGrow": true,
+                        "KeepTogether": true,
                         "Value": "=Fields!DiscountAmount.Value",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
                           "PaddingTop": "2pt",
@@ -1021,14 +901,12 @@
                     {
                       "Item": {
                         "Type": "textbox",
-                        "Name": "textBox27",
+                        "Name": "textBox31",
                         "CanGrow": true,
                         "KeepTogether": true,
                         "Value": "Tổng cộng:",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -1047,90 +925,14 @@
                     null,
                     null,
                     null,
-                    null,
-                    {
-                      "Item": {
-                        "Type": "textbox",
-                        "Name": "textBox33",
-                        "CanGrow": true,
-                        "KeepTogether": true,
-                        "Value": "=Sum(Fields!Amount2.Value)",
-                        "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
-                          "FontWeight": "Bold",
-                          "PaddingLeft": "2pt",
-                          "PaddingRight": "2pt",
-                          "PaddingTop": "2pt",
-                          "PaddingBottom": "2pt",
-                          "Format": "n0",
-                          "VerticalAlign": "Middle",
-                          "BackgroundColor": "rgb(255, 248, 220)"
-                        },
-                        "Width": "0in",
-                        "Height": "0.25in"
-                      }
-                    },
-                    {
-                      "Item": {
-                        "Type": "textbox",
-                        "Name": "textBox34",
-                        "CanGrow": true,
-                        "KeepTogether": true,
-                        "Value": "=Sum(Fields!TotalAmount.Value)",
-                        "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
-                          "FontWeight": "Bold",
-                          "PaddingLeft": "2pt",
-                          "PaddingRight": "2pt",
-                          "PaddingTop": "2pt",
-                          "PaddingBottom": "2pt",
-                          "Format": "n0",
-                          "VerticalAlign": "Middle",
-                          "BackgroundColor": "rgb(255, 248, 220)"
-                        },
-                        "Width": "0in",
-                        "Height": "0.25in"
-                      }
-                    },
-                    {
-                      "Item": {
-                        "Type": "textbox",
-                        "Name": "textBox35",
-                        "CanGrow": true,
-                        "KeepTogether": true,
-                        "Value": "=Sum(Fields!Amount111.Value)",
-                        "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
-                          "FontWeight": "Bold",
-                          "PaddingLeft": "2pt",
-                          "PaddingRight": "2pt",
-                          "PaddingTop": "2pt",
-                          "PaddingBottom": "2pt",
-                          "Format": "n0",
-                          "VerticalAlign": "Middle",
-                          "BackgroundColor": "rgb(255, 248, 220)"
-                        },
-                        "Width": "0in",
-                        "Height": "0.25in"
-                      }
-                    },
                     {
                       "Item": {
                         "Type": "textbox",
                         "Name": "textBox36",
                         "CanGrow": true,
                         "KeepTogether": true,
-                        "Value": "=Sum(Fields!Amount131.Value)",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -1150,11 +952,9 @@
                         "Name": "textBox37",
                         "CanGrow": true,
                         "KeepTogether": true,
-                        "Value": "=Sum(Fields!Profit.Value)",
+                        "Value": "=Sum(Fields!Amount2.Value)",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -1174,11 +974,97 @@
                         "Name": "textBox38",
                         "CanGrow": true,
                         "KeepTogether": true,
+                        "Value": "=Sum(Fields!TotalAmount.Value)",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "FontWeight": "Bold",
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Format": "n0",
+                          "VerticalAlign": "Middle",
+                          "BackgroundColor": "rgb(255, 248, 220)"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textBox39",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Sum(Fields!Amount111.Value)",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "FontWeight": "Bold",
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Format": "n0",
+                          "VerticalAlign": "Middle",
+                          "BackgroundColor": "rgb(255, 248, 220)"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textBox40",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Sum(Fields!Amount131.Value)",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "FontWeight": "Bold",
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Format": "n0",
+                          "VerticalAlign": "Middle",
+                          "BackgroundColor": "rgb(255, 248, 220)"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textBox41",
+                        "CanGrow": true,
+                        "KeepTogether": true,
+                        "Value": "=Sum(Fields!Profit.Value)",
+                        "Style": {
+                          "Border": { "Style": "Solid" },
+                          "FontWeight": "Bold",
+                          "PaddingLeft": "2pt",
+                          "PaddingRight": "2pt",
+                          "PaddingTop": "2pt",
+                          "PaddingBottom": "2pt",
+                          "Format": "n0",
+                          "VerticalAlign": "Middle",
+                          "BackgroundColor": "rgb(255, 248, 220)"
+                        },
+                        "Width": "0in",
+                        "Height": "0.25in"
+                      }
+                    },
+                    {
+                      "Item": {
+                        "Type": "textbox",
+                        "Name": "textBox42",
+                        "CanGrow": true,
+                        "KeepTogether": true,
                         "Value": "=Sum(Fields!DiscountAmount.Value)",
                         "Style": {
-                          "Border": {
-                            "Style": "Solid"
-                          },
+                          "Border": { "Style": "Solid" },
                           "FontWeight": "Bold",
                           "PaddingLeft": "2pt",
                           "PaddingRight": "2pt",
@@ -1196,12 +1082,13 @@
                 }
               ]
             },
+            "Top": "1.25in",
             "Width": "0in",
             "Height": "0.25in"
           },
           {
             "Type": "textbox",
-            "Name": "TextBox51",
+            "Name": "TextBox55",
             "CanGrow": true,
             "KeepTogether": true,
             "Value": "Nguời lập",
@@ -1221,7 +1108,7 @@
           },
           {
             "Type": "textbox",
-            "Name": "TextBox52",
+            "Name": "TextBox56",
             "CanGrow": true,
             "KeepTogether": true,
             "Value": "(ký, họ tên)",
@@ -1241,7 +1128,7 @@
           },
           {
             "Type": "textbox",
-            "Name": "TextBox53",
+            "Name": "TextBox57",
             "CanGrow": true,
             "KeepTogether": true,
             "Value": "Ngày ..... tháng ..... năm .....",
@@ -1261,7 +1148,7 @@
           },
           {
             "Type": "textbox",
-            "Name": "TextBox54",
+            "Name": "TextBox58",
             "CanGrow": true,
             "KeepTogether": true,
             "Value": "Kế toán trưởng",
@@ -1281,7 +1168,7 @@
           },
           {
             "Type": "textbox",
-            "Name": "TextBox55",
+            "Name": "TextBox59",
             "CanGrow": true,
             "KeepTogether": true,
             "Value": "(Ký, họ tên)",
@@ -1309,12 +1196,7 @@
             "CanGrow": true,
             "KeepTogether": true,
             "Value": "=\"Trang \" & Globals!PageNumber & \" / \" & Globals!TotalPages",
-            "Style": {
-              "PaddingLeft": "2pt",
-              "PaddingRight": "2pt",
-              "PaddingTop": "2pt",
-              "PaddingBottom": "2pt"
-            },
+            "Style": { "PaddingLeft": "2pt", "PaddingRight": "2pt", "PaddingTop": "2pt", "PaddingBottom": "2pt" },
             "Width": "1in",
             "Height": "0.25in"
           }
@@ -1326,175 +1208,49 @@
     {
       "Name": "dataset",
       "Fields": [
-        {
-          "Name": "Id",
-          "DataField": "Id"
-        },
-        {
-          "Name": "ParentId",
-          "DataField": "ParentId"
-        },
-        {
-          "Name": "IsGroup",
-          "DataField": "IsGroup"
-        },
-        {
-          "Name": "Level",
-          "DataField": "Level"
-        },
-        {
-          "Name": "_GroupOrder",
-          "DataField": "_GroupOrder"
-        },
-        {
-          "Name": "GroupCode",
-          "DataField": "GroupCode"
-        },
-        {
-          "Name": "GroupName",
-          "DataField": "GroupName"
-        },
-        {
-          "Name": "Ten_Vt",
-          "DataField": "Ten_Vt"
-        },
-        {
-          "Name": "Unit",
-          "DataField": "Unit"
-        },
-        {
-          "Name": "Quantity",
-          "DataField": "Quantity"
-        },
-        {
-          "Name": "Amount",
-          "DataField": "Amount"
-        },
-        {
-          "Name": "Amount2",
-          "DataField": "Amount2"
-        },
-        {
-          "Name": "OriginalAmount",
-          "DataField": "OriginalAmount"
-        },
-        {
-          "Name": "OriginalAmount2",
-          "DataField": "OriginalAmount2"
-        },
-        {
-          "Name": "TotalAmount",
-          "DataField": "TotalAmount"
-        },
-        {
-          "Name": "OriginalTotalAmount",
-          "DataField": "OriginalTotalAmount"
-        },
-        {
-          "Name": "Amount111",
-          "DataField": "Amount111"
-        },
-        {
-          "Name": "OriginalAmount111",
-          "DataField": "OriginalAmount111"
-        },
-        {
-          "Name": "Amount131",
-          "DataField": "Amount131"
-        },
-        {
-          "Name": "OriginalAmount131",
-          "DataField": "OriginalAmount131"
-        },
-        {
-          "Name": "Amount3",
-          "DataField": "Amount3"
-        },
-        {
-          "Name": "OriginalAmount3",
-          "DataField": "OriginalAmount3"
-        },
-        {
-          "Name": "Profit",
-          "DataField": "Profit"
-        },
-        {
-          "Name": "OriginalProfit",
-          "DataField": "OriginalProfit"
-        },
-        {
-          "Name": "DiscountAmount",
-          "DataField": "DiscountAmount"
-        },
-        {
-          "Name": "OriginalDiscountAmount",
-          "DataField": "OriginalDiscountAmount"
-        },
-        {
-          "Name": "CustomerId",
-          "DataField": "CustomerId"
-        },
-        {
-          "Name": "ItemId",
-          "DataField": "ItemId"
-        },
-        {
-          "Name": "ItemCode",
-          "DataField": "ItemCode"
-        },
-        {
-          "Name": "TransCode",
-          "DataField": "TransCode"
-        },
-        {
-          "Name": "WarehouseId",
-          "DataField": "WarehouseId"
-        },
-        {
-          "Name": "JobCode",
-          "DataField": "JobCode"
-        },
-        {
-          "Name": "BizDocId_SO",
-          "DataField": "BizDocId_SO"
-        },
-        {
-          "Name": "EmployeeId",
-          "DataField": "EmployeeId"
-        },
-        {
-          "Name": "TerritoryCode",
-          "DataField": "TerritoryCode"
-        },
-        {
-          "Name": "_FormatStyleKey",
-          "DataField": "_FormatStyleKey"
-        },
-        {
-          "Name": "SubTotalName",
-          "DataField": "SubTotalName"
-        },
-        {
-          "Name": "_LinkCommand",
-          "DataField": "_LinkCommand"
-        },
-        {
-          "Name": "_______idxr",
-          "DataField": "_______idxr"
-        },
-        {
-          "Name": "Date",
-          "DataField": "Date"
-        },
-        {
-          "Name": "CheckBox",
-          "DataField": "CheckBox"
-        }
+        { "Name": "Id", "DataField": "Id" },
+        { "Name": "ParentId", "DataField": "ParentId" },
+        { "Name": "IsGroup", "DataField": "IsGroup" },
+        { "Name": "Level", "DataField": "Level" },
+        { "Name": "_GroupOrder", "DataField": "_GroupOrder" },
+        { "Name": "GroupCode", "DataField": "GroupCode" },
+        { "Name": "GroupName", "DataField": "GroupName" },
+        { "Name": "Ten_Vt", "DataField": "Ten_Vt" },
+        { "Name": "Unit", "DataField": "Unit" },
+        { "Name": "Quantity", "DataField": "Quantity" },
+        { "Name": "Amount", "DataField": "Amount" },
+        { "Name": "Amount2", "DataField": "Amount2" },
+        { "Name": "OriginalAmount", "DataField": "OriginalAmount" },
+        { "Name": "OriginalAmount2", "DataField": "OriginalAmount2" },
+        { "Name": "TotalAmount", "DataField": "TotalAmount" },
+        { "Name": "OriginalTotalAmount", "DataField": "OriginalTotalAmount" },
+        { "Name": "Amount111", "DataField": "Amount111" },
+        { "Name": "OriginalAmount111", "DataField": "OriginalAmount111" },
+        { "Name": "Amount131", "DataField": "Amount131" },
+        { "Name": "OriginalAmount131", "DataField": "OriginalAmount131" },
+        { "Name": "Amount3", "DataField": "Amount3" },
+        { "Name": "OriginalAmount3", "DataField": "OriginalAmount3" },
+        { "Name": "Profit", "DataField": "Profit" },
+        { "Name": "OriginalProfit", "DataField": "OriginalProfit" },
+        { "Name": "DiscountAmount", "DataField": "DiscountAmount" },
+        { "Name": "OriginalDiscountAmount", "DataField": "OriginalDiscountAmount" },
+        { "Name": "CustomerId", "DataField": "CustomerId" },
+        { "Name": "ItemId", "DataField": "ItemId" },
+        { "Name": "ItemCode", "DataField": "ItemCode" },
+        { "Name": "TransCode", "DataField": "TransCode" },
+        { "Name": "WarehouseId", "DataField": "WarehouseId" },
+        { "Name": "JobCode", "DataField": "JobCode" },
+        { "Name": "BizDocId_SO", "DataField": "BizDocId_SO" },
+        { "Name": "EmployeeId", "DataField": "EmployeeId" },
+        { "Name": "TerritoryCode", "DataField": "TerritoryCode" },
+        { "Name": "_FormatStyleKey", "DataField": "_FormatStyleKey" },
+        { "Name": "SubTotalName", "DataField": "SubTotalName" },
+        { "Name": "_LinkCommand", "DataField": "_LinkCommand" },
+        { "Name": "_______idxr", "DataField": "_______idxr" },
+        { "Name": "Date", "DataField": "Date" },
+        { "Name": "CheckBox", "DataField": "CheckBox" }
       ],
-      "Query": {
-        "DataSourceName": "SaleData",
-        "CommandText": "jpath=$.[*]"
-      },
+      "Query": { "DataSourceName": "SaleData", "CommandText": "jpath=$.[*]" },
       "CaseSensitivity": "Auto",
       "KanatypeSensitivity": "Auto",
       "AccentSensitivity": "Auto",

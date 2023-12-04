@@ -1,9 +1,16 @@
 <div>
+  <div #style></div>
+  <iframe #pdfViewer style="display: none"></iframe>
   <mat-card class="p-3">
     <mat-card-header class="mb-3 card-header">
       <div fxLayout="row" fxLayoutAlign="space-between center" fxLayout.xs="column" class="w-100">
         <h3 class="text-capitalize title">Phân tích bán hàng</h3>
-        <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="toReportPage()">tạo báo cáo</button>
+        <div>
+          <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="dowloadReport()">download</button>
+          <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="toReportPage()">
+            tạo báo cáo
+          </button>
+        </div>
       </div>
     </mat-card-header>
     <mat-card-content class="">

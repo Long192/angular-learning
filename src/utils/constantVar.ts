@@ -43,3 +43,12 @@ export const dataSources = [
     datasets: [{ id: 'Employees', title: 'employee', template: employeeDataset, canEdit: false }],
   },
 ];
+
+export const comparator: any = {
+  "e": (a: any, b: any) => a == b,
+  "gt": (a: any, b: any) => a > b,
+  "st": (a: any, b: any) => a < b,
+  "ge": (a: any, b: any) => a >= b,
+  "se": (a: any, b: any) => a <= b,
+  "dif": (a: any, b: any) => a != b
+}

@@ -1,8 +1,10 @@
 import { Inject, Injectable, inject } from '@angular/core';
-import { Core } from '@grapecity/activereports';
+import { Core, PdfExport } from '@grapecity/activereports';
 import { rowTypeEnum } from 'src/enums/ReportEnum';
 import * as wjGrid from '@grapecity/wijmo.grid';
 import { constructorReportService } from 'src/types/reportServiceParameter';
+// import { FontStore } from '@grapecity/activereports';
+// import { FontStore } from '@grapecity/activereports/lib/ar-js-core';
 
 @Injectable()
 export class ReportService {
@@ -34,12 +36,12 @@ export class ReportService {
               this.createTextBox(constructParam.address || '', { Top: '0.25in', Width: '5in', Height: '0.25in' }, {}),
               this.createTextBox(
                 constructParam.title || '',
-                { Top: '0.5in', Width: '12in', Height: '0.4042in' },
+                { Top: '0.5in', Width: '12in', Height: '0.4598in' },
                 { FontSize: '20pt', TextAlign: 'Center', VerticalAlign: 'Center' }
               ),
               this.createTextBox(
                 constructParam.subTitle || '',
-                { Top: '0.9201in', Width: '12in', Height: '0.25in' },
+                { Top: '0.9757in', Width: '12in', Height: '0.25in' },
                 { TextAlign: 'Center', VerticalAlign: 'Center', FontStyle: 'Italic' }
               ),
               this.createTable(grid, constructParam.tableName),
@@ -94,7 +96,11 @@ export class ReportService {
             ReportItems: [
               this.createTextBox(
                 '="Trang " & Globals!PageNumber & " / " & Globals!TotalPages',
-                { Width: '1in', Height: '0.25in' },
+                {
+                  Width: '1in',
+                  Height: '0.25in',
+                  Visibility: { Hidden: '=iif(Globals!PageNumber <= 2, "true", "false")' },
+                },
                 {}
               ),
             ],
@@ -134,7 +140,7 @@ export class ReportService {
       Name: tableName,
       TableColumns: columnWidth,
       Header: header,
-      Details: this.createDetail(grid.columns),
+      Details: this.createDetail(grid),
       Footer: this.createFooter(grid),
       Width: '0in',
       Top: '1.25in',
@@ -205,7 +211,7 @@ export class ReportService {
       };
 
       if (current === 'default') {
-        return [...storage, this.createCell('', '', cellStyle)];
+        return [...storage, this.createCell({}, cellStyle)];
       }
 
       if (rowType === rowTypeEnum.detail) {
@@ -215,23 +221,36 @@ export class ReportService {
 
         return [
           ...storage,
-          this.createCell(`=Fields!${current.binding}.Value`, current.type || 'textbox', {
-            ...cellStyle,
-            Format: this.getDataType(current.dataType)?.format || '',
-          }),
+          this.createCell(
+            {
+              Value: `=Fields!${current.binding}.Value`,
+              Type: current.type || 'textbox',
+              Name: `${current.type || 'textbox'}${++this.count}`,
+            },
+            {
+              ...cellStyle,
+              Format: this.getDataType(current.dataType)?.format || '',
+            }
+          ),
         ];
       }
 
       if (current.aggregate && rowType === rowTypeEnum.group) {
         return [
           ...storage,
-          this.createCell(`=${this.getAggrateType(current.aggregate)}(Fields!${current.binding}.Value)`, '', cellStyle),
+          this.createCell(
+            { Value: `=${this.getAggrateType(current.aggregate)}(Fields!${current.binding}.Value)` },
+            cellStyle
+          ),
         ];
       }
 
       const cell = this.createCell(
-        current.header || current.binding,
-        rowType === rowTypeEnum.header ? 'textbox' : current.type,
+        {
+          Value: current.header || current.binding,
+          Type: rowType === rowTypeEnum.header ? 'textbox' : current.type,
+          Name: `${rowType === rowTypeEnum.header ? 'textbox' : current.type}${++this.count}`,
+        },
         rowType === rowTypeEnum.header ? style : cellStyle,
         current._rng.col2 != current._rng.col ? current._rng.col2 - current._rng.col + 1 : 0,
         current._rng.row2 != current._rng.row ? current._rng.row2 - current._rng.row + 1 : 0
@@ -240,14 +259,15 @@ export class ReportService {
       return [...storage, cell];
     }, []);
 
-  private createCell = (value?: any, type?: string, style?: any, colSpan?: number, rowSpan?: number) => {
+  private createCell = (option: any, style?: any, colSpan?: number, rowSpan?: number) => {
     let item: any = {
       Item: {
-        Type: type || 'textbox',
-        Name: `${type || 'textBox'}${++this.count}`,
+        Type: 'textbox',
+        Name: `${'textBox'}${++this.count}`,
         CanGrow: true,
+        CanShrink: true,
         KeepTogether: true,
-        Value: value || '',
+        Value: '',
         Width: '0in',
         Style: {
           Border: {
@@ -262,14 +282,15 @@ export class ReportService {
           ...style,
         },
         Height: '0.25in',
+        ...option,
       },
       ColSpan: colSpan || 0,
       RowSpan: rowSpan || 0,
     };
 
-    if (type === 'checkbox') {
+    if (option?.Type === 'checkbox') {
       item.Item.CheckAlignment = 'MiddleCenter';
-      item.Item.Checked = value.toString().charAt(0).toUpperCase() + value.toString().slice(1);
+      item.Item.Checked = option?.Value.toString().charAt(0).toUpperCase() + option?.Value.toString().slice(1);
       delete item.Item.Value;
     }
 
@@ -393,8 +414,23 @@ export class ReportService {
     return this.createRow(aggregateRow, rowTypeEnum.group, style);
   };
 
-  private createDetail = (column: any) => {
-    const detailRow = this.createRow(column, rowTypeEnum.detail);
+  private createDetail = (grid: wjGrid.FlexGrid) => {
+    const group = grid.collectionView.groups;
+    this.processGroup(group);
+
+    const rowStep = grid.alternatingRowStep;
+
+    const altCell = grid.cells.rows.find(
+      (item, index) => grid.cells.getCellElement(index, 0)?.classList.contains('wj-alt')
+    );
+
+    const altRowStyle = getComputedStyle(grid.cells.getCellElement(altCell?.index || 0, 0)).backgroundColor;
+
+    const style = {
+      BackgroundColor: `=iif(RowNumber() Mod ${rowStep + 1} = 0, "${altRowStyle}", "" )`,
+    };
+
+    const detailRow = this.createRow(grid.columns, rowTypeEnum.detail, style);
 
     return {
       TableRows: [
@@ -407,6 +443,7 @@ export class ReportService {
   };
 
   private processGroup(group: any[]) {
+    this.groupArray = [];
     group.forEach((item: any) => {
       if (!this.groupArray.includes(item.groupDescription.propertyName)) {
         this.groupArray.push(item.groupDescription.propertyName);
@@ -490,5 +527,21 @@ export class ReportService {
       },
       ...option,
     };
+  }
+
+  async export() {
+    const report = new Core.PageReport();
+    await report.load(this.report);
+    const doc = await report.run();
+    const result = await PdfExport.exportDocument(doc, {
+      fonts: [
+        {
+          name: 'Arial',
+          source: '../assets/SVN-Arial/SVN-Arial 3.ttf',
+        },
+      ],
+      pdfVersion: '1.4',
+    });
+    return result.data;
   }
 }

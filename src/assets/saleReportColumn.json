@@ -1,102 +1,52 @@
 {
   "columns": [
-    {
-      "header": "Mã số",
-      "binding": "GroupCode",
-      "width": 70,
-      "rowSpan": 2,
-      "align": "left"
-    },
-    {
-      "header": "Chỉ tiêu",
-      "binding": "GroupName",
-      "width": 195,
-      "rowSpan": 2
-    },
-    {
-      "header": "Dvt",
-      "binding": "Unit",
-      "width": 60,
-      "rowSpan": 2
-    },
-    {
-      "header": "Số lượng",
-      "binding": "Quantity",
-      "width": 65,
-      "align": "right",
-      "rowSpan": 2
-    },
-    {
-      "binding": "Date",
-      "format": "dd/MM/yyyy",
-      "align": "right",
-      "width": 90,
-      "rowSpan": 2,
-      "date": true
-    },
-    {
-      "binding": "CheckBox",
-      "width": 75,
-      "align": "center",
-      "rowSpan": 2,
-      "type": "checkbox"
-    },
-    {
-      "header": "Doanh số (chưa thuế)",
-      "binding": "Amount2",
-      "aggregate": "Sum",
-      "rowSpan": 2
-    },
+    { "header": "Mã số", "binding": "GroupCode", "width": 70, "align": "left" },
+    { "header": "Chỉ tiêu", "binding": "GroupName", "width": 195 },
+    { "header": "Dvt", "binding": "Unit", "width": 60 },
+    { "header": "Số lượng", "binding": "Quantity", "width": 65, "align": "right" },
+    { "binding": "Date", "format": "dd/MM/yyyy", "align": "right", "width": 90 },
+    { "binding": "CheckBox", "width": 75, "align": "center" },
+    { "header": "Doanh số (chưa thuế)", "binding": "Amount2", "aggregate": "Sum" },
     {
       "header": "Tiền thanh toán",
-      "group": "price",
-      "colSpan": 3
+      "columns": [
+        { "header": "Tổng cộng", "binding": "TotalAmount", "aggregate": "Sum" },
+        { "header": "Thu tiền ngay", "binding": "Amount111", "aggregate": "Sum" },
+        { "header": "Công nợ", "binding": "Amount131", "aggregate": "Sum" }
+      ]
     },
-    {
-      "header": "Lãi gộp (Doanh số - tiền vốn)",
-      "binding": "Profit",
-      "aggregate": "Sum",
-      "rowSpan": 2
-    },
-    {
-      "header": "Chiết khấu",
-      "binding": "DiscountAmount",
-      "aggregate": "Sum",
-      "rowSpan": 2
-    },
-    {
-      "header": "Tổng cộng",
-      "binding": "TotalAmount",
-      "aggregate": "Sum",
-      "parent": "price",
-      "level": 1
-    },
-    {
-      "header": "Thu tiền ngay",
-      "binding": "Amount111",
-      "aggregate": "Sum",
-      "parent": "price",
-      "level": 1
-    },
-    {
-      "header": "Công nợ",
-      "binding": "Amount131",
-      "aggregate": "Sum",
-      "parent": "price",
-      "level": 1
-    }
+    { "header": "Lãi gộp (Doanh số - tiền vốn)", "binding": "Profit", "aggregate": "Sum" },
+    { "header": "Chiết khấu", "binding": "DiscountAmount", "aggregate": "Sum" }
   ],
   "collumnGroup": ["SubTotalName"],
-  "report": {
-    "name": "sale Report",
-    "reportTable": {
-      "name": "sale list"
+  "rules": [
+    {
+      "key": "Amount131",
+      "operation": "e",
+      "compareValue": 0,
+      "property": "innerText",
+      "value": ""
     },
-    "dataSource": [
-      {
-        "dataSourceName": "DataSource",
-        "dataSetName": "Sales"
-      }
-    ]
-  }
+    {
+      "key": "DiscountAmount",
+      "operation": "e",
+      "compareValue": 0,
+      "property": "innerText",
+      "value": ""
+    },
+    {
+      "key": "Amount2",
+      "operation": "ge",
+      "compareValue": 1000000,
+      "property": "style.background-color",
+      "value": "red"
+    },
+    {
+      "key": "TotalAmount",
+      "operation": "ge",
+      "compareValue": 1000000,
+      "property": "style.color",
+      "value": "red"
+    }
+  ]
 }
