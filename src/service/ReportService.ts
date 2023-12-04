@@ -10,10 +10,12 @@ import { constructorReportService } from 'src/types/reportServiceParameter';
 export class ReportService {
   report!: Core.Rdl.Report;
   private count = 1;
+  private rule
   private groupArray: any[] = [];
 
   constructor(grid: wjGrid.FlexGrid, @Inject('constructParam') constructParam: constructorReportService) {
     this.report = this.createReport(grid, constructParam);
+    this.rule = constructParam.rules
   }
 
   createReport = (grid: wjGrid.FlexGrid, constructParam: constructorReportService): Core.Rdl.Report => {
@@ -164,7 +166,7 @@ export class ReportService {
 
     const style = {
       BackgroundColor: computedStyle.getPropertyValue('background-color'),
-      FontWeight: computedStyle.getPropertyValue('font-weight') ? 'Bold' : '',
+      FontWeight: this.getFontWeight(+computedStyle.getPropertyValue('font-weight') as number),
       Color: computedStyle.getPropertyValue('color') || 'Black',
       TextAlign: 'Center',
     };
@@ -359,7 +361,7 @@ export class ReportService {
 
     const style = {
       BackgroundColor: computedStyle.getPropertyValue('background-color'),
-      FontWeight: computedStyle.getPropertyValue('font-weight') ? 'Bold' : '',
+      FontWeight: this.getFontWeight(+computedStyle.getPropertyValue('font-weight') as number),
       Color: computedStyle.getPropertyValue('color') || 'Black',
     };
 
@@ -481,8 +483,9 @@ export class ReportService {
 
     const style = {
       BackgroundColor: computedStyle.getPropertyValue('background-color'),
-      FontWeight: computedStyle.getPropertyValue('font-weight') ? 'Bold' : '',
+      FontWeight: this.getFontWeight(+computedStyle.getPropertyValue('font-weight') as number),
     };
+
     const aggregateRow = this.createAggregate(grid.columns, style);
 
     grid.columnFooters.columns.forEach((item: any, index) => {
@@ -543,5 +546,19 @@ export class ReportService {
       pdfVersion: '1.4',
     });
     return result.data;
+  }
+
+  private getFontWeight(weight: number) {
+    const fontWeight = [
+      { weight: 100, style: 'Lighter' },
+      { weight: 400, style: 'Normal' },
+      { weight: 700, style: 'Bold' },
+    ];
+
+    return fontWeight.find(item => item.weight === weight)?.style || 'Normal';
+  }
+
+  private getRules(rules: any) {
+    rules
   }
 }

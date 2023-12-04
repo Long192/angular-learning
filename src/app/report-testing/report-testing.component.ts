@@ -26,7 +26,6 @@ export class ReportTestingComponent implements OnInit {
   // dataSources: any;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
-    console.log(this.reportDesigner);
     fetch('../../assets/dataResource.json')
       .then(res => res.json())
       .then(data => (this.reportDesigner.dataSources = data));

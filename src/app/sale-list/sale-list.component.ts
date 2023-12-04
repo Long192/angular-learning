@@ -165,6 +165,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
           data: this.dataSource,
         },
         reportSectionWidth: '12in',
+        rules: this.column.rules
       });
     }
   }
@@ -196,8 +197,6 @@ export class SaleListComponent implements OnInit, OnDestroy {
     this.reportGrid.endUpdate();
     this.reportGrid.autoSizeRows();
     this.hiddenButton = false;
-
-    // console.log(this.reportGrid.cells.rows[0] instanceof wjGrid.GroupRow)
   }
 
   ngOnDestroy(): void {
