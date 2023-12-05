@@ -3,19 +3,18 @@ import { Core, PdfExport } from '@grapecity/activereports';
 import { rowTypeEnum } from 'src/enums/ReportEnum';
 import * as wjGrid from '@grapecity/wijmo.grid';
 import { constructorReportService } from 'src/types/reportServiceParameter';
-// import { FontStore } from '@grapecity/activereports';
-// import { FontStore } from '@grapecity/activereports/lib/ar-js-core';
+import { ruleComparator } from 'src/enums/RulesEnum';
 
 @Injectable()
 export class ReportService {
   report!: Core.Rdl.Report;
   private count = 1;
-  private rule
+  private rule;
   private groupArray: any[] = [];
 
   constructor(grid: wjGrid.FlexGrid, @Inject('constructParam') constructParam: constructorReportService) {
+    this.rule = constructParam.rules;
     this.report = this.createReport(grid, constructParam);
-    this.rule = constructParam.rules
   }
 
   createReport = (grid: wjGrid.FlexGrid, constructParam: constructorReportService): Core.Rdl.Report => {
@@ -135,8 +134,6 @@ export class ReportService {
         Width: `${(item?.width || 99) * 0.0104166667}in`,
       }));
 
-    // this.createFooter(grid);
-
     const table: Core.Rdl.Table = {
       Type: 'table' as 'table',
       Name: tableName,
@@ -201,7 +198,7 @@ export class ReportService {
     return header;
   };
 
-  private createRow = (column: any[], rowType: string, style?: any) =>
+  private createRow = (column: any[], rowType: string, style?: any, rule?: any) =>
     column.reduce((storage: any, current: any) => {
       if (!current) {
         return [...storage, null];
@@ -217,6 +214,45 @@ export class ReportService {
       }
 
       if (rowType === rowTypeEnum.detail) {
+        let value = `=Fields!${current.binding}.Value`;
+        let ruleStyle = { ...cellStyle };
+
+        const matchRuleItem = rule.find((item: any) => item.key === current.binding);
+
+        if (matchRuleItem) {
+          if (matchRuleItem.value !== undefined) {
+            value = `=iif(Fields.${current.binding}.Value ${
+              ruleComparator[matchRuleItem.operation as keyof typeof ruleComparator]
+            } ${matchRuleItem.compareValue}, ${matchRuleItem.value}, Fields.${current.binding}.Value )`;
+          }
+
+          if (matchRuleItem.style) {
+            ruleStyle = {
+              ...ruleStyle,
+              ...Object.keys(matchRuleItem.style).reduce((storageStyle: any, currentStyle: any) => {
+                if (currentStyle !== 'BackgroundColor') {
+                  return {
+                    ...storageStyle,
+                    [currentStyle]: `=iif(Fields!${current.binding}.Value ${
+                      ruleComparator[matchRuleItem.operation as keyof typeof ruleComparator]
+                    } ${matchRuleItem.compareValue}, "${matchRuleItem.styleValue}", "")`,
+                  };
+                } else {
+                  return {
+                    ...storageStyle,
+                    BackgroundColor: `=iif(Fields!${current.binding}.Value ${
+                      ruleComparator[matchRuleItem.operation as keyof typeof ruleComparator]
+                    } ${matchRuleItem.compareValue}, "${matchRuleItem.styleValue}", ${cellStyle.BackgroundColor.replace(
+                      '=',
+                      ''
+                    )})`,
+                  };
+                }
+              }, {}),
+            };
+          }
+        }
+
         if (this.getDataType(current.dataType)?.value === 'boolean') {
           current.type = 'checkbox';
         }
@@ -225,12 +261,12 @@ export class ReportService {
           ...storage,
           this.createCell(
             {
-              Value: `=Fields!${current.binding}.Value`,
+              Value: value,
               Type: current.type || 'textbox',
               Name: `${current.type || 'textbox'}${++this.count}`,
             },
             {
-              ...cellStyle,
+              ...ruleStyle,
               Format: this.getDataType(current.dataType)?.format || '',
             }
           ),
@@ -423,16 +459,19 @@ export class ReportService {
     const rowStep = grid.alternatingRowStep;
 
     const altCell = grid.cells.rows.find(
-      (item, index) => grid.cells.getCellElement(index, 0)?.classList.contains('wj-alt')
+      (item, index) =>
+        grid.cells.getCellElement(index, 0)?.classList.contains('wj-alt') && !(item instanceof wjGrid.GroupRow)
     );
 
-    const altRowStyle = getComputedStyle(grid.cells.getCellElement(altCell?.index || 0, 0)).backgroundColor;
+    const altRowBackground = getComputedStyle(
+      grid.cells.getCellElement(altCell?.index || this.groupArray.length || 0, 0)
+    ).backgroundColor;
 
     const style = {
-      BackgroundColor: `=iif(RowNumber() Mod ${rowStep + 1} = 0, "${altRowStyle}", "" )`,
+      BackgroundColor: `=iif(RowNumber() Mod ${rowStep + 1} = 0, "${altRowBackground}", "" )`,
     };
 
-    const detailRow = this.createRow(grid.columns, rowTypeEnum.detail, style);
+    const detailRow = this.createRow(grid.columns, rowTypeEnum.detail, style, this.getRules());
 
     return {
       TableRows: [
@@ -558,7 +597,31 @@ export class ReportService {
     return fontWeight.find(item => item.weight === weight)?.style || 'Normal';
   }
 
-  private getRules(rules: any) {
-    rules
+  private getRules() {
+    return this.rule.map((item: any) => {
+      const newItem: any = {
+        key: item.key,
+        operation: item.operation,
+        compareValue: item.compareValue,
+        styleValue: item.value,
+      };
+      const keyStyle = item.property
+        .replace('style.', '')
+        .replace(/-([a-z])/g, (match: any, group: any) => group.toUpperCase())
+        .replace(/^([a-z])/, (match: any, group: any) => group.toUpperCase());
+
+      if (keyStyle.toLowerCase() === 'innerhtml' || keyStyle.toLowerCase() === 'innertext') {
+        newItem.value = item.value;
+        return newItem;
+      }
+
+      if (keyStyle) {
+        newItem.style = {
+          [keyStyle]: item.value,
+        };
+      }
+
+      return newItem;
+    });
   }
 }

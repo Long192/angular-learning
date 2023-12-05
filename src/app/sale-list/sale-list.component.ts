@@ -165,7 +165,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
           data: this.dataSource,
         },
         reportSectionWidth: '12in',
-        rules: this.column.rules
+        rules: this.column.rules,
       });
     }
   }
