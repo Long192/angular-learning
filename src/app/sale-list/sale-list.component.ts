@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Signal, ViewChild } from '@angular/core';
+import { signal } from '@angular/core';
 import * as wjGrid from '@grapecity/wijmo.grid';
 import * as wjCore from '@grapecity/wijmo';
 import { Store } from '@ngrx/store';
@@ -23,6 +24,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
   hiddenButton = true;
   groupCellElement!: HTMLElement;
   report!: ReportService;
+  gridHeight!: string;
 
   constructor(
     private router: Router,
@@ -31,13 +33,12 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
   async initGrid() {
     this.reportGrid.headersVisibility = wjGrid.HeadersVisibility.Column;
-
     this.reportGrid.initialize({
       itemsSource: new wjCore.CollectionView(this.dataSource, {
         groupDescriptions: this.column.columnGroup,
       }),
       autoGenerateColumns: false,
-      columns: this.column.column,
+      columns: this.column.columns,
     });
 
     const newRow = new wjGrid.GroupRow();
@@ -53,28 +54,58 @@ export class SaleListComponent implements OnInit, OnDestroy {
       0,
       this.reportGrid.columnFooters.columns.findIndex(item => item.aggregate) - 1
     );
-  }
 
-  formatItem() {
     this.reportGrid.formatItem.addHandler((sender: wjGrid.FlexGrid, event: wjGrid.FormatItemEventArgs) => {
-      const item = this.column.rules.find((item: any) => item.key === event.getColumn().binding);
-      const defaultCondition =
-        item && event.panel.cellType === wjGrid.CellType.Cell && !event.cell.classList.contains('wj-group');
-
-      if (
-        defaultCondition &&
-        comparator[item.operation](sender.getCellData(event.row, event.col, false), item.compareValue)
-      ) {
-        if (item.property.includes('style')) {
-          const property = item.property.replace('style.', '');
-          event.cell.classList.add(`grid-dnx-class-${property}-${item.key}`);
-        } else {
-          (event.cell[item.property as keyof HTMLElement] as any) = item.value;
-        }
-      }
+      this.formatItemByRule(sender, event);
+      this.addClass(event);
     });
 
     this.reportGrid.groupHeaderFormat = '{value}';
+  }
+
+  addClass(event: wjGrid.FormatItemEventArgs) {
+    event.cell.classList.add(`grid-dnx-class-${this.column.style.common.key}-cell`);
+    switch (event.panel.cellType) {
+      case wjGrid.CellType.ColumnHeader:
+        event.cell.classList.add(`grid-dnx-class-${this.column.style.common.key}-header`);
+        break;
+      case wjGrid.CellType.Cell:
+        if (event.panel.rows[event.row] instanceof wjGrid.GroupRow) {
+          event.cell.classList.add(`grid-dnx-class-${this.column.style.common.key}-group`);
+          break;
+        }
+        event.cell.classList.add(`grid-dnx-class-${this.column.style.common.key}-body`);
+
+        if (event.cell.classList.contains('wj-alt')) {
+          event.cell.classList.add(`grid-dnx-class-${this.column.style.common.key}-alt`);
+        }
+
+        break;
+      case wjGrid.CellType.ColumnFooter:
+        event.cell.classList.add(`grid-dnx-class-${this.column.style.common.key}-fotter`);
+    }
+  }
+
+  getGridHeight() {
+    return this.gridHeight || 'auto';
+  }
+
+  formatItemByRule(sender: wjGrid.FlexGrid, event: wjGrid.FormatItemEventArgs) {
+    const item = this.column.rules.find((item: any) => item.key === event.getColumn().binding);
+    const defaultCondition =
+      item && event.panel.cellType === wjGrid.CellType.Cell && !event.cell.classList.contains('wj-group');
+
+    if (
+      defaultCondition &&
+      comparator[item.operation](sender.getCellData(event.row, event.col, false), item.compareValue)
+    ) {
+      if (item.property.includes('style')) {
+        const property = item.property.replace('style.', '');
+        event.cell.classList.add(`grid-dnx-class-${property}-${item.key}`);
+      } else {
+        (event.cell[item.property as keyof HTMLElement] as any) = item.value;
+      }
+    }
   }
 
   getRandomDate(from: Date, to: Date) {
@@ -100,10 +131,13 @@ export class SaleListComponent implements OnInit, OnDestroy {
   async getColumn() {
     const column = await fetch('../../assets/saleReportColumn.json').then(res => res.json());
 
+    this.gridHeight = column.style.common.gridHeight;
+
     this.column = {
       columnGroup: column.collumnGroup,
-      column: column.columns,
+      columns: column.columns,
       rules: column.rules,
+      style: column.style,
     };
   }
 
@@ -111,7 +145,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
     this.reportGrid.scrollIntoView(0, 0);
     this.reportGrid.isDisabled = true;
 
-    await this.createReport();
+    await this.createReport(false);
 
     this.store.dispatch(setReport({ report: this.report.report }));
 
@@ -122,7 +156,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
     this.reportGrid.scrollIntoView(0, 0);
     this.reportGrid.isDisabled = true;
 
-    await this.createReport();
+    await this.createReport(false);
 
     const pdf = await this.report.export();
 
@@ -140,7 +174,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
     this.reportGrid.isDisabled = false;
   }
 
-  async createReport() {
+  async createReport(renderFromColumnJson: boolean) {
     if (!this.report) {
       if (!this.reportGrid.cells.getCellElement(0, 0)) {
         await this.sleep(1000);
@@ -166,6 +200,8 @@ export class SaleListComponent implements OnInit, OnDestroy {
         },
         reportSectionWidth: '12in',
         rules: this.column.rules,
+        renderFromColumnJson,
+        style: this.column.style
       });
     }
   }
@@ -176,6 +212,22 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
   generrateStyle() {
     const styleList = this.column.rules.filter((item: any) => item.property.includes('style'));
+
+    Object.keys(this.column.style.dynamix).forEach((item: any) => {
+      const style = document.createElement('style');
+      let styleClass = `.grid-dnx-class-${this.column.style.common.key}-${item} { `;
+      style.type = 'text/css';
+      this.column.style.dynamix[item].forEach((styleItem: any) => {
+        if (styleItem.gridProperty) {
+          styleClass = styleClass.concat(`${styleItem.gridProperty} : ${styleItem.value} !important ; `);
+        }
+      });
+      styleClass += '}';
+
+      style.innerHTML = styleClass;
+
+      this.styleDiv.nativeElement.appendChild(style);
+    });
 
     styleList.forEach((item: any) => {
       const property = item.property.replace('style.', '');
@@ -193,7 +245,6 @@ export class SaleListComponent implements OnInit, OnDestroy {
     await this.getColumn();
     this.generrateStyle();
     this.initGrid();
-    this.formatItem();
     this.reportGrid.endUpdate();
     this.reportGrid.autoSizeRows();
     this.hiddenButton = false;

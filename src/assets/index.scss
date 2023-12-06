@@ -39,26 +39,26 @@ $gray-600: #6c757d;
   margin-bottom: 20px;
 }
 
-.wj-cell.wj-header {
-  background: cornsilk;
-  justify-content: center !important;
-  &:not(.grid-footer) {
-    text-align: center;
-  }
-}
+// .wj-cell.wj-header {
+//   background: cornsilk;
+//   justify-content: center !important;
+//   &:not(.grid-footer) {
+//     text-align: center;
+//   }
+// }
 
-.wj-flexgrid {
-  max-height: 500px;
-}
+// .wj-flexgrid {
+//   max-height: 500px;
+// }
 
-.wj-cell {
-  word-wrap: break-word;
-  white-space: break-spaces;
-  padding: 4px 6px 3px 6px !important;
-  // height: 50px;
-}
+// .wj-cell {
+//   word-wrap: break-word;
+//   white-space: break-spaces;
+//   padding: 4px 6px 3px 6px !important;
+//   // height: 50px;
+// }
 
-.wj-cell.wj-group {
-  background-color: wheat;
-  font-weight: bold;
-}
+// .wj-cell.wj-group {
+//   background-color: wheat;
+//   font-weight: bold;
+// }

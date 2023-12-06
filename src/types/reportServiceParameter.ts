@@ -14,6 +14,9 @@ export type constructorReportService = {
     dataSourceName: string;
     data: any;
   };
-  reportSectionWidth: string,
-  rules: any
+  reportSectionWidth: string;
+  rules: any;
+  renderFromColumnJson: boolean;
+  style: any;
+  
 };

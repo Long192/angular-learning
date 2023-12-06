@@ -45,7 +45,7 @@ export class ReportService {
                 { Top: '0.9757in', Width: '12in', Height: '0.25in' },
                 { TextAlign: 'Center', VerticalAlign: 'Center', FontStyle: 'Italic' }
               ),
-              this.createTable(grid, constructParam.tableName),
+              this.createTable(grid, constructParam.tableName, constructParam.renderFromColumnJson),
               this.createTextBox(
                 'Nguời lập',
                 { Left: '1.5098in', Top: '1.802in', Width: '1in', Height: '0.25in' },
@@ -126,7 +126,7 @@ export class ReportService {
     ...page,
   });
 
-  private createTable = (grid: wjGrid.FlexGrid, tableName: string) => {
+  private createTable = (grid: wjGrid.FlexGrid, tableName: string, createFromColumnJson:boolean) => {
     const header = this.createHeader(grid);
     const columnWidth = this.getHeaderRow(grid.columnHeaders.columns)
       .filter((item: any) => !item?.level)
