@@ -291,6 +291,7 @@ export class ReportService {
       }
 
       if (rowType === rowTypeEnum.detail) {
+        console.log(this.getDetailStyle(current, style));
         let value = `=Fields!${current.binding}.Value`;
         let ruleStyle = { ...cellStyle };
 
@@ -603,20 +604,32 @@ export class ReportService {
 
     const style = this.getStyleByColumnJson(this.style.dynamix.body);
 
-    console.log(bindingList);
-
     // return bindingList.
   }
 
   getDetailStyle(column: any, styleDefault: any) {
-    const ruleStyle = this.getRules().find((item: any) => item.key === column.value);
+    const ruleStyle = this.getRules().find((item: any) => item.key === column.binding);
     const defaultStyleKey = Object.keys(styleDefault);
 
-    const a = Object.keys(ruleStyle.style).reduce((storage: any, current: any) => {
-      if (current && defaultStyleKey.includes(current)) {
-        const newStyle = `=iff(Fields!${current.binding}.Value ${ruleComparator[ruleStyle.operation as keyof typeof ruleComparator]} {}, , )`
-      }
-    }, {});
+    if (!ruleStyle) {
+      return {};
+    }
+
+    if (ruleStyle.style) {
+      return Object.keys(ruleStyle.style).reduce((storage: any, current: any) => {
+        if (!current.value && defaultStyleKey.includes(current)) {
+          const newStyle = `=iif(Fields!${current.binding}.Value ${
+            ruleComparator[ruleStyle.operation as keyof typeof ruleComparator]
+          } ${ruleStyle.compareValue}, ${ruleStyle.styleValue} , defaultStyle)`;
+          return {
+            ...storage,
+            [current]: newStyle,
+          };
+        }
+
+        return { ...storage };
+      }, {});
+    }
   }
 
   private processGroup(group: any[]) {
