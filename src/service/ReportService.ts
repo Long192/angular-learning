@@ -1,3 +1,4 @@
+import { columnJson } from './../types/reportServiceParameter';
 import { Inject, Injectable, inject } from '@angular/core';
 import { Core, PdfExport } from '@grapecity/activereports';
 import { rowTypeEnum } from 'src/enums/ReportEnum';
@@ -10,10 +11,14 @@ export class ReportService {
   report!: Core.Rdl.Report;
   private count = 1;
   private rule;
+  private columnFromJson;
   private groupArray: any[] = [];
+  private style;
 
   constructor(grid: wjGrid.FlexGrid, @Inject('constructParam') constructParam: constructorReportService) {
     this.rule = constructParam.rules;
+    this.columnFromJson = constructParam.columnJson;
+    this.style = constructParam.style;
     this.report = this.createReport(grid, constructParam);
   }
 
@@ -126,13 +131,15 @@ export class ReportService {
     ...page,
   });
 
-  private createTable = (grid: wjGrid.FlexGrid, tableName: string, createFromColumnJson:boolean) => {
-    const header = this.createHeader(grid);
-    const columnWidth = this.getHeaderRow(grid.columnHeaders.columns)
+  private createTable = (grid: wjGrid.FlexGrid, tableName: string, createFromColumnJson: boolean) => {
+    const header = this.createHeader(createFromColumnJson ? this.columnFromJson : grid);
+    const columnWidth = this.getHeaderRow(createFromColumnJson ? this.columnFromJson : grid.columnHeaders.columns)
       .filter((item: any) => !item?.level)
       .map((item: any) => ({
         Width: `${(item?.width || 99) * 0.0104166667}in`,
       }));
+
+    this.createDetailFromJson();
 
     const table: Core.Rdl.Table = {
       Type: 'table' as 'table',
@@ -150,43 +157,84 @@ export class ReportService {
       table.TableGroups = this.createGroup(grid);
     }
 
+    console.log(header);
+
     return table;
   };
 
-  private createHeader = (grid: wjGrid.FlexGrid) => {
+  private createHeader = (grid: wjGrid.FlexGrid | columnJson[]) => {
+    let levelList: number[], firstRow: any, style: any;
     const header: any = {
       TableRows: [],
       RepeatOnNewPage: true,
     };
 
-    const computedStyle = getComputedStyle(grid.columnHeaders.getCellElement(0, 0));
+    if (grid instanceof wjGrid.FlexGrid) {
+      firstRow = this.getHeaderRow(grid.columnHeaders.columns);
+      levelList = grid.columns.filter((item: any) => item.level).map((item: any) => item.level);
+      const computedStyle = getComputedStyle(grid.columnHeaders.getCellElement(0, 0));
+      style = {
+        BackgroundColor: computedStyle.getPropertyValue('background-color'),
+        FontWeight: this.getFontWeight(+computedStyle.getPropertyValue('font-weight') as number),
+        Color: computedStyle.getPropertyValue('color') || 'Black',
+        TextAlign: computedStyle.getPropertyValue('text-align'),
+      };
+    } else {
+      firstRow = this.getHeaderFromJsonColumn(this.columnFromJson);
+      levelList = grid.filter(item => item.level).map((item: any) => item.level);
+      style = this.getStyleByColumnJson(this.style.dynamix.header);
+    }
 
-    const style = {
-      BackgroundColor: computedStyle.getPropertyValue('background-color'),
-      FontWeight: this.getFontWeight(+computedStyle.getPropertyValue('font-weight') as number),
-      Color: computedStyle.getPropertyValue('color') || 'Black',
-      TextAlign: 'Center',
-    };
+    const maxlevel = Math.max(...(Array.isArray(levelList) && levelList.length ? levelList : [0]));
 
-    const firstRow = this.getHeaderRow(grid.columnHeaders.columns);
+    if (maxlevel && !(grid instanceof wjGrid.FlexGrid)) {
+      firstRow = firstRow.map((item: any) => {
+        if (item && !item.haveChild) {
+          item.rowSpan = maxlevel;
+        }
+
+        return item;
+      });
+    }
 
     header.TableRows.push({
       Height: '0.25in',
       TableCells: this.createRow(firstRow, rowTypeEnum.header, style),
     });
 
-    const levelList = grid.columns.filter((item: any) => item.level).map((item: any) => item.level);
-
-    const maxlevel = Math.max(...(levelList || 0));
+    let preRow = firstRow;
 
     if (maxlevel) {
       for (let level = 1; level <= maxlevel; level++) {
-        const levelList = grid.columns.filter((item: any) => item.level === level);
-        const newRow = new Array(header.TableRows[0].TableCells.length).fill(null);
+        const columnLevelList =
+          grid instanceof wjGrid.FlexGrid
+            ? grid.columns.filter((item: any) => item.level === level)
+            : grid.filter((item: any) => item.level === level);
+        let newRow = new Array(header.TableRows[0].TableCells.length).fill(null);
 
-        levelList.forEach((item: any) => {
-          newRow.splice(item._rng.col, 1, item);
+        columnLevelList.forEach((item: any, index: number) => {
+          if (grid instanceof wjGrid.FlexGrid) {
+            newRow.splice(item._rng.col, 1, item);
+          } else {
+            const colIndex = preRow.findIndex(
+              (IndexItem: any) => IndexItem && IndexItem.group && item.parent === IndexItem.group
+            );
+
+            newRow.splice(colIndex + index, 1, item);
+
+            if (level < maxlevel) {
+              newRow = newRow.map(item => {
+                if (item) {
+                  item.rowSpan = maxlevel - level;
+                }
+
+                return item;
+              });
+            }
+          }
         });
+
+        preRow = newRow;
 
         header.TableRows.push({
           Height: '0.25in',
@@ -195,8 +243,37 @@ export class ReportService {
       }
     }
 
+    console.log(header);
+
     return header;
   };
+
+  private getStyleByColumnJson(styleArray: any) {
+    const style = styleArray.reduce((storage: any, current: any) => {
+      if (current.reportProperty) {
+        switch (current.reportProperty) {
+          case 'Padding':
+            const paddingArray = current.value.replace('px ', ',').toArray();
+            return {
+              ...storage,
+              PaddingTop: `${paddingArray[0] * 0.75}pt`,
+              PaddingLeft: `${paddingArray[1] * 0.75}pt`,
+              PaddingBottom: `${paddingArray[2] * 0.75}pt`,
+              paddingLeft: `${paddingArray[3] * 0.75}pt`,
+            };
+
+          default:
+            return {
+              ...storage,
+              [current.reportProperty]: current.value,
+            };
+        }
+      }
+
+      return storage;
+    }, {});
+    return style;
+  }
 
   private createRow = (column: any[], rowType: string, style?: any, rule?: any) =>
     column.reduce((storage: any, current: any) => {
@@ -283,6 +360,16 @@ export class ReportService {
         ];
       }
 
+      let colSpan: number, rowSpan: number;
+
+      if (!current._rng) {
+        colSpan = current.colSpan;
+        rowSpan = current.rowSpan;
+      } else {
+        colSpan = current._rng.col2 != current._rng.col ? current._rng.col2 - current._rng.col + 1 : 0;
+        rowSpan = current._rng.row2 != current._rng.row ? current._rng.row2 - current._rng.row + 1 : 0;
+      }
+
       const cell = this.createCell(
         {
           Value: current.header || current.binding,
@@ -290,8 +377,8 @@ export class ReportService {
           Name: `${rowType === rowTypeEnum.header ? 'textbox' : current.type}${++this.count}`,
         },
         rowType === rowTypeEnum.header ? style : cellStyle,
-        current._rng.col2 != current._rng.col ? current._rng.col2 - current._rng.col + 1 : 0,
-        current._rng.row2 != current._rng.row ? current._rng.row2 - current._rng.row + 1 : 0
+        colSpan,
+        rowSpan
       );
 
       return [...storage, cell];
@@ -347,10 +434,10 @@ export class ReportService {
     return item;
   };
 
-  private getHeaderRow = (columns: wjGrid.ColumnCollection) => {
+  private getHeaderRow = (columns: wjGrid.ColumnCollection | columnJson[]) => {
     const firstRow = columns.map((item: any) => {
       if (item.level) {
-        return item.parentGroup;
+        return item.parentGroup || null;
       }
 
       return item;
@@ -359,13 +446,25 @@ export class ReportService {
     let prevHeader: string;
 
     return firstRow.map((item: any) => {
-      if (prevHeader === item.header) {
+      if (prevHeader === item?.header || prevHeader === item?.binding) {
         return null;
       }
-      prevHeader = item.header;
+      prevHeader = item?.header || item?.binding;
       return item;
     });
   };
+
+  private getHeaderFromJsonColumn(columns: columnJson[]) {
+    return columns
+      .filter(item => !item.level)
+      .reduce((storage: any, current: any) => {
+        if (current.colSpan) {
+          return [...storage, ...[current].concat(new Array(current.colSpan - 1).fill(null))];
+        }
+
+        return [...storage, current];
+      }, []);
+  }
 
   private getDataSource = (dataSource: any) => [
     {
@@ -399,6 +498,7 @@ export class ReportService {
       BackgroundColor: computedStyle.getPropertyValue('background-color'),
       FontWeight: this.getFontWeight(+computedStyle.getPropertyValue('font-weight') as number),
       Color: computedStyle.getPropertyValue('color') || 'Black',
+      FontFamily: computedStyle.getPropertyValue('font-family'),
     };
 
     this.groupArray.forEach((groupItem, groupIndex) => {
@@ -482,6 +582,42 @@ export class ReportService {
       ],
     };
   };
+
+  createDetailFromJson() {
+    let bindingList = this.columnFromJson.filter((item: any) => !item.level);
+
+    const levelList = this.columnFromJson.filter((item: any) => item.level);
+
+    let maxLevel = Math.max(...(levelList.map((item: any) => item.level) || 0));
+
+    for (maxLevel; maxLevel > 0; maxLevel--) {
+      bindingList.forEach((item: any, index: number) => {
+        if (item.group) {
+          const itemList = levelList.filter(
+            (levelItem: any) => levelItem.level === maxLevel && item.group === levelItem.parent
+          );
+          bindingList.splice(index, 1, ...itemList);
+        }
+      });
+    }
+
+    const style = this.getStyleByColumnJson(this.style.dynamix.body);
+
+    console.log(bindingList);
+
+    // return bindingList.
+  }
+
+  getDetailStyle(column: any, styleDefault: any) {
+    const ruleStyle = this.getRules().find((item: any) => item.key === column.value);
+    const defaultStyleKey = Object.keys(styleDefault);
+
+    const a = Object.keys(ruleStyle.style).reduce((storage: any, current: any) => {
+      if (current && defaultStyleKey.includes(current)) {
+        const newStyle = `=iff(Fields!${current.binding}.Value ${ruleComparator[ruleStyle.operation as keyof typeof ruleComparator]} {}, , )`
+      }
+    }, {});
+  }
 
   private processGroup(group: any[]) {
     this.groupArray = [];

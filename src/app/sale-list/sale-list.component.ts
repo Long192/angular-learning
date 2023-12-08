@@ -25,6 +25,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
   groupCellElement!: HTMLElement;
   report!: ReportService;
   gridHeight!: string;
+  rawColumn!: any;
 
   constructor(
     private router: Router,
@@ -43,12 +44,9 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
     const newRow = new wjGrid.GroupRow();
 
-    newRow.cssClassAll = 'grid-footer';
-    newRow.align = 'right';
-
     this.reportGrid.columnFooters.rows.push(newRow);
     this.reportGrid.columnFooters.setCellData(0, 0, 'Tổng cộng:');
-    this.reportGrid.alternatingRowStep = 1;
+    this.reportGrid.alternatingRowStep = this.column.style.common.alternateStep || 0;
 
     this.reportGrid.mergeManager = new MergeManagerService(
       0,
@@ -129,15 +127,48 @@ export class SaleListComponent implements OnInit, OnDestroy {
   }
 
   async getColumn() {
-    const column = await fetch('../../assets/saleReportColumn.json').then(res => res.json());
+    const columnResponse = await fetch('../../assets/saleReportColumn.json').then(res => res.json());
 
-    this.gridHeight = column.style.common.gridHeight;
+    this.rawColumn = JSON.parse(JSON.stringify(columnResponse.columns));
+
+    let maxLevel = Math.max(...columnResponse.columns.filter((item: any) => item.level).map((item: any) => item.level));
+
+    let newColumnList: any[] = [];
+
+    for (maxLevel; maxLevel > 0; maxLevel--) {
+      const listItemLevel = columnResponse.columns.filter((item: any) => item.level && item.level == maxLevel);
+
+      newColumnList = columnResponse.columns.map((columnItem: any) => {
+        delete columnItem.rowSpan;
+        delete columnItem.colSpan;
+        delete columnItem.checkBox;
+        delete columnItem.type;
+        delete columnItem.date;
+
+        if (!columnItem.group) {
+          return columnItem;
+        }
+
+        listItemLevel.forEach((item: any) => {
+          if (columnItem.group === item.parent) {
+            const { parent, level, group, ...newObj } = item;
+            columnItem.columns ? columnItem.columns.push(newObj) : (columnItem.columns = new Array(newObj));
+          }
+        });
+
+        const { group, ...newItem } = columnItem;
+
+        return newItem;
+      });
+    }
+
+    this.gridHeight = columnResponse.style.common.gridHeight;
 
     this.column = {
-      columnGroup: column.collumnGroup,
-      columns: column.columns,
-      rules: column.rules,
-      style: column.style,
+      columnGroup: columnResponse.collumnGroup,
+      columns: newColumnList.filter(item => !item.level),
+      rules: columnResponse.rules,
+      style: columnResponse.style,
     };
   }
 
@@ -175,6 +206,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
   }
 
   async createReport(renderFromColumnJson: boolean) {
+    console.log(this.rawColumn);
     if (!this.report) {
       if (!this.reportGrid.cells.getCellElement(0, 0)) {
         await this.sleep(1000);
@@ -201,7 +233,8 @@ export class SaleListComponent implements OnInit, OnDestroy {
         reportSectionWidth: '12in',
         rules: this.column.rules,
         renderFromColumnJson,
-        style: this.column.style
+        style: this.column.style,
+        columnJson: this.rawColumn,
       });
     }
   }
@@ -237,6 +270,10 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
       this.styleDiv.nativeElement.appendChild(style);
     });
+  }
+
+  createReportFromJson() {
+    this.createReport(true);
   }
 
   async ngOnInit() {

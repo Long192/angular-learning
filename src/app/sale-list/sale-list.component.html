@@ -5,8 +5,13 @@
     <mat-card-header class="mb-3 card-header">
       <div fxLayout="row" fxLayoutAlign="space-between center" fxLayout.xs="column" class="w-100">
         <h3 class="text-capitalize title">Phân tích bán hàng</h3>
-        <div>
-          <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="dowloadReport()">download</button>
+        <div class="">
+          <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="createReportFromJson()">
+            tạo báo cáo từ json
+          </button>
+          <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="dowloadReport()">
+            tạo nhanh báo cáo
+          </button>
           <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="toReportPage()">
             tạo báo cáo
           </button>
@@ -16,7 +21,7 @@
     <mat-card-content class="">
       <div class="">
         <div class="row">
-          <wj-flex-grid #reportGrid [style]="'max-height: '+this.getGridHeight()+';'" > </wj-flex-grid>
+          <wj-flex-grid #reportGrid [style]="'max-height: ' + this.getGridHeight() + ';'"> </wj-flex-grid>
         </div>
       </div>
     </mat-card-content>
