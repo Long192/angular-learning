@@ -206,7 +206,6 @@ export class SaleListComponent implements OnInit, OnDestroy {
   }
 
   async createReport(renderFromColumnJson: boolean) {
-    console.log(this.rawColumn);
     if (!this.report) {
       if (!this.reportGrid.cells.getCellElement(0, 0)) {
         await this.sleep(1000);
@@ -235,6 +234,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
         renderFromColumnJson,
         style: this.column.style,
         columnJson: this.rawColumn,
+        group: this.column.columnGroup,
       });
     }
   }

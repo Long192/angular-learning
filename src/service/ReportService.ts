@@ -14,8 +14,10 @@ export class ReportService {
   private columnFromJson;
   private groupArray: any[] = [];
   private style;
+  private group;
 
   constructor(grid: wjGrid.FlexGrid, @Inject('constructParam') constructParam: constructorReportService) {
+    this.group = constructParam.group;
     this.rule = constructParam.rules;
     this.columnFromJson = constructParam.columnJson;
     this.style = constructParam.style;
@@ -139,25 +141,28 @@ export class ReportService {
         Width: `${(item?.width || 99) * 0.0104166667}in`,
       }));
 
-    this.createDetailFromJson();
-
+    // console.log(this.createDetailFromJson());
     const table: Core.Rdl.Table = {
       Type: 'table' as 'table',
       Name: tableName,
       TableColumns: columnWidth,
       Header: header,
-      Details: this.createDetail(grid),
+      Details: createFromColumnJson ? this.createDetail(grid) : this.createDetailFromJson(),
       Footer: this.createFooter(grid),
       Width: '0in',
       Top: '1.25in',
       Height: '0.25in',
     };
 
+    console.log(this.group);
+
     if (grid.collectionView.groups) {
       table.TableGroups = this.createGroup(grid);
     }
 
-    console.log(header);
+    if (Array.isArray(this.group) && this.group.length && createFromColumnJson) {
+      console.log(this.craeteGroupFromColumnJson(this.columnFromJson));
+    }
 
     return table;
   };
@@ -243,8 +248,6 @@ export class ReportService {
       }
     }
 
-    console.log(header);
-
     return header;
   };
 
@@ -291,7 +294,6 @@ export class ReportService {
       }
 
       if (rowType === rowTypeEnum.detail) {
-        console.log(this.getDetailStyle(current, style));
         let value = `=Fields!${current.binding}.Value`;
         let ruleStyle = { ...cellStyle };
 
@@ -299,35 +301,9 @@ export class ReportService {
 
         if (matchRuleItem) {
           if (matchRuleItem.value !== undefined) {
-            value = `=iif(Fields.${current.binding}.Value ${
+            value = `=iif(Fields!${current.binding}.Value ${
               ruleComparator[matchRuleItem.operation as keyof typeof ruleComparator]
-            } ${matchRuleItem.compareValue}, ${matchRuleItem.value}, Fields.${current.binding}.Value )`;
-          }
-
-          if (matchRuleItem.style) {
-            ruleStyle = {
-              ...ruleStyle,
-              ...Object.keys(matchRuleItem.style).reduce((storageStyle: any, currentStyle: any) => {
-                if (currentStyle !== 'BackgroundColor') {
-                  return {
-                    ...storageStyle,
-                    [currentStyle]: `=iif(Fields!${current.binding}.Value ${
-                      ruleComparator[matchRuleItem.operation as keyof typeof ruleComparator]
-                    } ${matchRuleItem.compareValue}, "${matchRuleItem.styleValue}", "")`,
-                  };
-                } else {
-                  return {
-                    ...storageStyle,
-                    BackgroundColor: `=iif(Fields!${current.binding}.Value ${
-                      ruleComparator[matchRuleItem.operation as keyof typeof ruleComparator]
-                    } ${matchRuleItem.compareValue}, "${matchRuleItem.styleValue}", ${cellStyle.BackgroundColor.replace(
-                      '=',
-                      ''
-                    )})`,
-                  };
-                }
-              }, {}),
-            };
+            } ${matchRuleItem.compareValue}, "${matchRuleItem.value}", Fields!${current.binding}.Value )`;
           }
         }
 
@@ -345,6 +321,7 @@ export class ReportService {
             },
             {
               ...ruleStyle,
+              ...this.getDetailStyle(current),
               Format: this.getDataType(current.dataType)?.format || '',
             }
           ),
@@ -491,16 +468,10 @@ export class ReportService {
   private createGroup = (grid: wjGrid.FlexGrid) => {
     const group = grid.collectionView.groups;
     this.processGroup(group);
+
     const groupRows: any = [];
 
-    const computedStyle = getComputedStyle(grid.cells.getCellElement(0, 0));
-
-    const style = {
-      BackgroundColor: computedStyle.getPropertyValue('background-color'),
-      FontWeight: this.getFontWeight(+computedStyle.getPropertyValue('font-weight') as number),
-      Color: computedStyle.getPropertyValue('color') || 'Black',
-      FontFamily: computedStyle.getPropertyValue('font-family'),
-    };
+    const style = this.getStyleByColumnJson(this.style.dynamix.group);
 
     this.groupArray.forEach((groupItem, groupIndex) => {
       const aggregateRow = this.createAggregate(grid.columns, style);
@@ -537,6 +508,47 @@ export class ReportService {
     return groupRows;
   };
 
+  private craeteGroupFromColumnJson(column: columnJson[]) {
+    const groupRows: any[] = [];
+
+    this.group.forEach((item: any, index: number) => {
+      const aggregateRow = this.createAggregate(column, this.getStyleByColumnJson(this.style.dynamix.group));
+      aggregateRow[0].Item.Value = `=Fields!${item}.Value`;
+
+      let prevCell: number;
+
+      aggregateRow.map((item: any, index: number) => {
+        if (item.value) {
+          prevCell = index;
+          return item;
+        }
+
+        console.log(aggregateRow[prevCell]);
+
+        aggregateRow[prevCell].ColSpan ? aggregateRow[prevCell].ColSpan++ : (aggregateRow[prevCell].ColSpan = 1);
+
+        return null;
+      });
+      console.log(aggregateRow);
+      groupRows.push({
+        Group: {
+          Name: item,
+          GroupExpressions: [`=Fields!${item}.Value`],
+        },
+        Header: {
+          TableRows: [
+            {
+              Height: '0.25in',
+              TableCells: aggregateRow,
+            },
+          ],
+        },
+      });
+    });
+
+    return groupRows;
+  }
+
   private createAggregate = (column: any, style: any) => {
     const aggregateList = column.filter((item: any) => item.aggregate);
 
@@ -554,25 +566,7 @@ export class ReportService {
   };
 
   private createDetail = (grid: wjGrid.FlexGrid) => {
-    const group = grid.collectionView.groups;
-    this.processGroup(group);
-
-    const rowStep = grid.alternatingRowStep;
-
-    const altCell = grid.cells.rows.find(
-      (item, index) =>
-        grid.cells.getCellElement(index, 0)?.classList.contains('wj-alt') && !(item instanceof wjGrid.GroupRow)
-    );
-
-    const altRowBackground = getComputedStyle(
-      grid.cells.getCellElement(altCell?.index || this.groupArray.length || 0, 0)
-    ).backgroundColor;
-
-    const style = {
-      BackgroundColor: `=iif(RowNumber() Mod ${rowStep + 1} = 0, "${altRowBackground}", "" )`,
-    };
-
-    const detailRow = this.createRow(grid.columns, rowTypeEnum.detail, style, this.getRules());
+    const detailRow = this.createRow(grid.columns, rowTypeEnum.detail, {}, this.getRules());
 
     return {
       TableRows: [
@@ -584,8 +578,8 @@ export class ReportService {
     };
   };
 
-  createDetailFromJson() {
-    let bindingList = this.columnFromJson.filter((item: any) => !item.level);
+  private createDetailFromJson() {
+    let bindingList: any = this.columnFromJson.filter((item: any) => !item.level);
 
     const levelList = this.columnFromJson.filter((item: any) => item.level);
 
@@ -602,34 +596,68 @@ export class ReportService {
       });
     }
 
-    const style = this.getStyleByColumnJson(this.style.dynamix.body);
-
-    // return bindingList.
+    return this.createRow(bindingList, rowTypeEnum.detail, {}, this.getRules());
   }
 
-  getDetailStyle(column: any, styleDefault: any) {
+  getDetailStyle(column: any) {
     const ruleStyle = this.getRules().find((item: any) => item.key === column.binding);
-    const defaultStyleKey = Object.keys(styleDefault);
+    let style: any = {};
 
-    if (!ruleStyle) {
-      return {};
-    }
+    style = this.style.dynamix.body.reduce((storage: any, current: any) => {
+      if (current.reportProperty) {
+        return {
+          ...storage,
+          [current]: current.value,
+        };
+      }
 
-    if (ruleStyle.style) {
-      return Object.keys(ruleStyle.style).reduce((storage: any, current: any) => {
-        if (!current.value && defaultStyleKey.includes(current)) {
-          const newStyle = `=iif(Fields!${current.binding}.Value ${
-            ruleComparator[ruleStyle.operation as keyof typeof ruleComparator]
-          } ${ruleStyle.compareValue}, ${ruleStyle.styleValue} , defaultStyle)`;
+      return storage;
+    }, {});
+
+    style = {
+      ...style,
+      ...this.style.dynamix.alt.reduce((storage: any, current: any) => {
+        if (current.reportProperty) {
           return {
             ...storage,
-            [current]: newStyle,
+            [current.reportProperty]: `=iif(RowNumber() Mod ${this.style.common.alternateStep + 1} = 0, "${
+              current.value
+            }", "${style[current] || ''}")`,
           };
         }
 
-        return { ...storage };
-      }, {});
+        return storage;
+      }, {}),
+    };
+
+    if (ruleStyle?.style) {
+      style = {
+        ...style,
+        ...Object.keys(ruleStyle.style).reduce((storage: any, current: any) => {
+          if (!current.value) {
+            let newStyle: string;
+            if (style[current]?.includes('=')) {
+              newStyle = `=iif(Fields!${column.binding}.Value ${
+                ruleComparator[ruleStyle.operation as keyof typeof ruleComparator]
+              } ${ruleStyle.compareValue}, "${ruleStyle.styleValue}" , ${style[current].replace('=', '')})`;
+            } else {
+              newStyle = `=iif(Fields!${column.binding}.Value ${
+                ruleComparator[ruleStyle.operation as keyof typeof ruleComparator]
+              } ${ruleStyle.compareValue}, "${ruleStyle.styleValue}" , "${style[current] || ''}")`;
+            }
+
+            return {
+              ...storage,
+              [current]: newStyle,
+            };
+          }
+
+          return storage;
+        }, {}),
+      };
     }
+
+    return style;
   }
 
   private processGroup(group: any[]) {

@@ -19,6 +19,7 @@ export type constructorReportService = {
   renderFromColumnJson: boolean;
   style: any;
   columnJson: any;
+  group: string[]
 };
 
 export type columnJson = {

@@ -1,5 +1,5 @@
 export enum ruleComparator{
-  e = "==",
+  e = "=",
   gt = ">",
   st = "<",
   ge = ">=",
