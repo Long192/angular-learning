@@ -136,33 +136,32 @@ export class ReportService {
   private createTable = (grid: wjGrid.FlexGrid, tableName: string, createFromColumnJson: boolean) => {
     const header = this.createHeader(createFromColumnJson ? this.columnFromJson : grid);
     const columnWidth = this.getHeaderRow(createFromColumnJson ? this.columnFromJson : grid.columnHeaders.columns)
-      .filter((item: any) => !item?.level)
+      .filter((item: any) => !item?.level && !item?.group)
       .map((item: any) => ({
         Width: `${(item?.width || 99) * 0.0104166667}in`,
       }));
 
-    // console.log(this.createDetailFromJson());
     const table: Core.Rdl.Table = {
       Type: 'table' as 'table',
       Name: tableName,
       TableColumns: columnWidth,
       Header: header,
-      Details: createFromColumnJson ? this.createDetail(grid) : this.createDetailFromJson(),
-      Footer: this.createFooter(grid),
+      Details: this.createDetail(createFromColumnJson ? undefined : grid),
+      Footer: createFromColumnJson ? this.createFotterFromColumnJson() : this.createFooter(grid),
       Width: '0in',
       Top: '1.25in',
       Height: '0.25in',
     };
 
-    console.log(this.group);
-
-    if (grid.collectionView.groups) {
+    if (grid?.collectionView.groups && !createFromColumnJson) {
       table.TableGroups = this.createGroup(grid);
     }
 
     if (Array.isArray(this.group) && this.group.length && createFromColumnJson) {
-      console.log(this.craeteGroupFromColumnJson(this.columnFromJson));
+      table.TableGroups = this.craeteGroupFromColumnJson(this.columnFromJson);
     }
+
+    console.log(table);
 
     return table;
   };
@@ -195,7 +194,7 @@ export class ReportService {
     if (maxlevel && !(grid instanceof wjGrid.FlexGrid)) {
       firstRow = firstRow.map((item: any) => {
         if (item && !item.haveChild) {
-          item.rowSpan = maxlevel;
+          item.rowSpan = grid instanceof wjGrid.FlexGrid ? maxlevel : maxlevel + 1;
         }
 
         return item;
@@ -511,25 +510,24 @@ export class ReportService {
   private craeteGroupFromColumnJson(column: columnJson[]) {
     const groupRows: any[] = [];
 
-    this.group.forEach((item: any, index: number) => {
-      const aggregateRow = this.createAggregate(column, this.getStyleByColumnJson(this.style.dynamix.group));
+    this.group.forEach((item: any) => {
+      const aggregateRow = this.createAggregate(
+        this.getBindingList(),
+        this.getStyleByColumnJson(this.style.dynamix.group)
+      );
       aggregateRow[0].Item.Value = `=Fields!${item}.Value`;
 
-      let prevCell: number;
+      let prevCell: number = 0;
 
-      aggregateRow.map((item: any, index: number) => {
-        if (item.value) {
+      aggregateRow.forEach((item: any, index: number) => {
+        if (item.Item.Value) {
           prevCell = index;
-          return item;
+          return;
         }
 
-        console.log(aggregateRow[prevCell]);
-
-        aggregateRow[prevCell].ColSpan ? aggregateRow[prevCell].ColSpan++ : (aggregateRow[prevCell].ColSpan = 1);
-
-        return null;
+        aggregateRow[prevCell].ColSpan ? aggregateRow[prevCell].ColSpan++ : (aggregateRow[prevCell].ColSpan = 2);
+        aggregateRow[index] = null;
       });
-      console.log(aggregateRow);
       groupRows.push({
         Group: {
           Name: item,
@@ -561,12 +559,16 @@ export class ReportService {
 
       return 'default';
     });
-
     return this.createRow(aggregateRow, rowTypeEnum.group, style);
   };
 
-  private createDetail = (grid: wjGrid.FlexGrid) => {
-    const detailRow = this.createRow(grid.columns, rowTypeEnum.detail, {}, this.getRules());
+  private createDetail = (grid?: wjGrid.FlexGrid) => {
+    let detailRow;
+    if (grid) {
+      detailRow = this.createRow(grid.columns, rowTypeEnum.detail, {}, this.getRules());
+    } else {
+      detailRow = this.createRow(this.getBindingList(), rowTypeEnum.detail, {}, this.getRules());
+    }
 
     return {
       TableRows: [
@@ -578,7 +580,7 @@ export class ReportService {
     };
   };
 
-  private createDetailFromJson() {
+  private getBindingList() {
     let bindingList: any = this.columnFromJson.filter((item: any) => !item.level);
 
     const levelList = this.columnFromJson.filter((item: any) => item.level);
@@ -596,10 +598,10 @@ export class ReportService {
       });
     }
 
-    return this.createRow(bindingList, rowTypeEnum.detail, {}, this.getRules());
+    return bindingList;
   }
 
-  getDetailStyle(column: any) {
+  private getDetailStyle(column: any) {
     const ruleStyle = this.getRules().find((item: any) => item.key === column.binding);
     let style: any = {};
 
@@ -673,14 +675,14 @@ export class ReportService {
     });
   }
 
-  private getAggrateType(key: number) {
+  private getAggrateType(key: number | string) {
     const agrateType = [
       { key: 1, value: 'Sum' },
       { key: 2, value: 'Count' },
       { key: 3, value: 'Avg' },
     ];
 
-    return agrateType.find(item => item.key === key)?.value;
+    return agrateType.find(item => item.key === key || item.value === key)?.value;
   }
 
   private getDataType(key: number) {
@@ -695,12 +697,7 @@ export class ReportService {
   }
 
   private createFooter(grid: wjGrid.FlexGrid) {
-    const computedStyle = getComputedStyle(grid.columnFooters.getCellElement(0, 0));
-
-    const style = {
-      BackgroundColor: computedStyle.getPropertyValue('background-color'),
-      FontWeight: this.getFontWeight(+computedStyle.getPropertyValue('font-weight') as number),
-    };
+    const style = this.getStyleByColumnJson(this.style.dynamix.fotter);
 
     const aggregateRow = this.createAggregate(grid.columns, style);
 
@@ -719,6 +716,38 @@ export class ReportService {
         aggregateRow[index].Item.Value = grid.columnFooters.getCellData(0, index, true);
       }
     });
+
+    return {
+      TableRows: [
+        {
+          Height: '0.25in',
+          TableCells: aggregateRow,
+        },
+      ],
+    };
+  }
+
+  private createFotterFromColumnJson() {
+    const aggregateRow = this.createAggregate(
+      this.getBindingList(),
+      this.getStyleByColumnJson(this.style.dynamix.fotter)
+    );
+
+    let prevCell: number = 0;
+
+    aggregateRow[0].Item.Value = this.style.common.fotterText;
+
+    aggregateRow.forEach((item: any, index: number) => {
+      if (item.Item.Value) {
+        prevCell = index;
+        return;
+      }
+
+      aggregateRow[prevCell].ColSpan ? aggregateRow[prevCell].ColSpan++ : (aggregateRow[prevCell].ColSpan = 1);
+      aggregateRow[index] = null;
+    });
+
+
 
     return {
       TableRows: [

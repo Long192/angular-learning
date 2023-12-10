@@ -120,7 +120,8 @@
     "common": {
       "key": "sale-list",
       "gridHeight": "500px",
-      "alternateStep": 1
+      "alternateStep": 1,
+      "fotterText":"Tổng cộng"
     },
     "dynamix": {
       "header": [

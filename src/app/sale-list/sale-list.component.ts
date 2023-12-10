@@ -45,7 +45,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
     const newRow = new wjGrid.GroupRow();
 
     this.reportGrid.columnFooters.rows.push(newRow);
-    this.reportGrid.columnFooters.setCellData(0, 0, 'Tổng cộng:');
+    this.reportGrid.columnFooters.setCellData(0, 0, this.column.style.common.fotterText);
     this.reportGrid.alternatingRowStep = this.column.style.common.alternateStep || 0;
 
     this.reportGrid.mergeManager = new MergeManagerService(
@@ -183,11 +183,13 @@ export class SaleListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/sale-report']);
   }
 
-  async dowloadReport() {
+  async dowloadReport(exportFromJson: boolean) {
     this.reportGrid.scrollIntoView(0, 0);
     this.reportGrid.isDisabled = true;
 
-    await this.createReport(false);
+    await this.createReport(exportFromJson);
+
+    console.log(JSON.stringify(this.report.report))
 
     const pdf = await this.report.export();
 
@@ -270,10 +272,6 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
       this.styleDiv.nativeElement.appendChild(style);
     });
-  }
-
-  createReportFromJson() {
-    this.createReport(true);
   }
 
   async ngOnInit() {

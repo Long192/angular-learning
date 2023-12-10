@@ -6,10 +6,10 @@
       <div fxLayout="row" fxLayoutAlign="space-between center" fxLayout.xs="column" class="w-100">
         <h3 class="text-capitalize title">Phân tích bán hàng</h3>
         <div class="">
-          <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="createReportFromJson()">
+          <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="dowloadReport(true)">
             tạo báo cáo từ json
           </button>
-          <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="dowloadReport()">
+          <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="dowloadReport(false)">
             tạo nhanh báo cáo
           </button>
           <button mat-raised-button color="primary" [hidden]="hiddenButton" (click)="toReportPage()">
