@@ -35,4 +35,5 @@ export type columnJson = {
   group?: string;
   rowSpan?: number;
   format?: string;
+  dataType?: string
 };

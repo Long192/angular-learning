@@ -29,6 +29,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { WjGridModule } from '@grapecity/wijmo.angular2.grid';
 import { WjGridFilterModule } from '@grapecity/wijmo.angular2.grid.filter';
+import { WjInputModule } from '@grapecity/wijmo.angular2.input'
 import { WjGridGrouppanelModule } from '@grapecity/wijmo.angular2.grid.grouppanel';
 import { EffectsModule } from '@ngrx/effects';
 // import { EmployeeEffect } from 'src/effect/employeeEffect';
@@ -72,6 +73,7 @@ import { MergeManagerService } from 'src/service/MergeManagerService';
     MatGridListModule,
     WjGridModule,
     WjGridFilterModule,
+    WjInputModule,
     WjGridGrouppanelModule,
     ActiveReportsModule,
     StoreModule.forRoot({ employee: EmployeeReducer, report: ReportReducer }),

@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, Signal, ViewChild } from '@angular/core';
 import { signal } from '@angular/core';
 import * as wjGrid from '@grapecity/wijmo.grid';
+import * as wjInput from '@grapecity/wijmo.input';
 import * as wjCore from '@grapecity/wijmo';
 import { Store } from '@ngrx/store';
 import { setReport } from 'src/slices/ReportSlice';
@@ -18,6 +19,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
   @ViewChild('reportGrid', { static: true }) reportGrid!: wjGrid.FlexGrid;
   @ViewChild('pdfViewer') pdfViewer!: ElementRef;
   @ViewChild('style') styleDiv!: ElementRef;
+  @ViewChild('gridNavigate') gridNavigate!: wjInput.CollectionViewNavigator;
 
   dataSource: any;
   column: any;
@@ -33,21 +35,27 @@ export class SaleListComponent implements OnInit, OnDestroy {
   ) {}
 
   async initGrid() {
+    const collectionView = new wjCore.CollectionView(this.dataSource, {
+      groupDescriptions: this.column.columnGroup,
+      pageSize: 100,
+    });
+
+    this.gridNavigate.cv = collectionView;
+    this.gridNavigate.headerFormat = 'Page {currentPage:n0} of {pageCount:n0}';
+    this.gridNavigate.byPage = true;
     this.reportGrid.headersVisibility = wjGrid.HeadersVisibility.Column;
     this.reportGrid.initialize({
-      itemsSource: new wjCore.CollectionView(this.dataSource, {
-        groupDescriptions: this.column.columnGroup,
-      }),
+      itemsSource: collectionView,
       autoGenerateColumns: false,
       columns: this.column.columns,
     });
 
-    const newRow = new wjGrid.GroupRow();
-
-    this.reportGrid.columnFooters.rows.push(newRow);
+    this.reportGrid.columnFooters.rows.push(new wjGrid.GroupRow());
     this.reportGrid.columnFooters.setCellData(0, 0, this.column.style.common.fotterText);
+    // this.reportGrid.columnFooters.rows[0].allowDragging = false
+    // this.reportGrid.columnFooters.rows[0].allowMerging = true
     this.reportGrid.alternatingRowStep = this.column.style.common.alternateStep || 0;
-
+    this.reportGrid.autoRowHeights = true;
     this.reportGrid.mergeManager = new MergeManagerService(
       0,
       this.reportGrid.columnFooters.columns.findIndex(item => item.aggregate) - 1
@@ -184,12 +192,24 @@ export class SaleListComponent implements OnInit, OnDestroy {
   }
 
   async dowloadReport(exportFromJson: boolean) {
-    this.reportGrid.scrollIntoView(0, 0);
-    this.reportGrid.isDisabled = true;
+    if (!exportFromJson) {
+      this.reportGrid.scrollIntoView(0, 0);
+      this.reportGrid.isDisabled = true;
+    }
+
+    // if (typeof Worker !== 'undefined') {
+    //   // Create a new
+    //   const worker = new Worker(new URL('../../worker/sale-workder.worker.ts', import.meta.url));
+    //   worker.onmessage = ({ data }) => {
+    //     console.log(`page got message: ${data}`);
+    //   };
+    //   worker.postMessage('hello');
+    // } else {
+    //   // Web workers are not supported in this environment.
+    //   // You should add a fallback so that your program still executes correctly.
+    // }
 
     await this.createReport(exportFromJson);
-
-    console.log(JSON.stringify(this.report.report))
 
     const pdf = await this.report.export();
 

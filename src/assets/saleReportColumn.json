@@ -31,7 +31,8 @@
       "align": "right",
       "width": 90,
       "rowSpan": 2,
-      "date": true
+      "date": true,
+      "dataType": 4
     },
     {
       "binding": "CheckBox",
@@ -44,7 +45,9 @@
       "header": "Doanh số (chưa thuế)",
       "binding": "Amount2",
       "aggregate": "Sum",
-      "rowSpan": 2
+      "rowSpan": 2,
+      "format": "n0",
+      "dataType": 2
     },
     {
       "header": "Tiền thanh toán",
@@ -55,34 +58,44 @@
       "header": "Lãi gộp (Doanh số - tiền vốn)",
       "binding": "Profit",
       "aggregate": "Sum",
-      "rowSpan": 2
+      "rowSpan": 2,
+      "format": "n0",
+      "dataType": 2
     },
     {
       "header": "Chiết khấu",
       "binding": "DiscountAmount",
       "aggregate": "Sum",
-      "rowSpan": 2
+      "rowSpan": 2,
+      "format": "n0",
+      "dataType": 2
     },
     {
       "header": "Tổng cộng",
       "binding": "TotalAmount",
       "aggregate": "Sum",
       "parent": "price",
-      "level": 1
+      "level": 1,
+      "format": "n0",
+      "dataType": 2
     },
     {
       "header": "Thu tiền ngay",
       "binding": "Amount111",
       "aggregate": "Sum",
       "parent": "price",
-      "level": 1
+      "level": 1,
+      "format": "n0",
+      "dataType": 2
     },
     {
       "header": "Công nợ",
       "binding": "Amount131",
       "aggregate": "Sum",
       "parent": "price",
-      "level": 1
+      "level": 1,
+      "format": "n0",
+      "dataType": 2
     }
   ],
   "collumnGroup": ["SubTotalName"],
@@ -121,20 +134,20 @@
       "key": "sale-list",
       "gridHeight": "500px",
       "alternateStep": 1,
-      "fotterText":"Tổng cộng"
+      "fotterText": "Tổng cộng"
     },
     "dynamix": {
       "header": [
+        { "reportProperty": "VerticalAlign", "value": "middle" },
         { "gridProperty": "background-color", "reportProperty": "BackgroundColor", "value": "cornsilk" },
         { "gridProperty": "font-weight", "reportProperty": "FontWeight", "value": "Bold" },
         { "gridProperty": "text-align", "reportProperty": "TextAlign", "value": "center" },
         { "gridProperty": "justify-content", "value": "center" }
       ],
-      "body": [],
+      "body": [{ "gridProperty": "padding", "reportProperty": "Padding", "value": "4px 6px 3px 6px" }],
       "cell": [
         { "gridProperty": "word-wrap", "value": "break-word" },
-        { "gridProperty": "white-space", "value": " break-spaces" },
-        { "gridProperty": "padding", "value": "4px 6px 3px 6px" }
+        { "gridProperty": "white-space", "value": " break-spaces" }
       ],
       "alt": [{ "reportProperty": "BackgroundColor", "value": "#f7f7f7" }],
       "group": [

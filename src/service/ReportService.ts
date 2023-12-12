@@ -193,7 +193,7 @@ export class ReportService {
 
     if (maxlevel && !(grid instanceof wjGrid.FlexGrid)) {
       firstRow = firstRow.map((item: any) => {
-        if (item && !item.haveChild) {
+        if (item && !item.group) {
           item.rowSpan = grid instanceof wjGrid.FlexGrid ? maxlevel : maxlevel + 1;
         }
 
@@ -255,7 +255,8 @@ export class ReportService {
       if (current.reportProperty) {
         switch (current.reportProperty) {
           case 'Padding':
-            const paddingArray = current.value.replace('px ', ',').toArray();
+            console.log(current);
+            const paddingArray = current.value.split('px ');
             return {
               ...storage,
               PaddingTop: `${paddingArray[0] * 0.75}pt`,
@@ -267,7 +268,9 @@ export class ReportService {
           default:
             return {
               ...storage,
-              [current.reportProperty]: current.value,
+              [current.reportProperty]: current.value.includes('px')
+                ? `${current.value.replace('px', '') * 0.75}pt`
+                : current.value,
             };
         }
       }
@@ -279,6 +282,11 @@ export class ReportService {
 
   private createRow = (column: any[], rowType: string, style?: any, rule?: any) =>
     column.reduce((storage: any, current: any) => {
+      style = {
+        ...style,
+        ...this.getStyleByColumnJson(this.style.dynamix.cell),
+      };
+
       if (!current) {
         return [...storage, null];
       }
@@ -321,7 +329,7 @@ export class ReportService {
             {
               ...ruleStyle,
               ...this.getDetailStyle(current),
-              Format: this.getDataType(current.dataType)?.format || '',
+              Format: current.format || this.getDataType(current.dataType)?.format || '',
             }
           ),
         ];
@@ -685,7 +693,7 @@ export class ReportService {
     return agrateType.find(item => item.key === key || item.value === key)?.value;
   }
 
-  private getDataType(key: number) {
+  private getDataType(key: number | string) {
     const dataType = [
       { key: 1, value: 'string', format: '' },
       { key: 2, value: 'number', format: 'n0' },
@@ -693,7 +701,7 @@ export class ReportService {
       { key: 4, value: 'date', format: 'd' },
     ];
 
-    return dataType.find(item => item.key === key);
+    return dataType.find(item => item.key === key || item.value === key);
   }
 
   private createFooter(grid: wjGrid.FlexGrid) {
@@ -743,11 +751,9 @@ export class ReportService {
         return;
       }
 
-      aggregateRow[prevCell].ColSpan ? aggregateRow[prevCell].ColSpan++ : (aggregateRow[prevCell].ColSpan = 1);
+      aggregateRow[prevCell].ColSpan ? aggregateRow[prevCell].ColSpan++ : (aggregateRow[prevCell].ColSpan = 2);
       aggregateRow[index] = null;
     });
-
-
 
     return {
       TableRows: [
@@ -781,6 +787,7 @@ export class ReportService {
     const report = new Core.PageReport();
     await report.load(this.report);
     const doc = await report.run();
+    console.log("run")
     const result = await PdfExport.exportDocument(doc, {
       fonts: [
         {
@@ -790,6 +797,7 @@ export class ReportService {
       ],
       pdfVersion: '1.4',
     });
+    console.log("run2")
     return result.data;
   }
 

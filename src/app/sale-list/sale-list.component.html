@@ -21,8 +21,10 @@
     <mat-card-content class="">
       <div class="">
         <div class="row">
+          <wj-collection-view-navigator #gridNavigate> </wj-collection-view-navigator>
           <wj-flex-grid #reportGrid [style]="'max-height: ' + this.getGridHeight() + ';'"> </wj-flex-grid>
         </div>
+        <div></div>
       </div>
     </mat-card-content>
   </mat-card>
