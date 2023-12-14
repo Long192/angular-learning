@@ -17,6 +17,36 @@ export class SaleReportComponent implements OnInit {
   firstPreview = true;
   definition!: Core.Rdl.Report;
 
+  exportsSettings = {
+    pdf: {
+      title: 'ActiveReportsJS Sample',
+      author: 'GrapeCity',
+      subject: 'Web Reporting',
+      keywords: 'reporting, sample',
+      userPassword: 'pwd',
+      ownerPassword: 'ownerPwd',
+      printing: 'none',
+      copying: true,
+      modifying: true,
+      annotating: true,
+      contentAccessibility: true,
+      documentAssembly: true,
+      pdfVersion: '1.4',
+      autoPrint: true,
+      filename: 'ActiveReportsJS-Sample.pdf',
+    },
+    html: {
+      title: 'ActiveReportsJS Sample',
+      filename: 'ActiveReportsJS-Sample.html',
+      autoPrint: true,
+      multiPage: true,
+      embedImages: 'external',
+      outputType: 'html',
+    },
+  };
+
+  availableExports = ['pdf', 'html', 'tabular-data'];
+
   constructor(private store: Store<{ report: any }>) {}
 
   updateToolbar() {
@@ -86,6 +116,7 @@ export class SaleReportComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(Core.FontStore.getFonts());
     this.store
       .select(reportSelector)
       .subscribe((data: any) => (this.definition = data.report))

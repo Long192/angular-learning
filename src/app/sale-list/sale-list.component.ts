@@ -9,6 +9,7 @@ import { ReportService } from 'src/service/ReportService';
 import { Router } from '@angular/router';
 import { MergeManagerService } from 'src/service/MergeManagerService';
 import { comparator } from 'src/utils/constantVar';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-sale-report',
@@ -31,7 +32,8 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private store: Store<{ report: any }>
+    private store: Store<{ report: any }>,
+    private appService: AppService
   ) {}
 
   async initGrid() {
@@ -295,8 +297,13 @@ export class SaleListComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.appService.getData().subscribe(item => {
+      console.log(item);
+      this.dataSource = item;
+      this.reportGrid.itemsSource = item
+    });
     this.reportGrid.beginUpdate();
-    await this.getData();
+    // await this.getData();
     await this.getColumn();
     this.generrateStyle();
     this.initGrid();

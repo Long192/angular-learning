@@ -255,7 +255,6 @@ export class ReportService {
       if (current.reportProperty) {
         switch (current.reportProperty) {
           case 'Padding':
-            console.log(current);
             const paddingArray = current.value.split('px ');
             return {
               ...storage,
@@ -787,17 +786,22 @@ export class ReportService {
     const report = new Core.PageReport();
     await report.load(this.report);
     const doc = await report.run();
-    console.log("run")
+    console.log('run');
     const result = await PdfExport.exportDocument(doc, {
       fonts: [
         {
           name: 'Arial',
           source: '../assets/SVN-Arial/SVN-Arial 3.ttf',
         },
+        {
+          name: 'Roboto',
+          source: 'https://fonts.gstatic.com/s/roboto/v20/KFOkCnqEu92Fr1MmgVxIIzI.woff2',
+        },
       ],
       pdfVersion: '1.4',
-    });
-    console.log("run2")
+
+    },);
+    console.log('run2');
     return result.data;
   }
 
@@ -838,4 +842,14 @@ export class ReportService {
       return newItem;
     });
   }
+
+  // createExcel() {
+  //   const workBook = new Workbook();
+  //   const sheet = workBook.addWorksheet('my sheet', {
+  //     headerFooter: {
+  //       firstFooter: 'header',
+  //       firstHeader: 'footer',
+  //     },
+  //   });
+  // }
 }

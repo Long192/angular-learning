@@ -4,6 +4,10 @@
     </gc-activereports-designer>
   </div>
   <div id="viewer-host" [hidden]="!designerHidden">
-    <gc-activereports-viewer (init)="onInitViewer()"> </gc-activereports-viewer>
+    <gc-activereports-viewer
+      (init)="onInitViewer()"
+      [exportsSettings]="exportsSettings"
+      [availableExports]="availableExports">
+    </gc-activereports-viewer>
   </div>
 </div>

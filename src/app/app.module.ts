@@ -29,18 +29,19 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { WjGridModule } from '@grapecity/wijmo.angular2.grid';
 import { WjGridFilterModule } from '@grapecity/wijmo.angular2.grid.filter';
-import { WjInputModule } from '@grapecity/wijmo.angular2.input'
+import { WjInputModule } from '@grapecity/wijmo.angular2.input';
 import { WjGridGrouppanelModule } from '@grapecity/wijmo.angular2.grid.grouppanel';
 import { EffectsModule } from '@ngrx/effects';
 // import { EmployeeEffect } from 'src/effect/employeeEffect';
 import { EmployeeService } from 'src/service/EmployeeService';
 import { ReportTestingComponent } from './report-testing/report-testing.component';
-import { ActiveReportsModule } from '@grapecity/activereports-angular';
+import { AR_EXPORTS, ActiveReportsModule, HtmlExportService, PdfExportService, TabularDataExportService } from '@grapecity/activereports-angular';
 import { SaleListComponent } from './sale-list/sale-list.component';
 import { SaleReportComponent } from './sale-report/sale-report.component';
 import { ReportReducer } from 'src/slices/ReportSlice';
 import { ReportService } from 'src/service/ReportService';
 import { MergeManagerService } from 'src/service/MergeManagerService';
+import { SaleService } from 'src/service/SaleService';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,21 @@ import { MergeManagerService } from 'src/service/MergeManagerService';
     // EffectsModule.forRoot([EmployeeEffect])
   ],
   providers: [
+    {
+      provide: AR_EXPORTS,
+      useClass: PdfExportService,
+      multi: true,
+    },
+    {
+      provide: AR_EXPORTS,
+      useClass: HtmlExportService,
+      multi: true,
+    },
+    {
+      provide: AR_EXPORTS,
+      useClass: TabularDataExportService,
+      multi: true,
+    },
     { provide: MAT_DATE_LOCALE, useValue: 'vi-VN' },
     {
       provide: DateAdapter,
@@ -89,8 +105,9 @@ import { MergeManagerService } from 'src/service/MergeManagerService';
     { provide: MAT_DATE_FORMATS, useValue: dateFormat },
     CustomValidationService,
     EmployeeService,
+    SaleService,
     ReportService,
-    MergeManagerService
+    MergeManagerService,
   ],
   bootstrap: [AppComponent],
 })
