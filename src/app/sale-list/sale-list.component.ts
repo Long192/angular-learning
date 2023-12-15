@@ -329,7 +329,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
         a.download = "test.xlsx";
         a.style.display = 'none';
         document.body.appendChild(a);
-      
+
         a.click();
       });
     }, 5000);

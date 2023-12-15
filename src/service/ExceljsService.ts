@@ -70,20 +70,18 @@ export class ExceljsService {
     });
 
     headerRow.forEach((element, index) => {
-      const row = this.indexToAlphabet(index);
       element.forEach((cell: any, cellIndex: any) => {
-        // if (cell.colSpan) {
-        //   sheet.mergeCells(`${row}${cellIndex}`, `${row}${cellIndex + cell.colSpan - 1}`);
-        // }
-        console.log(row, cellIndex)
-        if(cell.rowSpan) {
-          const addRowSpan = this.indexToAlphabet(index + cell.rowSpan - 1)
-          sheet.mergeCells(`${row}${cellIndex}`, `${addRowSpan}${cellIndex}`)
+        const col = this.indexToAlphabet(cellIndex);
+        if (cell.colSpan) {
+          sheet.mergeCells(`${col}${index}`, `${this.indexToAlphabet(cellIndex + cell.colSpan - 1)}${index}`);
+        }
+        if (cell.rowSpan) {
+          const row = this.indexToAlphabet(cellIndex);
+          console.log(`${row}${index + 1}`, `${row}${index + cell.rowSpan}`);
+          sheet.mergeCells(`${row}${index + 1}`, `${row}${index + cell.rowSpan}`);
         }
       });
     });
-
-    console.log(sheet);
   }
 
   indexToAlphabet(index: number) {
