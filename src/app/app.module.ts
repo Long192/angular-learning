@@ -38,7 +38,6 @@ import { ReportTestingComponent } from './report-testing/report-testing.componen
 import { AR_EXPORTS, ActiveReportsModule, HtmlExportService, PdfExportService, TabularDataExportService } from '@grapecity/activereports-angular';
 import { SaleListComponent } from './sale-list/sale-list.component';
 import { SaleReportComponent } from './sale-report/sale-report.component';
-import { ReportReducer } from 'src/slices/ReportSlice';
 import { ReportService } from 'src/service/ReportService';
 import { MergeManagerService } from 'src/service/MergeManagerService';
 import { SaleService } from 'src/service/SaleService';
@@ -77,7 +76,7 @@ import { SaleService } from 'src/service/SaleService';
     WjInputModule,
     WjGridGrouppanelModule,
     ActiveReportsModule,
-    StoreModule.forRoot({ employee: EmployeeReducer, report: ReportReducer }),
+    StoreModule.forRoot({ employee: EmployeeReducer }),
     // EffectsModule.forRoot([EmployeeEffect])
   ],
   providers: [

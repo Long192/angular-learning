@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { DesignerComponent, ViewerComponent } from '@grapecity/activereports-angular';
 import { Core } from '@grapecity/activereports';
 import { Store } from '@ngrx/store';
-import { reportSelector } from 'src/slices/ReportSlice';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-sale-report',
@@ -47,7 +47,10 @@ export class SaleReportComponent implements OnInit {
 
   availableExports = ['pdf', 'html', 'tabular-data'];
 
-  constructor(private store: Store<{ report: any }>) {}
+  constructor(
+    private store: Store<{ report: any }>,
+    private appService: AppService
+  ) {}
 
   updateToolbar() {
     const designButton = {
@@ -116,10 +119,6 @@ export class SaleReportComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(Core.FontStore.getFonts());
-    this.store
-      .select(reportSelector)
-      .subscribe((data: any) => (this.definition = data.report))
-      .unsubscribe();
+    this.definition = this.appService.getReport();
   }
 }

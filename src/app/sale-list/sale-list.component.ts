@@ -1,15 +1,15 @@
-import { Component, ElementRef, OnDestroy, OnInit, Signal, ViewChild } from '@angular/core';
-import { signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import * as wjGrid from '@grapecity/wijmo.grid';
 import * as wjInput from '@grapecity/wijmo.input';
 import * as wjCore from '@grapecity/wijmo';
 import { Store } from '@ngrx/store';
-import { setReport } from 'src/slices/ReportSlice';
+import { SaleService } from 'src/service/SaleService';
 import { ReportService } from 'src/service/ReportService';
-import { Router } from '@angular/router';
 import { MergeManagerService } from 'src/service/MergeManagerService';
-import { comparator } from 'src/utils/constantVar';
 import { AppService } from '../app.service';
+import { comparator } from 'src/utils/constantVar';
+import { ExceljsService } from 'src/service/ExceljsService';
 
 @Component({
   selector: 'app-sale-report',
@@ -29,39 +29,38 @@ export class SaleListComponent implements OnInit, OnDestroy {
   report!: ReportService;
   gridHeight!: string;
   rawColumn!: any;
+  collectionView = new wjCore.CollectionView([], {
+    pageSize: 100,
+    groupDescriptions: [],
+  });
 
   constructor(
     private router: Router,
     private store: Store<{ report: any }>,
-    private appService: AppService
+    private appService: AppService,
+    private saleService: SaleService
   ) {}
 
-  async initGrid() {
-    const collectionView = new wjCore.CollectionView(this.dataSource, {
-      groupDescriptions: this.column.columnGroup,
-      pageSize: 100,
-    });
-
-    this.gridNavigate.cv = collectionView;
-    this.gridNavigate.headerFormat = 'Page {currentPage:n0} of {pageCount:n0}';
-    this.gridNavigate.byPage = true;
+  async initGrid(data: any) {
     this.reportGrid.headersVisibility = wjGrid.HeadersVisibility.Column;
     this.reportGrid.initialize({
-      itemsSource: collectionView,
+      itemsSource: this.collectionView,
       autoGenerateColumns: false,
-      columns: this.column.columns,
     });
 
+    console.log(data.style.common.fotterText);
+
+    this.reportGrid.alternatingRowStep = data.style.common.alternateStep || 0;
+    const groupDes = data.collumnGroup.map((item: string) => new wjCore.PropertyGroupDescription(item));
+    this.collectionView.groupDescriptions.push(...groupDes);
+
     this.reportGrid.columnFooters.rows.push(new wjGrid.GroupRow());
-    this.reportGrid.columnFooters.setCellData(0, 0, this.column.style.common.fotterText);
-    // this.reportGrid.columnFooters.rows[0].allowDragging = false
-    // this.reportGrid.columnFooters.rows[0].allowMerging = true
-    this.reportGrid.alternatingRowStep = this.column.style.common.alternateStep || 0;
     this.reportGrid.autoRowHeights = true;
     this.reportGrid.mergeManager = new MergeManagerService(
       0,
       this.reportGrid.columnFooters.columns.findIndex(item => item.aggregate) - 1
     );
+    this.reportGrid.columnFooters.setCellData(0, 0, data.style.common.fotterText);
 
     this.reportGrid.formatItem.addHandler((sender: wjGrid.FlexGrid, event: wjGrid.FormatItemEventArgs) => {
       this.formatItemByRule(sender, event);
@@ -124,62 +123,70 @@ export class SaleListComponent implements OnInit, OnDestroy {
     return Math.random() >= 0.5;
   }
 
-  async getData() {
-    this.dataSource = await fetch('../../assets/saleReportData.json')
-      .then(res => res.json())
-      .then(data =>
-        data.map((item: any) => ({
-          ...item,
-          Quantity: item.Quantity * 1000,
-          Date: new Date(item.Date),
-        }))
-      );
+  getData() {
+    this.saleService.getSaleData().subscribe(data => {
+      const newData = data.map((item: any) => ({
+        ...item,
+        Date: new Date(item.Date),
+        Quantity: item.Quantity * 1000,
+      }));
+      this.collectionView.sourceCollection = newData;
+      this.dataSource = newData;
+      this.gridNavigate.cv = this.collectionView;
+      this.gridNavigate.headerFormat = 'Page {currentPage:n0} of {pageCount:n0}';
+      this.gridNavigate.byPage = true;
+    });
   }
 
   async getColumn() {
-    const columnResponse = await fetch('../../assets/saleReportColumn.json').then(res => res.json());
+    // const data = await fetch('../../assets/saleReportColumn.json').then(res => res.json());
 
-    this.rawColumn = JSON.parse(JSON.stringify(columnResponse.columns));
+    this.saleService.getSaleColumn().subscribe(data => {
+      this.rawColumn = JSON.parse(JSON.stringify(data.columns));
 
-    let maxLevel = Math.max(...columnResponse.columns.filter((item: any) => item.level).map((item: any) => item.level));
+      let maxLevel = Math.max(...data.columns.filter((item: any) => item.level).map((item: any) => item.level));
 
-    let newColumnList: any[] = [];
+      let newColumnList: any[] = [];
 
-    for (maxLevel; maxLevel > 0; maxLevel--) {
-      const listItemLevel = columnResponse.columns.filter((item: any) => item.level && item.level == maxLevel);
+      for (maxLevel; maxLevel > 0; maxLevel--) {
+        const listItemLevel = data.columns.filter((item: any) => item.level && item.level == maxLevel);
 
-      newColumnList = columnResponse.columns.map((columnItem: any) => {
-        delete columnItem.rowSpan;
-        delete columnItem.colSpan;
-        delete columnItem.checkBox;
-        delete columnItem.type;
-        delete columnItem.date;
+        newColumnList = data.columns.map((columnItem: any) => {
+          delete columnItem.rowSpan;
+          delete columnItem.colSpan;
+          delete columnItem.checkBox;
+          delete columnItem.type;
+          delete columnItem.date;
 
-        if (!columnItem.group) {
-          return columnItem;
-        }
-
-        listItemLevel.forEach((item: any) => {
-          if (columnItem.group === item.parent) {
-            const { parent, level, group, ...newObj } = item;
-            columnItem.columns ? columnItem.columns.push(newObj) : (columnItem.columns = new Array(newObj));
+          if (!columnItem.group) {
+            return columnItem;
           }
+
+          listItemLevel.forEach((item: any) => {
+            if (columnItem.group === item.parent) {
+              const { parent, level, group, ...newObj } = item;
+              columnItem.columns ? columnItem.columns.push(newObj) : (columnItem.columns = new Array(newObj));
+            }
+          });
+
+          const { group, ...newItem } = columnItem;
+
+          return newItem;
         });
+      }
 
-        const { group, ...newItem } = columnItem;
+      this.reportGrid.columnGroups = newColumnList.filter(item => !item.level);
+      this.initGrid(data);
+      this.gridHeight = data.style.common.gridHeight;
 
-        return newItem;
-      });
-    }
-
-    this.gridHeight = columnResponse.style.common.gridHeight;
-
-    this.column = {
-      columnGroup: columnResponse.collumnGroup,
-      columns: newColumnList.filter(item => !item.level),
-      rules: columnResponse.rules,
-      style: columnResponse.style,
-    };
+      this.generrateStyle({ rules: data.rules, style: data.style });
+      this.column = {
+        columnGroup: data.collumnGroup,
+        columns: newColumnList.filter(item => !item.level),
+        rules: data.rules,
+        style: data.style,
+      };
+    });
   }
 
   async toReportPage() {
@@ -188,7 +195,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
     await this.createReport(false);
 
-    this.store.dispatch(setReport({ report: this.report.report }));
+    this.appService.setReport(this.report.report);
 
     this.router.navigate(['/sale-report']);
   }
@@ -267,14 +274,14 @@ export class SaleListComponent implements OnInit, OnDestroy {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  generrateStyle() {
-    const styleList = this.column.rules.filter((item: any) => item.property.includes('style'));
+  generrateStyle(column: any) {
+    const styleList = column.rules.filter((item: any) => item.property.includes('style'));
 
-    Object.keys(this.column.style.dynamix).forEach((item: any) => {
+    Object.keys(column.style.dynamix).forEach((item: any) => {
       const style = document.createElement('style');
-      let styleClass = `.grid-dnx-class-${this.column.style.common.key}-${item} { `;
+      let styleClass = `.grid-dnx-class-${column.style.common.key}-${item} { `;
       style.type = 'text/css';
-      this.column.style.dynamix[item].forEach((styleItem: any) => {
+      column.style.dynamix[item].forEach((styleItem: any) => {
         if (styleItem.gridProperty) {
           styleClass = styleClass.concat(`${styleItem.gridProperty} : ${styleItem.value} !important ; `);
         }
@@ -297,19 +304,35 @@ export class SaleListComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.appService.getData().subscribe(item => {
-      console.log(item);
-      this.dataSource = item;
-      this.reportGrid.itemsSource = item
-    });
     this.reportGrid.beginUpdate();
-    // await this.getData();
-    await this.getColumn();
-    this.generrateStyle();
-    this.initGrid();
+    this.getData();
+    this.getColumn();
+    // this.generrateStyle();
     this.reportGrid.endUpdate();
     this.reportGrid.autoSizeRows();
     this.hiddenButton = false;
+
+    setTimeout(() => {
+      const test = new ExceljsService({
+        dataSource: this.dataSource,
+        column: this.rawColumn
+      });
+
+      test.createSheet()
+
+      test.workbook.xlsx.writeBuffer().then((buffer: any) => {
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        // const url = URL.createObjectURL(blob)
+        // console.log(url)
+        const a = document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = "test.xlsx";
+        a.style.display = 'none';
+        document.body.appendChild(a);
+      
+        a.click();
+      });
+    }, 5000);
   }
 
   ngOnDestroy(): void {

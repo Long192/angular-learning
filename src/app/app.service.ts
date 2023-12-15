@@ -1,18 +1,20 @@
-import { SaleService } from './../service/SaleService';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { Core } from '@grapecity/activereports';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppService {
-  saleData: Observable<any>
+  report!: Core.Rdl.Report;
 
-  constructor(private saleService: SaleService){
-    this.saleData = saleService.getSaleData()
+  constructor() {}
+
+  getReport() {
+    return this.report
   }
 
-  getData(){
-    return this.saleData
+  setReport(report: Core.Rdl.Report) {
+    this.report = report
   }
 }
