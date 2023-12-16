@@ -19,7 +19,6 @@ export class ExceljsService {
   }
 
   createHeader(sheet: Worksheet) {
-    const headerRow = [];
     const firstRow = this.contructParam.column
       .filter((item: any) => !item.level)
       .reduce((storage: any, current: any) => {
@@ -29,6 +28,34 @@ export class ExceljsService {
 
         return [...storage, current];
       }, []);
+
+    const headerRow = this.getHeaderRows(firstRow);
+
+    headerRow.forEach(element => {
+      sheet.addRow(element.map((item: any) => item.header || item.binding));
+    });
+
+    headerRow.forEach((element, index) => {
+      element.forEach((cell: any, cellIndex: any) => {
+        const col = this.indexToAlphabet(cellIndex);
+        if (cell.colSpan) {
+          sheet.mergeCells(`${col}${index}`, `${this.indexToAlphabet(cellIndex + cell.colSpan - 1)}${index}`);
+        }
+        if (cell.rowSpan) {
+          const row = this.indexToAlphabet(cellIndex);
+          sheet.mergeCells(`${row}${index + 1}`, `${row}${index + cell.rowSpan}`);
+        }
+        const style = this.getStyle('header');
+        sheet.getCell(`${this.indexToAlphabet(cellIndex)}${index + 1}`).fill = style.fill;
+        sheet.getCell(`${this.indexToAlphabet(cellIndex)}${index + 1}`).font = style.font;
+        sheet.getCell(`${this.indexToAlphabet(cellIndex)}${index + 1}`).alignment = style.alignment;
+      });
+
+    });
+  }
+
+  getHeaderRows(firstRow: any) {
+    const headerRow = [];
     const levelList = this.contructParam.column.filter((item: any) => item.level).map((item: any) => item.level);
     headerRow.push(firstRow);
 
@@ -65,31 +92,59 @@ export class ExceljsService {
       }
     }
 
-    headerRow.forEach(element => {
-      sheet.addRow(element.map((item: any) => item.header || item.binding));
-    });
-
-    headerRow.forEach((element, index) => {
-      element.forEach((cell: any, cellIndex: any) => {
-        const col = this.indexToAlphabet(cellIndex);
-        if (cell.colSpan) {
-          sheet.mergeCells(`${col}${index}`, `${this.indexToAlphabet(cellIndex + cell.colSpan - 1)}${index}`);
-        }
-        if (cell.rowSpan) {
-          const row = this.indexToAlphabet(cellIndex);
-          console.log(`${row}${index + 1}`, `${row}${index + cell.rowSpan}`);
-          sheet.mergeCells(`${row}${index + 1}`, `${row}${index + cell.rowSpan}`);
-        }
-      });
-    });
+    return headerRow;
   }
 
   indexToAlphabet(index: number) {
     if (index >= 0 && index <= 25) {
       return String.fromCharCode('A'.charCodeAt(0) + index);
     } else {
-      // Handle out-of-range indices or other errors
-      return null;
+      throw new Error('out of range');
     }
+  }
+
+  getStyle(type: 'header' | 'body' | 'cell' | 'fotter' | 'group' | 'alt') {
+    const styleList = this.contructParam.style.dynamix[type];
+    const style: any = {border: {
+      
+    }};
+    styleList.forEach((element: any) => {
+      switch (element.gridProperty) {
+        case 'text-align':
+          style.alignment = {
+            ...style.alignment,
+            horizontal: element.value,
+          };
+          break;
+        case 'font-weight':
+          style.font = {
+            ...style.font,
+            bold: element.value > 400 || element.value === 'bold',
+          };
+          break;
+        case 'color':
+          style.font = {
+            ...style.font,
+            color: { argb: element.value },
+          };
+          break;
+        case 'background-color':
+          style.fill = {
+            ...style.fill,
+            type: 'pattern',
+            pattern: 'solid',
+            bgColor: { argb: 'FFF8DC' },
+            fgColor: { argb: 'FFF8DC' },
+          };
+          break;
+        case 'font-size':
+          style.font = {
+            ...style.font,
+            size: +element.value.replace('px', ''),
+          };
+          break;
+      }
+    });
+    return style;
   }
 }

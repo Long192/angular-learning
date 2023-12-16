@@ -315,10 +315,11 @@ export class SaleListComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       const test = new ExceljsService({
         dataSource: this.dataSource,
-        column: this.rawColumn
+        column: this.rawColumn,
+        style: this.column.style,
       });
 
-      test.createSheet()
+      test.createSheet();
 
       test.workbook.xlsx.writeBuffer().then((buffer: any) => {
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -326,7 +327,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
         // console.log(url)
         const a = document.createElement('a');
         a.href = window.URL.createObjectURL(blob);
-        a.download = "test.xlsx";
+        a.download = 'test.xlsx';
         a.style.display = 'none';
         document.body.appendChild(a);
 
