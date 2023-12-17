@@ -49,8 +49,8 @@ export class ExceljsService {
         sheet.getCell(`${this.indexToAlphabet(cellIndex)}${index + 1}`).fill = style.fill;
         sheet.getCell(`${this.indexToAlphabet(cellIndex)}${index + 1}`).font = style.font;
         sheet.getCell(`${this.indexToAlphabet(cellIndex)}${index + 1}`).alignment = style.alignment;
+        sheet.getCell(`${this.indexToAlphabet(cellIndex)}${index + 1}`).border = style.border;
       });
-
     });
   }
 
@@ -105,9 +105,25 @@ export class ExceljsService {
 
   getStyle(type: 'header' | 'body' | 'cell' | 'fotter' | 'group' | 'alt') {
     const styleList = this.contructParam.style.dynamix[type];
-    const style: any = {border: {
-      
-    }};
+    const style: any = {
+      alignment: {
+        vertical: 'middle',
+      },
+      border: {
+        top: {
+          style: 'medium',
+        },
+        left: {
+          style: 'medium',
+        },
+        bottom: {
+          style: 'medium',
+        },
+        right: {
+          style: 'medium',
+        },
+      },
+    };
     styleList.forEach((element: any) => {
       switch (element.gridProperty) {
         case 'text-align':
