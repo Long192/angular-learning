@@ -139,24 +139,41 @@
     "dynamix": {
       "header": [
         { "reportProperty": "VerticalAlign", "value": "middle" },
-        { "gridProperty": "background-color", "reportProperty": "BackgroundColor", "value": "cornsilk" },
-        { "gridProperty": "font-weight", "reportProperty": "FontWeight", "value": "Bold" },
-        { "gridProperty": "text-align", "reportProperty": "TextAlign", "value": "center" },
-        { "gridProperty": "justify-content", "value": "center" }
+        {
+          "important": true,
+          "gridProperty": "background-color",
+          "reportProperty": "BackgroundColor",
+          "value": "#FFF8DC"
+        },
+        { "important": true, "gridProperty": "font-weight", "reportProperty": "FontWeight", "value": "Bold" },
+        { "important": true, "gridProperty": "text-align", "reportProperty": "TextAlign", "value": "center" },
+        { "important": true, "gridProperty": "justify-content", "value": "center" }
       ],
-      "body": [{ "gridProperty": "padding", "reportProperty": "Padding", "value": "4px 6px 3px 6px" }],
+      "body": [
+        { "important": true, "gridProperty": "padding", "reportProperty": "Padding", "value": "4px 6px 3px 6px" }
+      ],
       "cell": [
-        { "gridProperty": "word-wrap", "value": "break-word" },
-        { "gridProperty": "white-space", "value": " break-spaces" }
+        { "important": true, "gridProperty": "word-wrap", "value": "break-word" },
+        { "important": true, "gridProperty": "white-space", "value": " break-spaces" }
       ],
-      "alt": [{ "reportProperty": "BackgroundColor", "value": "#f7f7f7" }],
+      "alt": [{ "reportProperty": "BackgroundColor", "gridProperty": "background-color", "value": "#f7f7f7" }],
       "group": [
-        { "gridProperty": "background-color", "reportProperty": "BackgroundColor", "value": "wheat" },
-        { "gridProperty": "font-weight", "reportProperty": "FontWeight", "value": "Bold" }
+        {
+          "important": true,
+          "gridProperty": "background-color",
+          "reportProperty": "BackgroundColor",
+          "value": "wheat"
+        },
+        { "important": true, "gridProperty": "font-weight", "reportProperty": "FontWeight", "value": "Bold" }
       ],
       "fotter": [
-        { "gridProperty": "background-color", "reportProperty": "BackgroundColor", "value": "cornsilk" },
-        { "gridProperty": "font-weight", "reportProperty": "FontWeight", "value": "Bold" }
+        {
+          "important": true,
+          "gridProperty": "background-color",
+          "reportProperty": "BackgroundColor",
+          "value": "#FFF8DC"
+        },
+        { "important": true, "gridProperty": "font-weight", "reportProperty": "FontWeight", "value": "Bold" }
       ]
     }
   }

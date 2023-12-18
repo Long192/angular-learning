@@ -161,8 +161,6 @@ export class ReportService {
       table.TableGroups = this.craeteGroupFromColumnJson(this.columnFromJson);
     }
 
-    console.log(table);
-
     return table;
   };
 

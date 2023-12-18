@@ -48,8 +48,6 @@ export class SaleListComponent implements OnInit, OnDestroy {
       autoGenerateColumns: false,
     });
 
-    console.log(data.style.common.fotterText);
-
     this.reportGrid.alternatingRowStep = data.style.common.alternateStep || 0;
     const groupDes = data.collumnGroup.map((item: string) => new wjCore.PropertyGroupDescription(item));
     this.collectionView.groupDescriptions.push(...groupDes);
@@ -186,6 +184,8 @@ export class SaleListComponent implements OnInit, OnDestroy {
         rules: data.rules,
         style: data.style,
       };
+
+      this.hiddenButton = false;
     });
   }
 
@@ -205,18 +205,6 @@ export class SaleListComponent implements OnInit, OnDestroy {
       this.reportGrid.scrollIntoView(0, 0);
       this.reportGrid.isDisabled = true;
     }
-
-    // if (typeof Worker !== 'undefined') {
-    //   // Create a new
-    //   const worker = new Worker(new URL('../../worker/sale-workder.worker.ts', import.meta.url));
-    //   worker.onmessage = ({ data }) => {
-    //     console.log(`page got message: ${data}`);
-    //   };
-    //   worker.postMessage('hello');
-    // } else {
-    //   // Web workers are not supported in this environment.
-    //   // You should add a fallback so that your program still executes correctly.
-    // }
 
     await this.createReport(exportFromJson);
 
@@ -283,7 +271,9 @@ export class SaleListComponent implements OnInit, OnDestroy {
       style.type = 'text/css';
       column.style.dynamix[item].forEach((styleItem: any) => {
         if (styleItem.gridProperty) {
-          styleClass = styleClass.concat(`${styleItem.gridProperty} : ${styleItem.value} !important ; `);
+          styleClass = styleClass.concat(
+            `${styleItem.gridProperty} : ${styleItem.value} ${styleItem.important ? '!important' : ''} ; `
+          );
         }
       });
       styleClass += '}';
@@ -303,37 +293,33 @@ export class SaleListComponent implements OnInit, OnDestroy {
     });
   }
 
-  async ngOnInit() {
-    this.reportGrid.beginUpdate();
-    this.getData();
-    this.getColumn();
-    // this.generrateStyle();
-    this.reportGrid.endUpdate();
-    this.reportGrid.autoSizeRows();
-    this.hiddenButton = false;
-
-    setTimeout(() => {
-      const test = new ExceljsService({
+  dowloadExcel() {
+    if (typeof Worker !== 'undefined') {
+      const worker = new Worker(new URL('../../worker/sale-workder.worker.ts', import.meta.url));
+      worker.onmessage = ({ data }) => {
+        const a = document.createElement('a');
+        a.href = data;
+        a.download = 'test.xlsx';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        URL.revokeObjectURL(data);
+      };
+      worker.postMessage({
         dataSource: this.dataSource,
         column: this.rawColumn,
         style: this.column.style,
       });
+    } else {
+    }
+  }
 
-      test.createSheet();
-
-      test.workbook.xlsx.writeBuffer().then((buffer: any) => {
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        // const url = URL.createObjectURL(blob)
-        // console.log(url)
-        const a = document.createElement('a');
-        a.href = window.URL.createObjectURL(blob);
-        a.download = 'test.xlsx';
-        a.style.display = 'none';
-        document.body.appendChild(a);
-
-        a.click();
-      });
-    }, 5000);
+  async ngOnInit() {
+    this.reportGrid.beginUpdate();
+    this.getData();
+    this.getColumn();
+    this.reportGrid.endUpdate();
+    this.reportGrid.autoSizeRows();
   }
 
   ngOnDestroy(): void {

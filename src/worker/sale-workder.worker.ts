@@ -2,15 +2,21 @@
 
 // import { PdfExport } from '@grapecity/activereports';
 // import { Worksheet } from 'exceljs';
-import * as ExcelJs from "exceljs"
-import * as Converter from "libreoffice-convert"
-import { ExceljsService } from "src/service/ExceljsService";
-
+import { ExceljsService } from 'src/service/ExceljsService';
+import { excelParameter } from 'src/types/exceljsServiceParameter';
 
 addEventListener('message', ({ data }) => {
-  // const response = printReport(data);
-  const response = `worker response to ${data}`;
-  postMessage(response);
+  createExcel(data)
+    .xlsx.writeBuffer()
+    .then((buffer: any) => {
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = URL.createObjectURL(blob);
+      postMessage(url);
+    });
 });
 
-const printReport = async (report: any) => await report.export();
+const createExcel = (params: excelParameter) => {
+  const excel = new ExceljsService(params);
+  excel.createSheet();
+  return excel.workbook;
+};
