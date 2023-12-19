@@ -98,35 +98,35 @@
       "dataType": 2
     }
   ],
-  "collumnGroup": ["SubTotalName"],
+  "collumnGroup": ["SubTotalName", "CheckBox"],
   "rules": [
     {
       "key": "Amount131",
       "operation": "e",
       "compareValue": 0,
       "property": "innerText",
-      "value": ""
+      "value": "test 2"
     },
     {
       "key": "DiscountAmount",
       "operation": "e",
       "compareValue": 0,
       "property": "innerText",
-      "value": ""
+      "value": "test 1"
     },
     {
       "key": "Amount2",
       "operation": "ge",
       "compareValue": 1000000,
       "property": "style.background-color",
-      "value": "red"
+      "value": "#ff0000"
     },
     {
       "key": "TotalAmount",
       "operation": "ge",
       "compareValue": 1000000,
       "property": "style.color",
-      "value": "red"
+      "value": "#ff0000"
     }
   ],
   "style": {
@@ -162,7 +162,7 @@
           "important": true,
           "gridProperty": "background-color",
           "reportProperty": "BackgroundColor",
-          "value": "wheat"
+          "value": "#f5deb3"
         },
         { "important": true, "gridProperty": "font-weight", "reportProperty": "FontWeight", "value": "Bold" }
       ],

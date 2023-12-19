@@ -1,7 +1,8 @@
 // import { Injectable } from '@angular/core';
 // import { Workbook, Worksheet } from 'exceljs';
-import { Row, Workbook, Worksheet } from 'exceljs';
+import { CellModel, Row, Workbook, Worksheet } from 'exceljs';
 import { excelParameter } from 'src/types/exceljsServiceParameter';
+import { comparator } from 'src/utils/constantVar';
 
 // Injectable();
 export class ExceljsService {
@@ -59,6 +60,8 @@ export class ExceljsService {
         return item[bindingItem.binding];
       });
     });
+
+    console.log(this.groupByFields(this.constructParam.dataSource, ['SubTotalName', 'CheckBox']));
 
     // sheet.addRows(data);
     data.forEach(element => {
@@ -245,8 +248,8 @@ export class ExceljsService {
     }
   }
 
-  getStyle(type: 'header' | 'body' | 'fotter' | 'group' | 'alt') {
-    const styleList = this.constructParam.style.dynamix[type];
+  getStyle(type: 'header' | 'body' | 'fotter' | 'group' | 'alt', arrayStyle?: any) {
+    const styleList = arrayStyle || this.constructParam.style.dynamix[type];
     const style: any = {
       alignment: {
         vertical: 'middle',
@@ -267,7 +270,7 @@ export class ExceljsService {
       },
     };
     styleList.forEach((element: any) => {
-      switch (element.gridProperty) {
+      switch (element.gridProperty || element.property) {
         case 'text-align':
           style.alignment = {
             ...style.alignment,
@@ -307,46 +310,166 @@ export class ExceljsService {
   }
 
   drawStyle(sheet: Worksheet) {
-    const colLength = this.getBindingList().length;
+    const bindingList = this.getBindingList();
+    const headerStyle = this.getStyle('header');
+    const fotterStyle = this.getStyle('fotter');
+    const valueFormat = this.constructParam.rule.filter((item: any) => item.property === 'innerText');
+    const valueFormatIndex = bindingList
+      .map((bindingItem: any, bindingIndex: number) => {
+        if (valueFormat.find((ruleItem: any) => ruleItem.key === bindingItem.binding)) {
+          return bindingIndex;
+        }
+        return null;
+      })
+      .filter((item: any) => item);
+
+    let flagMode = '',
+      ruleIndexList: any = [],
+      bodyStyle: any = [];
     sheet.eachRow((item: Row, index: number) => {
-      console.log(item)
       let style: any = {};
       if (index <= this.headerLength) {
-        style = this.getStyle('header');
+        flagMode = 'header';
+        style = headerStyle;
       } else if (index > this.headerLength && index <= this.bodylenghth) {
-        if (index % (this.constructParam.style.common.alternateStep + 1) === 0) {
-          const altStyle = this.getStyle('alt');
-          const bodyStyle = this.getStyle('body');
-          style = {
+        flagMode = 'body';
+        bodyStyle = this.getBodyStyle(index);
+        style = bodyStyle.style;
+        ruleIndexList = bindingList
+          .map((bindingItem: any, bindingIndex: number) => {
+            if (bodyStyle.ruleStyle.find((ruleItem: any) => ruleItem.key === bindingItem.binding)) {
+              return bindingIndex;
+            }
+            return null;
+          })
+          .filter((ruleIndex: number) => ruleIndex);
+      } else {
+        flagMode = 'fotter';
+        style = fotterStyle;
+      }
+
+      if (!item.model || !item.model.cells) {
+        return;
+      }
+
+      item.model.cells.forEach((cell: CellModel, cellIndex: number) => {
+        const bindingIndex = ruleIndexList.findIndex((indexItem: number) => indexItem === cellIndex);
+        const valueFormatBindingIndex = valueFormatIndex.findIndex((indexItem: number) => indexItem === cellIndex);
+        let ruleStyle;
+
+        if (
+          this.checkBindingIndexCondition(valueFormatBindingIndex) &&
+          comparator[valueFormat[valueFormatBindingIndex].operation](
+            cell.value,
+            valueFormat[valueFormatBindingIndex].compareValue
+          )
+        ) {
+          item.getCell(cellIndex + 1).value = valueFormat[valueFormatBindingIndex].value;
+        }
+
+        if (this.checkBindingIndexCondition(bindingIndex)) {
+          ruleStyle = bodyStyle.ruleStyle[bindingIndex];
+        }
+        // console.log("run")
+        if (flagMode === 'body' && ruleStyle && comparator[ruleStyle.operation](cell.value, ruleStyle.compareValue)) {
+          const mergeStyle = {
             alignment: {
-              ...bodyStyle.alignment,
-              ...altStyle.alignment,
-            },
-            font: {
-              ...bodyStyle.font,
-              ...altStyle.font,
+              ...style.alignment,
+              ...ruleStyle.property.alignment,
             },
             border: {
-              ...bodyStyle.border,
-              ...altStyle.border,
+              ...style.border,
+              ...ruleStyle.property.border,
             },
             fill: {
-              ...bodyStyle.fill,
-              ...altStyle.fill,
+              ...style.fill,
+              ...ruleStyle.property.fill,
+            },
+            font: {
+              ...style.font,
+              ...ruleStyle.property.font,
             },
           };
-        } else {
-          style = this.getStyle('body');
+          item.getCell(cellIndex + 1).alignment = mergeStyle.alignment;
+          item.getCell(cellIndex + 1).border = mergeStyle.border;
+          item.getCell(cellIndex + 1).fill = mergeStyle.fill;
+          item.getCell(cellIndex + 1).font = mergeStyle.font;
+          return;
         }
-      } else {
-        style = this.getStyle('fotter');
-      }
-      for (let forIndex = 0; forIndex < colLength; forIndex++) {
-        item.getCell(forIndex + 1).alignment = style.alignment;
-        item.getCell(forIndex + 1).border = style.border;
-        item.getCell(forIndex + 1).fill = style.fill;
-        item.getCell(forIndex + 1).font = style.font;
-      }
+        item.getCell(cellIndex + 1).alignment = style.alignment;
+        item.getCell(cellIndex + 1).border = style.border;
+        item.getCell(cellIndex + 1).fill = style.fill;
+        item.getCell(cellIndex + 1).font = style.font;
+      });
     });
+  }
+
+  getBodyStyle(index: number) {
+    let style;
+
+    const ruleStyleList = this.constructParam.rule
+      .filter((item: any) => item.property.includes('style'))
+      .map((item: any) => {
+        const property = item.property.replace('style.', '');
+        return {
+          key: item.key,
+          compareValue: item.compareValue,
+          operation: item.operation,
+          property: this.getStyle('body', [{ property, value: item.value }]),
+        };
+      });
+
+    if (index % (this.constructParam.style.common.alternateStep + 1) === 0) {
+      const altStyle = this.getStyle('alt');
+      const bodyStyle = this.getStyle('body');
+      style = {
+        alignment: {
+          ...bodyStyle.alignment,
+          ...altStyle.alignment,
+        },
+        font: {
+          ...bodyStyle.font,
+          ...altStyle.font,
+        },
+        border: {
+          ...bodyStyle.border,
+          ...altStyle.border,
+        },
+        fill: {
+          ...bodyStyle.fill,
+          ...altStyle.fill,
+        },
+      };
+    } else {
+      style = this.getStyle('body');
+    }
+
+    return {
+      style,
+      ruleStyle: ruleStyleList,
+    };
+  }
+
+  checkBindingIndexCondition(bindingIndex: number | null | undefined) {
+    return bindingIndex !== undefined && bindingIndex !== null && bindingIndex >= 0;
+  }
+
+  groupByFields(data: any, groupBy: string[]) {
+    const groupedData: any = [];
+
+    data.forEach((item: any) => {
+      groupBy.forEach(groupItem => {
+        const group = groupedData.find((groupDataItem: any) => groupDataItem[groupItem] === item[groupItem]);
+
+        if (!group) {
+          const groupObject = { [groupItem]: item[groupItem], isGroupRow: true };
+          groupedData.push(groupObject);
+        }
+      });
+
+      groupedData.push(item);
+    });
+
+    return groupedData;
   }
 }

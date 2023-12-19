@@ -302,13 +302,15 @@ export class SaleListComponent implements OnInit, OnDestroy {
         a.download = 'test.xlsx';
         a.style.display = 'none';
         document.body.appendChild(a);
-        a.click();
+        // a.click();
         URL.revokeObjectURL(data);
+        document.body.removeChild(a)
       };
       worker.postMessage({
         dataSource: this.dataSource,
         column: this.rawColumn,
         style: this.column.style,
+        rule: this.column.rules
       });
     } else {
     }
