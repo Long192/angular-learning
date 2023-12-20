@@ -61,7 +61,7 @@ export class ExceljsService {
       });
     });
 
-    console.log(this.groupByFields(this.constructParam.dataSource, ['SubTotalName', 'CheckBox']));
+    console.log(this.groupByFields(this.constructParam.dataSource, ['SubTotalName', 'CheckBox', 'Unit']));
 
     // sheet.addRows(data);
     data.forEach(element => {
@@ -253,6 +253,7 @@ export class ExceljsService {
     const style: any = {
       alignment: {
         vertical: 'middle',
+        wrapText: true,
       },
       border: {
         top: {
@@ -267,6 +268,11 @@ export class ExceljsService {
         right: {
           style: 'medium',
         },
+      },
+      font: {
+        name: 'Calibri(body)',
+        size: 11,
+        family: 2,
       },
     };
     styleList.forEach((element: any) => {
@@ -327,6 +333,7 @@ export class ExceljsService {
       ruleIndexList: any = [],
       bodyStyle: any = [];
     sheet.eachRow((item: Row, index: number) => {
+      let rowHeight = 0;
       let style: any = {};
       if (index <= this.headerLength) {
         flagMode = 'header';
@@ -353,6 +360,11 @@ export class ExceljsService {
       }
 
       item.model.cells.forEach((cell: CellModel, cellIndex: number) => {
+        const column = sheet.getColumn(this.indexToAlphabet(cellIndex));
+        if (cell.text && column && column.width) {
+          const height = cell.text.length / column.width;
+          rowHeight < height && (rowHeight = height + 0.5);
+        }
         const bindingIndex = ruleIndexList.findIndex((indexItem: number) => indexItem === cellIndex);
         const valueFormatBindingIndex = valueFormatIndex.findIndex((indexItem: number) => indexItem === cellIndex);
         let ruleStyle;
@@ -390,18 +402,21 @@ export class ExceljsService {
               ...ruleStyle.property.font,
             },
           };
-          item.getCell(cellIndex + 1).alignment = mergeStyle.alignment;
-          item.getCell(cellIndex + 1).border = mergeStyle.border;
-          item.getCell(cellIndex + 1).fill = mergeStyle.fill;
-          item.getCell(cellIndex + 1).font = mergeStyle.font;
+          this.addStyle(item, cellIndex, mergeStyle);
           return;
         }
-        item.getCell(cellIndex + 1).alignment = style.alignment;
-        item.getCell(cellIndex + 1).border = style.border;
-        item.getCell(cellIndex + 1).fill = style.fill;
-        item.getCell(cellIndex + 1).font = style.font;
+        this.addStyle(item, cellIndex, style);
       });
+
+      item.height = rowHeight;
     });
+  }
+
+  addStyle(row: Row, index: number, style: any) {
+    row.getCell(index + 1).alignment = style.alignment;
+    row.getCell(index + 1).border = style.border;
+    row.getCell(index + 1).fill = style.fill;
+    row.getCell(index + 1).font = style.font;
   }
 
   getBodyStyle(index: number) {
@@ -454,22 +469,26 @@ export class ExceljsService {
     return bindingIndex !== undefined && bindingIndex !== null && bindingIndex >= 0;
   }
 
-  groupByFields(data: any, groupBy: string[]) {
-    const groupedData: any = [];
+  groupByFields(data: any[], fields: string[]) {
+    return Object.values(
+      data.reduce((storage, current) => {
+        const key = fields.map(field => current[field]).join('_');
 
-    data.forEach((item: any) => {
-      groupBy.forEach(groupItem => {
-        const group = groupedData.find((groupDataItem: any) => groupDataItem[groupItem] === item[groupItem]);
+        if (!storage[key]) {
+          storage[key] = {
+            data: [],
+            groupitem: {},
+          };
 
-        if (!group) {
-          const groupObject = { [groupItem]: item[groupItem], isGroupRow: true };
-          groupedData.push(groupObject);
+          fields.forEach(field => {
+            storage[key].groupItem[field] = current[field];
+          });
         }
-      });
 
-      groupedData.push(item);
-    });
+        storage[key].data.push(current);
 
-    return groupedData;
+        return storage;
+      }, {})
+    )
   }
 }

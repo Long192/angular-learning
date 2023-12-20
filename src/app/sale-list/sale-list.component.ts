@@ -9,7 +9,6 @@ import { ReportService } from 'src/service/ReportService';
 import { MergeManagerService } from 'src/service/MergeManagerService';
 import { AppService } from '../app.service';
 import { comparator } from 'src/utils/constantVar';
-import { ExceljsService } from 'src/service/ExceljsService';
 
 @Component({
   selector: 'app-sale-report',

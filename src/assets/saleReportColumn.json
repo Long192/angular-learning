@@ -16,7 +16,8 @@
       "header": "Dvt",
       "binding": "Unit",
       "width": 60,
-      "rowSpan": 2
+      "rowSpan": 2,
+      "dataType": 1
     },
     {
       "header": "Số lượng",
@@ -98,21 +99,21 @@
       "dataType": 2
     }
   ],
-  "collumnGroup": ["SubTotalName", "CheckBox"],
+  "collumnGroup": ["SubTotalName"],
   "rules": [
     {
       "key": "Amount131",
       "operation": "e",
       "compareValue": 0,
       "property": "innerText",
-      "value": "test 2"
+      "value": ""
     },
     {
       "key": "DiscountAmount",
       "operation": "e",
       "compareValue": 0,
       "property": "innerText",
-      "value": "test 1"
+      "value": ""
     },
     {
       "key": "Amount2",
