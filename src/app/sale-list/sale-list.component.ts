@@ -303,13 +303,14 @@ export class SaleListComponent implements OnInit, OnDestroy {
         document.body.appendChild(a);
         // a.click();
         URL.revokeObjectURL(data);
-        document.body.removeChild(a)
+        document.body.removeChild(a);
       };
       worker.postMessage({
         dataSource: this.dataSource,
         column: this.rawColumn,
         style: this.column.style,
-        rule: this.column.rules
+        rule: this.column.rules,
+        group: this.column.columnGroup,
       });
     } else {
     }

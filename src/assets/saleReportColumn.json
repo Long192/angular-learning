@@ -174,7 +174,13 @@
           "reportProperty": "BackgroundColor",
           "value": "#FFF8DC"
         },
-        { "important": true, "gridProperty": "font-weight", "reportProperty": "FontWeight", "value": "Bold" }
+        { "important": true, "gridProperty": "text-warp", "value": "warp" },
+        {
+          "important": true,
+          "gridProperty": "word-wrap",
+          "value": "break-word"
+        },
+        { "important": true, "gridProperty": "white-space", "value": " break-spaces" }
       ]
     }
   }

@@ -22,6 +22,8 @@ export class ExceljsService {
     this.createBody(sheet);
     this.createFotter(sheet);
     this.drawStyle(sheet);
+
+    // sheet.getRow(3).outlineLevel = 1
   }
 
   createHeader(sheet: Worksheet) {
@@ -61,7 +63,8 @@ export class ExceljsService {
       });
     });
 
-    console.log(this.groupByFields(this.constructParam.dataSource, ['SubTotalName', 'CheckBox', 'Unit']));
+    const groupData = this.groupByFields(this.constructParam.dataSource, this.constructParam.group || []);
+    console.log(this.mergeGroup(groupData));
 
     // sheet.addRows(data);
     data.forEach(element => {
@@ -241,11 +244,12 @@ export class ExceljsService {
   }
 
   indexToAlphabet(index: number) {
-    if (index >= 0 && index <= 25) {
-      return String.fromCharCode('A'.charCodeAt(0) + index);
-    } else {
-      throw new Error('out of range');
+    let excelIndex = '';
+    while (index >= 0) {
+      excelIndex = String.fromCharCode((index % 26) + 65) + excelIndex;
+      index = Math.floor(index / 26) - 1;
     }
+    return excelIndex;
   }
 
   getStyle(type: 'header' | 'body' | 'fotter' | 'group' | 'alt', arrayStyle?: any) {
@@ -469,26 +473,70 @@ export class ExceljsService {
     return bindingIndex !== undefined && bindingIndex !== null && bindingIndex >= 0;
   }
 
+  // groupByFields(data: any[], fields: string[]) {
+  //   return Object.values(
+  //     data.reduce((storage, current) => {
+  //       const key = fields.map(field => current[field]).join('_');
+
+  //       if (!storage[key]) {
+  //         storage[key] = {
+  //           data: [],
+  //           groupItem: {},
+  //         };
+
+  //         fields.forEach(field => {
+  //           console.log(storage[key]);
+  //           storage[key].groupItem[field] = current[field];
+  //         });
+  //       }
+
+  //       storage[key].data.push(current);
+
+  //       return storage;
+  //     }, {})
+  //   ).sort((a: any, b: any) => {
+  //     let compareString = '';
+  //     fields.forEach(item => {
+  //       if (compareString) {
+  //         compareString += ' || ';
+  //       }
+  //       compareString += `a.${item} - b.${item}`;
+  //     });
+
+  //     return eval(compareString);
+  //   });
+  // }
   groupByFields(data: any[], fields: string[]) {
-    return Object.values(
-      data.reduce((storage, current) => {
-        const key = fields.map(field => current[field]).join('_');
+    let result: any[] = [],
+      temp = { data: result };
 
-        if (!storage[key]) {
-          storage[key] = {
-            data: [],
-            groupitem: {},
-          };
+    data.forEach((item: any) => {
+      fields
+        .reduce((storage: any, current: any) => {
+          if (!storage[item[current]]) {
+            storage[item[current]] = { data: [] };
+            storage.data.push({ [current]: item[current], [current + 'list']: storage[item[current]].data });
+          }
+          return storage[item[current]];
+        }, temp)
+        .data.push(item);
+    });
 
-          fields.forEach(field => {
-            storage[key].groupItem[field] = current[field];
-          });
-        }
+    return result;
+  }
 
-        storage[key].data.push(current);
-
-        return storage;
-      }, {})
-    )
+  mergeGroup(data: any[]) {
+    let rowData: any[] = [];
+    data.forEach(item => {
+      // console.log(item);
+      const keys = Object.keys(item);
+      const findKey = this.constructParam.group?.find(item => keys.includes(item));
+      if (findKey && keys.length === 2) {
+        rowData.push(item[findKey]);
+        rowData.concat(this.mergeGroup(item[findKey + 'list']));
+      }
+      rowData = rowData.concat(item[keys[1]])
+    });
+    return rowData;
   }
 }
