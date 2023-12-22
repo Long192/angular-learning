@@ -10,6 +10,8 @@ export class ExceljsService {
   private constructParam: excelParameter;
   private headerLength = 0;
   private bodylenghth = 0;
+  private level = 0;
+  private groupRowIndex = [];
 
   constructor(constructParam: excelParameter) {
     this.constructParam = constructParam;
@@ -19,6 +21,7 @@ export class ExceljsService {
     const sheet = this.workbook.addWorksheet('');
 
     this.createHeader(sheet);
+    // console.log(sheet.getCell("A1"))
     this.createBody(sheet);
     this.createFotter(sheet);
     this.drawStyle(sheet);
@@ -63,8 +66,11 @@ export class ExceljsService {
       });
     });
 
+    console.log('converting');
     const groupData = this.groupByFields(this.constructParam.dataSource, this.constructParam.group || []);
-    console.log(this.mergeGroup(groupData));
+    const convertData = this.convertToExcelData(this.mergeGroup(groupData));
+    console.log('converted');
+    console.log(convertData);
 
     // sheet.addRows(data);
     data.forEach(element => {
@@ -84,6 +90,58 @@ export class ExceljsService {
     });
 
     this.bodylenghth = data.length;
+  }
+
+  convertToExcelData(data: any[]) {
+    let conditionArray: any[] = [];
+    const bindingList = this.getBindingList();
+    console.log('in here');
+    const excelData = data.map(item => {
+      if (item.level) {
+        conditionArray[item.level - 1] = {
+          key: item.binding,
+          value: item.header,
+        };
+
+        const row = new Array(bindingList.length).fill('');
+
+        row[2] = item.header;
+
+        const conditionString = conditionArray.reduce((storage: string, current: any) => {
+          if (storage) {
+            storage += ' && ';
+          }
+          storage += `element.${current.key} === "${current.value}"`;
+
+          return storage;
+        }, '');
+
+        console.log("in loop")
+
+        bindingList.forEach((element: any, index: number) => {
+          console.log("in more loop")
+          if (element.aggregate) {
+            row[index] = this.constructParam.dataSource.reduce((storage: number, current: any) => {
+              console.log("reduce loop")
+              if (eval(conditionString)) {
+                storage += current[element.binding];
+              }
+
+              return storage
+            }, 0);
+          }
+        });
+
+        conditionArray = []
+        return row;
+      }
+
+      return bindingList.map((item: any) => {
+        return data[item.binding];
+      });
+    });
+
+    return excelData;
   }
 
   createRow(rows: any[], sheet: Worksheet, skipIndex: number = 0) {
@@ -274,7 +332,7 @@ export class ExceljsService {
         },
       },
       font: {
-        name: 'Calibri(body)',
+        name: 'Arial',
         size: 11,
         family: 2,
       },
@@ -412,11 +470,15 @@ export class ExceljsService {
         this.addStyle(item, cellIndex, style);
       });
 
-      item.height = rowHeight;
+      // item.height = rowHeight;
     });
   }
 
   addStyle(row: Row, index: number, style: any) {
+    // style.alignment && Object.keys(style.alignment).length ? (row.getCell(index + 1).alignment = style.alignment) : {};
+    // style.border && Object.keys(style.border).length ? (row.getCell(index + 1).border = style.border) : {};
+    // style.fill && Object.keys(style.fill).length ? (row.getCell(index + 1).fill = style.fill) : {};
+    // style.font && Object.keys(style.font).length ? (row.getCell(index + 1).font = style.font) : {};
     row.getCell(index + 1).alignment = style.alignment;
     row.getCell(index + 1).border = style.border;
     row.getCell(index + 1).fill = style.fill;
@@ -472,40 +534,6 @@ export class ExceljsService {
   checkBindingIndexCondition(bindingIndex: number | null | undefined) {
     return bindingIndex !== undefined && bindingIndex !== null && bindingIndex >= 0;
   }
-
-  // groupByFields(data: any[], fields: string[]) {
-  //   return Object.values(
-  //     data.reduce((storage, current) => {
-  //       const key = fields.map(field => current[field]).join('_');
-
-  //       if (!storage[key]) {
-  //         storage[key] = {
-  //           data: [],
-  //           groupItem: {},
-  //         };
-
-  //         fields.forEach(field => {
-  //           console.log(storage[key]);
-  //           storage[key].groupItem[field] = current[field];
-  //         });
-  //       }
-
-  //       storage[key].data.push(current);
-
-  //       return storage;
-  //     }, {})
-  //   ).sort((a: any, b: any) => {
-  //     let compareString = '';
-  //     fields.forEach(item => {
-  //       if (compareString) {
-  //         compareString += ' || ';
-  //       }
-  //       compareString += `a.${item} - b.${item}`;
-  //     });
-
-  //     return eval(compareString);
-  //   });
-  // }
   groupByFields(data: any[], fields: string[]) {
     let result: any[] = [],
       temp = { data: result };
@@ -528,15 +556,16 @@ export class ExceljsService {
   mergeGroup(data: any[]) {
     let rowData: any[] = [];
     data.forEach(item => {
-      // console.log(item);
       const keys = Object.keys(item);
       const findKey = this.constructParam.group?.find(item => keys.includes(item));
       if (findKey && keys.length === 2) {
-        rowData.push(item[findKey]);
-        rowData.concat(this.mergeGroup(item[findKey + 'list']));
+        rowData.push({ header: item[findKey], level: ++this.level, binding: findKey });
+        rowData = rowData.concat(this.mergeGroup(item[findKey + 'list']));
+      } else {
+        rowData.push(item);
       }
-      rowData = rowData.concat(item[keys[1]])
     });
+    this.level--;
     return rowData;
   }
 }
