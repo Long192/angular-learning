@@ -11,7 +11,7 @@ export class ExceljsService {
   private headerLength = 0;
   private bodylenghth = 0;
   private level = 0;
-  private groupRowIndex = [];
+  private aggragateList: any[] = [];
 
   constructor(constructParam: excelParameter) {
     this.constructParam = constructParam;
@@ -46,7 +46,7 @@ export class ExceljsService {
     this.createRow(headerRow, sheet);
 
     bindingList.forEach((item: any, index: number) => {
-      sheet.getColumn(index + 1).width = item.width / 8 || 12.5;
+      sheet.getColumn(index + 1).width = item.width / 6.5 || 100 / 6.5;
     });
 
     this.headerLength = headerRow.length;
@@ -66,14 +66,14 @@ export class ExceljsService {
       });
     });
 
-    console.log('converting');
-    const groupData = this.groupByFields(this.constructParam.dataSource, this.constructParam.group || []);
-    const convertData = this.convertToExcelData(this.mergeGroup(groupData));
-    console.log('converted');
-    console.log(convertData);
+    const convertData = this.convertToExcelData();
+    console.log('run');
+    const aggragateData = this.createAggragateRow(convertData);
+
+    console.log(aggragateData);
 
     // sheet.addRows(data);
-    data.forEach(element => {
+    aggragateData.forEach((element: any) => {
       sheet.addRow(element);
       const lastRow = sheet.lastRow;
       if (lastRow) {
@@ -92,52 +92,83 @@ export class ExceljsService {
     this.bodylenghth = data.length;
   }
 
-  convertToExcelData(data: any[]) {
+  createAggragateRow(data: any) {
+    const aggragateCells = this.getBindingList()
+      .map((item: any, index: number) => {
+        if (item.aggregate) {
+          return {
+            type: item.aggregate,
+            field: item.binding,
+            cellIndex: index,
+          };
+        }
+
+        return null;
+      })
+      .filter((item: any) => item);
+
+    this.aggragateList.forEach(item => {
+      const conditionString = item.condition.reduce((storage: string, current: any) => {
+        if (storage) {
+          storage += ' && ';
+        }
+        storage += `item.${current.binding}.toString() === "${current.value}"`;
+        return storage;
+      }, '');
+
+      const groupItem = this.constructParam.dataSource.filter(item => eval(conditionString));
+
+      // console.log(groupItem);
+      aggragateCells.forEach((element: any) => {
+        data[item.rowIndex][element.cellIndex] = this.caculateAggragate(element.type, groupItem, element.field);
+      });
+    });
+
+    return data;
+  }
+
+  caculateAggragate(type: string, data: any[], field: string) {
+    switch (type) {
+      case 'Sum':
+        return data.reduce((storage: number, current) => {
+          // console.log(current)
+          storage += current[field];
+          return storage;
+        }, 0);
+      case 'Avg':
+        return data.reduce((storage: number, current) => (storage += current[field]), 0) / data.length;
+      default:
+        return 0;
+    }
+  }
+
+  convertToExcelData() {
     let conditionArray: any[] = [];
     const bindingList = this.getBindingList();
-    console.log('in here');
-    const excelData = data.map(item => {
+
+    const excelData = this.mergeGroup(
+      this.groupByFields(this.constructParam.dataSource, this.constructParam.group || [])
+    ).map((item, index) => {
       if (item.level) {
         conditionArray[item.level - 1] = {
-          key: item.binding,
+          binding: item.binding,
           value: item.header,
         };
 
         const row = new Array(bindingList.length).fill('');
+        row[1] = item.header;
 
-        row[2] = item.header;
-
-        const conditionString = conditionArray.reduce((storage: string, current: any) => {
-          if (storage) {
-            storage += ' && ';
-          }
-          storage += `element.${current.key} === "${current.value}"`;
-
-          return storage;
-        }, '');
-
-        console.log("in loop")
-
-        bindingList.forEach((element: any, index: number) => {
-          console.log("in more loop")
-          if (element.aggregate) {
-            row[index] = this.constructParam.dataSource.reduce((storage: number, current: any) => {
-              console.log("reduce loop")
-              if (eval(conditionString)) {
-                storage += current[element.binding];
-              }
-
-              return storage
-            }, 0);
-          }
+        this.aggragateList.push({
+          rowIndex: index,
+          condition: conditionArray,
         });
 
-        conditionArray = []
+        conditionArray = conditionArray.slice(0, item.level - 1 || 1);
         return row;
       }
 
-      return bindingList.map((item: any) => {
-        return data[item.binding];
+      return bindingList.map((bindingItem: any) => {
+        return item[bindingItem.binding];
       });
     });
 
@@ -374,6 +405,10 @@ export class ExceljsService {
           break;
       }
     });
+
+    if (type === 'alt') {
+      console.log(style);
+    }
     return style;
   }
 
@@ -444,7 +479,7 @@ export class ExceljsService {
         if (this.checkBindingIndexCondition(bindingIndex)) {
           ruleStyle = bodyStyle.ruleStyle[bindingIndex];
         }
-        // console.log("run")
+
         if (flagMode === 'body' && ruleStyle && comparator[ruleStyle.operation](cell.value, ruleStyle.compareValue)) {
           const mergeStyle = {
             alignment: {
@@ -469,24 +504,27 @@ export class ExceljsService {
         }
         this.addStyle(item, cellIndex, style);
       });
-
-      // item.height = rowHeight;
     });
   }
 
   addStyle(row: Row, index: number, style: any) {
-    // style.alignment && Object.keys(style.alignment).length ? (row.getCell(index + 1).alignment = style.alignment) : {};
-    // style.border && Object.keys(style.border).length ? (row.getCell(index + 1).border = style.border) : {};
-    // style.fill && Object.keys(style.fill).length ? (row.getCell(index + 1).fill = style.fill) : {};
-    // style.font && Object.keys(style.font).length ? (row.getCell(index + 1).font = style.font) : {};
-    row.getCell(index + 1).alignment = style.alignment;
-    row.getCell(index + 1).border = style.border;
-    row.getCell(index + 1).fill = style.fill;
-    row.getCell(index + 1).font = style.font;
+    style.alignment && Object.keys(style.alignment).length ? (row.getCell(index + 1).alignment = style.alignment) : {};
+    style.border && Object.keys(style.border).length ? (row.getCell(index + 1).border = style.border) : {};
+    style.fill && Object.keys(style.fill).length ? (row.getCell(index + 1).fill = style.fill) : {};
+    style.font && Object.keys(style.font).length ? (row.getCell(index + 1).font = style.font) : {};
+    // row.getCell(index + 1).alignment = style.alignment;
+    // row.getCell(index + 1).border = style.border;
+    // row.getCell(index + 1).fill = style.fill;
+    // row.getCell(index + 1).font = style.font;
   }
 
   getBodyStyle(index: number) {
     let style;
+    console.log(this.aggragateList);
+
+    if (this.aggragateList.find(item => item.rowIndex === index)) {
+      return { style: this.getStyle('group'), ruleStyle: [] };
+    }
 
     const ruleStyleList = this.constructParam.rule
       .filter((item: any) => item.property.includes('style'))

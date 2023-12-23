@@ -301,7 +301,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
         a.download = 'test.xlsx';
         a.style.display = 'none';
         document.body.appendChild(a);
-        // a.click();
+        a.click();
         URL.revokeObjectURL(data);
         document.body.removeChild(a);
       };
