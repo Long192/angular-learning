@@ -19,13 +19,10 @@ export class ExceljsService {
 
   createSheet() {
     const sheet = this.workbook.addWorksheet('');
-
     this.createHeader(sheet);
-    // console.log(sheet.getCell("A1"))
     this.createBody(sheet);
     this.createFotter(sheet);
     this.drawStyle(sheet);
-
     // sheet.getRow(3).outlineLevel = 1
   }
 
@@ -67,10 +64,7 @@ export class ExceljsService {
     });
 
     const convertData = this.convertToExcelData();
-    console.log('run');
     const aggragateData = this.createAggragateRow(convertData);
-
-    console.log(aggragateData);
 
     // sheet.addRows(data);
     aggragateData.forEach((element: any) => {
@@ -118,7 +112,6 @@ export class ExceljsService {
 
       const groupItem = this.constructParam.dataSource.filter(item => eval(conditionString));
 
-      // console.log(groupItem);
       aggragateCells.forEach((element: any) => {
         data[item.rowIndex][element.cellIndex] = this.caculateAggragate(element.type, groupItem, element.field);
       });
@@ -131,7 +124,6 @@ export class ExceljsService {
     switch (type) {
       case 'Sum':
         return data.reduce((storage: number, current) => {
-          // console.log(current)
           storage += current[field];
           return storage;
         }, 0);
@@ -406,9 +398,6 @@ export class ExceljsService {
       }
     });
 
-    if (type === 'alt') {
-      console.log(style);
-    }
     return style;
   }
 
@@ -520,9 +509,8 @@ export class ExceljsService {
 
   getBodyStyle(index: number) {
     let style;
-    console.log(this.aggragateList);
 
-    if (this.aggragateList.find(item => item.rowIndex === index)) {
+    if (this.aggragateList.find(item => item.rowIndex === index - (this.headerLength + 1))) {
       return { style: this.getStyle('group'), ruleStyle: [] };
     }
 

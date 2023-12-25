@@ -99,7 +99,7 @@
       "dataType": 2
     }
   ],
-  "collumnGroup": ["SubTotalName"],
+  "collumnGroup": ["SubTotalName", "CheckBox"],
   "rules": [
     {
       "key": "Amount131",
