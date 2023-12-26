@@ -99,7 +99,7 @@
       "dataType": 2
     }
   ],
-  "collumnGroup": ["SubTotalName", "CheckBox"],
+  "collumnGroup": ["SubTotalName"],
   "rules": [
     {
       "key": "Amount131",
@@ -120,6 +120,14 @@
       "operation": "ge",
       "compareValue": 1000000,
       "property": "style.background-color",
+      "excelProperty": {
+        "fill":  {
+          "bgColor": { "argb": "FF0000" },
+          "fgColor": { "argb": "FF0000" },
+          "pattern": "solid",
+          "type": "pattern"
+        }
+      },
       "value": "#ff0000"
     },
     {
@@ -127,6 +135,11 @@
       "operation": "ge",
       "compareValue": 1000000,
       "property": "style.color",
+      "excelProperty": {
+        "font": {
+          "color": {"argb": "FF0000"}
+        }
+      },
       "value": "#ff0000"
     }
   ],
@@ -182,6 +195,123 @@
         },
         { "important": true, "gridProperty": "white-space", "value": " break-spaces" }
       ]
+    }
+  },
+  "excelStyle": {
+    "header": {
+      "alignment": {
+        "horizontal": "center",
+        "vertical": "middle",
+        "wrapText": true
+      },
+      "border": {
+        "bottom": { "style": "medium" },
+        "top": { "style": "medium" },
+        "left": { "style": "medium" },
+        "right": { "style": "medium" }
+      },
+      "fill": {
+        "bgColor": { "argb": "FFF8DC" },
+        "fgColor": { "argb": "FFF8DC" },
+        "pattern": "solid",
+        "type": "pattern"
+      },
+      "font": {
+        "bold": true,
+        "family": 2,
+        "size": 11,
+        "name": "Arial"
+      }
+    },
+    "body": {
+      "alignment": {
+        "vertical": "middle",
+        "wrapText": true
+      },
+      "border": {
+        "top": { "style": "medium" },
+        "left": { "style": "medium" },
+        "bottom": { "style": "medium" },
+        "right": { "style": "medium" }
+      },
+      "font": {
+        "size": 11,
+        "family": 2,
+        "name": "Arial"
+      }
+    },
+    "alt": {
+      "alignment": {
+        "vertical": "middle",
+        "wrapText": true
+      },
+      "border": {
+        "top": { "style": "medium" },
+        "left": { "style": "medium" },
+        "bottom": { "style": "medium" },
+        "right": { "style": "medium" }
+      },
+      "fill": {
+        "bgColor": { "argb": "F7F7F7" },
+        "fgColor": { "argb": "F7F7F7" },
+        "pattern": "solid",
+        "type": "pattern"
+      },
+      "font": {
+        "name": "Arial",
+        "size": 11,
+        "family": 2
+      }
+    },
+    "fotter": {
+      "alignment": {
+        "horizontal": "center",
+        "vertical": "middle",
+        "wrapText": true
+      },
+      "border": {
+        "bottom": { "style": "medium" },
+        "top": { "style": "medium" },
+        "left": { "style": "medium" },
+        "right": { "style": "medium" }
+      },
+      "fill": {
+        "bgColor": { "argb": "FFF8DC" },
+        "fgColor": { "argb": "FFF8DC" },
+        "pattern": "solid",
+        "type": "pattern"
+      },
+      "font": {
+        "bold": true,
+        "family": 2,
+        "size": 11,
+        "name": "Arial"
+      }
+    },
+    "group": {
+      "alignment": {
+        "horizontal": "center",
+        "vertical": "middle",
+        "wrapText": true
+      },
+      "border": {
+        "bottom": { "style": "medium" },
+        "top": { "style": "medium" },
+        "left": { "style": "medium" },
+        "right": { "style": "medium" }
+      },
+      "fill": {
+        "bgColor": { "argb": "F5DEB3" },
+        "fgColor": { "argb": "F5DEB3" },
+        "pattern": "solid",
+        "type": "pattern"
+      },
+      "font": {
+        "bold": true,
+        "family": 2,
+        "size": 11,
+        "name": "Arial"
+      }
     }
   }
 }

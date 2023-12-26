@@ -104,12 +104,12 @@ export class SaleReportComponent implements OnInit {
   };
 
   onSaveReport = (info: any) => {
-    console.log(JSON.stringify(info.definition));
+    // console.log(JSON.stringify(info.definition));
     return Promise.resolve({ displayName: 'report' });
   };
 
   onSaveAsReport = (info: any) => {
-    console.log(JSON.stringify(info.definition));
+    // console.log(JSON.stringify(info.definition));
     return Promise.resolve({ id: 'report', displayName: 'report' });
   };
 

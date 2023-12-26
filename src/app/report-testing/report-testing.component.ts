@@ -14,7 +14,7 @@ import * as active from '@grapecity/activereports';
   templateUrl: './report-testing.component.html',
   styleUrls: ['./report-testing.component.scss'],
 })
-export class ReportTestingComponent implements OnInit {
+export class ReportTestingComponent {
   @ViewChild(ViewerComponent, { static: false }) reportViewer!: ViewerComponent;
   @ViewChild(DesignerComponent, { static: false })
   reportDesigner: DesignerComponent = new DesignerComponent();
@@ -88,27 +88,16 @@ export class ReportTestingComponent implements OnInit {
   };
 
   onSaveReport = (info: any) => {
-    console.log(JSON.stringify(info.definition));
+    // console.log(JSON.stringify(info.definition));
     const reportId = info.id || `NewReport${++this.counter}`;
     this.reportStorage.set(reportId, info.definition);
     return Promise.resolve({ displayName: reportId });
   };
 
   onSaveAsReport = (info: any) => {
-    console.log(JSON.stringify(info.definition));
+    // console.log(JSON.stringify(info.definition));
     const reportId = `NewReport${++this.counter}`;
     this.reportStorage.set(reportId, info.definition);
     return Promise.resolve({ id: reportId, displayName: reportId });
   };
-
-  async ngOnInit() {
-    // this.reportDesigner.open(this.initialReport.definition)
-    // const data = await
-    // this.changeDetectorRef.detectChanges();
-    // this.reportDesigner.report = await
-    // console.log(activeReport.Core.Rdl);
-    setTimeout(() => {
-      console.log(this.reportDesigner);
-    }, 5000);
-  }
 }

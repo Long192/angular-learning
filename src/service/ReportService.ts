@@ -105,7 +105,7 @@ export class ReportService {
               this.createTextBox(
                 '="Trang " & Globals!PageNumber & " / " & Globals!TotalPages',
                 {
-                  Width: '1in',
+                  Width: '5in',
                   Height: '0.25in',
                   Visibility: { Hidden: '=iif(Globals!PageNumber <= 2, "true", "false")' },
                 },
@@ -471,6 +471,7 @@ export class ReportService {
 
   private createGroup = (grid: wjGrid.FlexGrid) => {
     const group = grid.collectionView.groups;
+    this.groupArray = []
     this.processGroup(group);
 
     const groupRows: any = [];
@@ -668,7 +669,6 @@ export class ReportService {
   }
 
   private processGroup(group: any[]) {
-    this.groupArray = [];
     group.forEach((item: any) => {
       if (!this.groupArray.includes(item.groupDescription.propertyName)) {
         this.groupArray.push(item.groupDescription.propertyName);
@@ -784,7 +784,6 @@ export class ReportService {
     const report = new Core.PageReport();
     await report.load(this.report);
     const doc = await report.run();
-    console.log('run');
     const result = await PdfExport.exportDocument(doc, {
       fonts: [
         {
@@ -799,7 +798,6 @@ export class ReportService {
       pdfVersion: '1.4',
 
     },);
-    console.log('run2');
     return result.data;
   }
 

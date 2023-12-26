@@ -3,5 +3,6 @@ export type excelParameter = {
   column?: any;
   rule?: any;
   style?: any;
-  group?: string[]
+  group?: string[],
+  excelStyle? : any
 };

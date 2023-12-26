@@ -41,6 +41,7 @@ import { SaleReportComponent } from './sale-report/sale-report.component';
 import { ReportService } from 'src/service/ReportService';
 import { MergeManagerService } from 'src/service/MergeManagerService';
 import { SaleService } from 'src/service/SaleService';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { SaleService } from 'src/service/SaleService';
       deps: [MAT_DATE_LOCALE],
     },
     { provide: MAT_DATE_FORMATS, useValue: dateFormat },
+    { provide: LocationStrategy, useClass: HashLocationStrategy},
     CustomValidationService,
     EmployeeService,
     SaleService,

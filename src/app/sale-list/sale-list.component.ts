@@ -182,6 +182,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
         columns: newColumnList.filter(item => !item.level),
         rules: data.rules,
         style: data.style,
+        excelStyle: data .excelStyle
       };
 
       this.hiddenButton = false;
@@ -189,7 +190,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
   }
 
   async toReportPage() {
-    this.reportGrid.scrollIntoView(0, 0);
+    await this.reportGrid.scrollIntoView(0, 0);
     this.reportGrid.isDisabled = true;
 
     await this.createReport(false);
@@ -311,6 +312,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
         style: this.column.style,
         rule: this.column.rules,
         group: this.column.columnGroup,
+        excelStyle: this.column.excelStyle
       });
     } else {
     }

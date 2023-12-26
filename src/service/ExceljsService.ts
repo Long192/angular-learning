@@ -333,72 +333,8 @@ export class ExceljsService {
     return excelIndex;
   }
 
-  getStyle(type: 'header' | 'body' | 'fotter' | 'group' | 'alt', arrayStyle?: any) {
-    const styleList = arrayStyle || this.constructParam.style.dynamix[type];
-    const style: any = {
-      alignment: {
-        vertical: 'middle',
-        wrapText: true,
-      },
-      border: {
-        top: {
-          style: 'medium',
-        },
-        left: {
-          style: 'medium',
-        },
-        bottom: {
-          style: 'medium',
-        },
-        right: {
-          style: 'medium',
-        },
-      },
-      font: {
-        name: 'Arial',
-        size: 11,
-        family: 2,
-      },
-    };
-    styleList.forEach((element: any) => {
-      switch (element.gridProperty || element.property) {
-        case 'text-align':
-          style.alignment = {
-            ...style.alignment,
-            horizontal: element.value,
-          };
-          break;
-        case 'font-weight':
-          style.font = {
-            ...style.font,
-            bold: element.value > 400 || element.value === 'bold',
-          };
-          break;
-        case 'color':
-          style.font = {
-            ...style.font,
-            color: { argb: element.value.replace('#', '').toUpperCase() },
-          };
-          break;
-        case 'background-color':
-          style.fill = {
-            ...style.fill,
-            type: 'pattern',
-            pattern: 'solid',
-            bgColor: { argb: element.value.replace('#', '').toUpperCase() },
-            fgColor: { argb: element.value.replace('#', '').toUpperCase() },
-          };
-          break;
-        case 'font-size':
-          style.font = {
-            ...style.font,
-            size: +element.value.replace('px', ''),
-          };
-          break;
-      }
-    });
-
-    return style;
+  getStyle(type: 'header' | 'body' | 'fotter' | 'group' | 'alt') {
+    return this.constructParam.excelStyle[type];
   }
 
   drawStyle(sheet: Worksheet) {
@@ -516,15 +452,12 @@ export class ExceljsService {
 
     const ruleStyleList = this.constructParam.rule
       .filter((item: any) => item.property.includes('style'))
-      .map((item: any) => {
-        const property = item.property.replace('style.', '');
-        return {
-          key: item.key,
-          compareValue: item.compareValue,
-          operation: item.operation,
-          property: this.getStyle('body', [{ property, value: item.value }]),
-        };
-      });
+      .map((item: any) => ({
+        key: item.key,
+        compareValue: item.compareValue,
+        operation: item.operation,
+        property: item.excelProperty,
+      }));
 
     if (index % (this.constructParam.style.common.alternateStep + 1) === 0) {
       const altStyle = this.getStyle('alt');

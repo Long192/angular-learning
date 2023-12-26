@@ -199,7 +199,7 @@ export class ListEmployeeComponent implements OnInit, OnDestroy {
         const formatData = JSON.parse(JSON.stringify(data.employeeList), (key: string, val: any) => {
           if (typeof val === 'string') {
             let matchDate = val.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/);
-            console.log(matchDate)
+            // console.log(matchDate)
             if (matchDate) {
               return new Date(
                 Date.UTC(+matchDate[1], +matchDate[2] - 1, +matchDate[3], +matchDate[4], +matchDate[5], +matchDate[6])
