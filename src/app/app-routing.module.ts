@@ -5,6 +5,7 @@ import { EmployeeFormComponent } from './employee-form/employee-form.component';
 import { ReportTestingComponent } from './report-testing/report-testing.component';
 import { SaleListComponent } from './sale-list/sale-list.component';
 import { SaleReportComponent } from './sale-report/sale-report.component';
+import { StimuSaleReportComponent } from './stimu-sale-report/stimu-sale-report.component';
 
 const routes: Routes = [
   { path: '', component: ListEmployeeComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'report', component: ReportTestingComponent },
   { path: 'sale', component: SaleListComponent },
   { path: 'sale-report', component: SaleReportComponent },
+  { path: 'stimu-sale-report', component: StimuSaleReportComponent },
 ];
 
 @NgModule({

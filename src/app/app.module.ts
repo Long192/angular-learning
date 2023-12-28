@@ -42,6 +42,7 @@ import { ReportService } from 'src/service/ReportService';
 import { MergeManagerService } from 'src/service/MergeManagerService';
 import { SaleService } from 'src/service/SaleService';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { StimuSaleReportComponent } from './stimu-sale-report/stimu-sale-report.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     ReportTestingComponent,
     SaleListComponent,
     SaleReportComponent,
+    StimuSaleReportComponent,
   ],
   imports: [
     DialogComponent,

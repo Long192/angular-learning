@@ -12,6 +12,8 @@ export class ExceljsService {
   private bodylenghth = 0;
   private level = 0;
   private aggragateList: any[] = [];
+  private outLinelevelList: any[] = [];
+  private currentLevel = 0;
 
   constructor(constructParam: excelParameter) {
     this.constructParam = constructParam;
@@ -75,7 +77,7 @@ export class ExceljsService {
       }
     });
 
-    data.forEach((element, index) => {
+    aggragateData.forEach((element: any, index: number) => {
       element.forEach((cell: any, cellIndex: any) => {
         if (numberFormatIndex.includes(cellIndex)) {
           sheet.getCell(`${this.indexToAlphabet(cellIndex)}${index + this.headerLength + 1}`).numFmt = '#,##';
@@ -83,7 +85,8 @@ export class ExceljsService {
       });
     });
 
-    this.bodylenghth = data.length;
+    this.bodylenghth = aggragateData.length;
+    console.log(aggragateData.length);
   }
 
   createAggragateRow(data: any) {
@@ -147,6 +150,11 @@ export class ExceljsService {
           value: item.header,
         };
 
+        this.outLinelevelList.push({
+          rowIndex: index,
+          level: item.level,
+        });
+
         const row = new Array(bindingList.length).fill('');
         row[1] = item.header;
 
@@ -163,6 +171,8 @@ export class ExceljsService {
         return item[bindingItem.binding];
       });
     });
+
+    console.log(this.outLinelevelList)
 
     return excelData;
   }
@@ -351,6 +361,11 @@ export class ExceljsService {
       })
       .filter((item: any) => item);
 
+
+    if (this.outLinelevelList.length) {
+      this.currentLevel = 1;
+    }
+
     let flagMode = '',
       ruleIndexList: any = [],
       bodyStyle: any = [];
@@ -360,7 +375,21 @@ export class ExceljsService {
       if (index <= this.headerLength) {
         flagMode = 'header';
         style = headerStyle;
-      } else if (index > this.headerLength && index <= this.bodylenghth) {
+      } else if (index > this.headerLength && index <= this.bodylenghth + this.headerLength) {
+        // item.outlineLevel = 1;
+        const outlinelevel = this.outLinelevelList.find(levelItem => levelItem.rowIndex === index - (this.headerLength + 1));
+        // console.log(index - this.headerLength)
+        // console.log(outlinelevel)
+        // console.log(outlinelevel);
+
+        if (outlinelevel) {
+          // console.log(index)
+          this.currentLevel = outlinelevel.level;
+        }
+
+        if (!outlinelevel) {
+          item.outlineLevel = this.currentLevel;
+        }
         flagMode = 'body';
         bodyStyle = this.getBodyStyle(index);
         style = bodyStyle.style;
@@ -383,6 +412,7 @@ export class ExceljsService {
 
       item.model.cells.forEach((cell: CellModel, cellIndex: number) => {
         const column = sheet.getColumn(this.indexToAlphabet(cellIndex));
+
         if (cell.text && column && column.width) {
           const height = cell.text.length / column.width;
           rowHeight < height && (rowHeight = height + 0.5);

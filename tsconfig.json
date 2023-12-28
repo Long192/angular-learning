@@ -3,7 +3,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "exceljs": ["node_modules/exceljs/dist/exceljs.min"]
+      "exceljs": ["node_modules/exceljs/dist/exceljs.min"],
     },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
