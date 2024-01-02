@@ -1,14 +1,15 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import * as wjGrid from '@grapecity/wijmo.grid';
 import * as wjInput from '@grapecity/wijmo.input';
 import * as wjCore from '@grapecity/wijmo';
-import { Store } from '@ngrx/store';
 import { SaleService } from 'src/service/SaleService';
 import { ReportService } from 'src/service/ReportService';
 import { MergeManagerService } from 'src/service/MergeManagerService';
 import { AppService } from '../app.service';
 import { comparator } from 'src/utils/constantVar';
+import { StimuReportService } from 'src/service/stimuReportService';
 
 @Component({
   selector: 'app-sale-report',
@@ -316,6 +317,17 @@ export class SaleListComponent implements OnInit, OnDestroy {
       });
     } else {
     }
+  }
+
+  toStiReportPage(){
+    const stiReportService = new StimuReportService({
+      dataSource: this.dataSource,
+      column: this.rawColumn
+    })
+
+    this.appService.setStiReport(stiReportService.report)
+
+    this.router.navigate(["/stimu-sale-report"])
   }
 
   async ngOnInit() {
