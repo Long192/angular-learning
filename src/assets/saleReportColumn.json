@@ -121,9 +121,13 @@
       "compareValue": 1000000,
       "property": "style.background-color",
       "excelProperty": {
-        "fill":  {
-          "bgColor": { "argb": "FF0000" },
-          "fgColor": { "argb": "FF0000" },
+        "fill": {
+          "bgColor": {
+            "argb": "FF0000"
+          },
+          "fgColor": {
+            "argb": "FF0000"
+          },
           "pattern": "solid",
           "type": "pattern"
         }
@@ -137,7 +141,9 @@
       "property": "style.color",
       "excelProperty": {
         "font": {
-          "color": {"argb": "FF0000"}
+          "color": {
+            "argb": "FF0000"
+          }
         }
       },
       "value": "#ff0000"
@@ -152,25 +158,61 @@
     },
     "dynamix": {
       "header": [
-        { "reportProperty": "VerticalAlign", "value": "middle" },
+        {
+          "reportProperty": "VerticalAlign",
+          "value": "middle"
+        },
         {
           "important": true,
           "gridProperty": "background-color",
           "reportProperty": "BackgroundColor",
           "value": "#FFF8DC"
         },
-        { "important": true, "gridProperty": "font-weight", "reportProperty": "FontWeight", "value": "Bold" },
-        { "important": true, "gridProperty": "text-align", "reportProperty": "TextAlign", "value": "center" },
-        { "important": true, "gridProperty": "justify-content", "value": "center" }
+        {
+          "important": true,
+          "gridProperty": "font-weight",
+          "reportProperty": "FontWeight",
+          "value": "Bold"
+        },
+        {
+          "important": true,
+          "gridProperty": "text-align",
+          "reportProperty": "TextAlign",
+          "value": "center"
+        },
+        {
+          "important": true,
+          "gridProperty": "justify-content",
+          "value": "center"
+        }
       ],
       "body": [
-        { "important": true, "gridProperty": "padding", "reportProperty": "Padding", "value": "4px 6px 3px 6px" }
+        {
+          "important": true,
+          "gridProperty": "padding",
+          "reportProperty": "Padding",
+          "value": "4px 6px 3px 6px"
+        }
       ],
       "cell": [
-        { "important": true, "gridProperty": "word-wrap", "value": "break-word" },
-        { "important": true, "gridProperty": "white-space", "value": " break-spaces" }
+        {
+          "important": true,
+          "gridProperty": "word-wrap",
+          "value": "break-word"
+        },
+        {
+          "important": true,
+          "gridProperty": "white-space",
+          "value": " break-spaces"
+        }
       ],
-      "alt": [{ "reportProperty": "BackgroundColor", "gridProperty": "background-color", "value": "#f7f7f7" }],
+      "alt": [
+        {
+          "reportProperty": "BackgroundColor",
+          "gridProperty": "background-color",
+          "value": "#f7f7f7"
+        }
+      ],
       "group": [
         {
           "important": true,
@@ -178,7 +220,12 @@
           "reportProperty": "BackgroundColor",
           "value": "#f5deb3"
         },
-        { "important": true, "gridProperty": "font-weight", "reportProperty": "FontWeight", "value": "Bold" }
+        {
+          "important": true,
+          "gridProperty": "font-weight",
+          "reportProperty": "FontWeight",
+          "value": "Bold"
+        }
       ],
       "fotter": [
         {
@@ -187,13 +234,21 @@
           "reportProperty": "BackgroundColor",
           "value": "#FFF8DC"
         },
-        { "important": true, "gridProperty": "text-warp", "value": "warp" },
+        {
+          "important": true,
+          "gridProperty": "text-warp",
+          "value": "warp"
+        },
         {
           "important": true,
           "gridProperty": "word-wrap",
           "value": "break-word"
         },
-        { "important": true, "gridProperty": "white-space", "value": " break-spaces" }
+        {
+          "important": true,
+          "gridProperty": "white-space",
+          "value": " break-spaces"
+        }
       ]
     }
   },
@@ -205,14 +260,26 @@
         "wrapText": true
       },
       "border": {
-        "bottom": { "style": "medium" },
-        "top": { "style": "medium" },
-        "left": { "style": "medium" },
-        "right": { "style": "medium" }
+        "bottom": {
+          "style": "medium"
+        },
+        "top": {
+          "style": "medium"
+        },
+        "left": {
+          "style": "medium"
+        },
+        "right": {
+          "style": "medium"
+        }
       },
       "fill": {
-        "bgColor": { "argb": "FFF8DC" },
-        "fgColor": { "argb": "FFF8DC" },
+        "bgColor": {
+          "argb": "FFF8DC"
+        },
+        "fgColor": {
+          "argb": "FFF8DC"
+        },
         "pattern": "solid",
         "type": "pattern"
       },
@@ -229,10 +296,18 @@
         "wrapText": true
       },
       "border": {
-        "top": { "style": "medium" },
-        "left": { "style": "medium" },
-        "bottom": { "style": "medium" },
-        "right": { "style": "medium" }
+        "top": {
+          "style": "medium"
+        },
+        "left": {
+          "style": "medium"
+        },
+        "bottom": {
+          "style": "medium"
+        },
+        "right": {
+          "style": "medium"
+        }
       },
       "font": {
         "size": 11,
@@ -246,14 +321,26 @@
         "wrapText": true
       },
       "border": {
-        "top": { "style": "medium" },
-        "left": { "style": "medium" },
-        "bottom": { "style": "medium" },
-        "right": { "style": "medium" }
+        "top": {
+          "style": "medium"
+        },
+        "left": {
+          "style": "medium"
+        },
+        "bottom": {
+          "style": "medium"
+        },
+        "right": {
+          "style": "medium"
+        }
       },
       "fill": {
-        "bgColor": { "argb": "F7F7F7" },
-        "fgColor": { "argb": "F7F7F7" },
+        "bgColor": {
+          "argb": "F7F7F7"
+        },
+        "fgColor": {
+          "argb": "F7F7F7"
+        },
         "pattern": "solid",
         "type": "pattern"
       },
@@ -270,14 +357,26 @@
         "wrapText": true
       },
       "border": {
-        "bottom": { "style": "medium" },
-        "top": { "style": "medium" },
-        "left": { "style": "medium" },
-        "right": { "style": "medium" }
+        "bottom": {
+          "style": "medium"
+        },
+        "top": {
+          "style": "medium"
+        },
+        "left": {
+          "style": "medium"
+        },
+        "right": {
+          "style": "medium"
+        }
       },
       "fill": {
-        "bgColor": { "argb": "FFF8DC" },
-        "fgColor": { "argb": "FFF8DC" },
+        "bgColor": {
+          "argb": "FFF8DC"
+        },
+        "fgColor": {
+          "argb": "FFF8DC"
+        },
         "pattern": "solid",
         "type": "pattern"
       },
@@ -295,14 +394,26 @@
         "wrapText": true
       },
       "border": {
-        "bottom": { "style": "medium" },
-        "top": { "style": "medium" },
-        "left": { "style": "medium" },
-        "right": { "style": "medium" }
+        "bottom": {
+          "style": "medium"
+        },
+        "top": {
+          "style": "medium"
+        },
+        "left": {
+          "style": "medium"
+        },
+        "right": {
+          "style": "medium"
+        }
       },
       "fill": {
-        "bgColor": { "argb": "F5DEB3" },
-        "fgColor": { "argb": "F5DEB3" },
+        "bgColor": {
+          "argb": "F5DEB3"
+        },
+        "fgColor": {
+          "argb": "F5DEB3"
+        },
         "pattern": "solid",
         "type": "pattern"
       },
