@@ -183,7 +183,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
         columns: newColumnList.filter(item => !item.level),
         rules: data.rules,
         style: data.style,
-        excelStyle: data .excelStyle
+        excelStyle: data.excelStyle,
       };
 
       this.hiddenButton = false;
@@ -313,21 +313,23 @@ export class SaleListComponent implements OnInit, OnDestroy {
         style: this.column.style,
         rule: this.column.rules,
         group: this.column.columnGroup,
-        excelStyle: this.column.excelStyle
+        excelStyle: this.column.excelStyle,
       });
     } else {
     }
   }
 
-  toStiReportPage(){
+  toStiReportPage() {
     const stiReportService = new StimuReportService({
       dataSource: this.dataSource,
-      column: this.rawColumn
-    })
+      column: this.rawColumn,
+      group: this.column.columnGroup,
+      style: this.column.style
+    });
 
-    this.appService.setStiReport(stiReportService.report)
+    this.appService.setStiReport(stiReportService.report);
 
-    this.router.navigate(["/stimu-sale-report"])
+    this.router.navigate(['/stimu-sale-report']);
   }
 
   async ngOnInit() {
