@@ -17,6 +17,7 @@ export class StimuReportService {
   }
 
   createTable() {
+    this.createDataSource()
     this.report.pages.getByIndex(0).orientation = Stimulsoft.Report.Components.StiPageOrientation.Landscape;
     this.createHeader();
     this.createBody();
@@ -39,17 +40,26 @@ export class StimuReportService {
     });
   }
 
+  createDataSource(){
+    const dataSource = new Stimulsoft.System.Data.DataSet("DataSource")
+    dataSource.readJson(this.stiReportParams.dataSource)
+    this.report.regData("DataSource", "DataSource", dataSource)
+    this.report.dictionary.synchronize()
+  }
+
   createBody() {
     let left = 0;
     const dataBand = new Stimulsoft.Report.Components.StiDataBand();
     this.report.pages.getByIndex(0).components.add(dataBand);
+    dataBand.dataSourceName = "root"
     const bindingList = this.stiReportParams.column.filter(item => item.binding);
     const bodyCells = bindingList.map(item => {
       const cell = new Stimulsoft.Report.Components.StiText();
-      cell.text = item.binding;
+      cell.text = `{root.${item.binding}}`;
       cell.height = this.defaultHeight;
       cell.width = this.pxToCm(item.width || 100);
       cell.left = left;
+      cell.format = "string"
       left += cell.width;
       return cell;
     });
