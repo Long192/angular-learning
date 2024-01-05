@@ -17,7 +17,7 @@ export class StimuSaleReportComponent implements OnInit {
 
   ngOnInit() {
     this.options.appearance.fullScreenMode = true;
-    // this.options.appearance.defaultUnit = Stimulsoft.Report.StiReportUnitType.Inches
+    this.options.appearance.defaultUnit = Stimulsoft.Report.StiReportUnitType.Inches
     // this.designer.report = new Stimulsoft.Report.StiReport();
     this.designer.report = this.appService.getStiReport()
     this.designer.renderHtml('designContent');

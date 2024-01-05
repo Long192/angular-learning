@@ -43,6 +43,11 @@ export class StimuReportService {
     rows.forEach(item => {
       headerBand.components.add(item);
       item.setComponentStyle('header');
+      this.stiReportParams.style.dynamix.header.find(
+        (styleItem: any) => styleItem.reportProperty === 'word-wrap' && styleItem.value !== 'break-word'
+      )
+        ? (item.wordWrap = false)
+        : (item.wordWrap = true);
     });
   }
 
@@ -68,8 +73,21 @@ export class StimuReportService {
       } else {
         cell = new Stimulsoft.Report.Components.StiText();
         cell.text = `{root.${item.binding}}`;
+        cell.canGrow = true;
+        cell.horAlignment = item.align
+          ? Stimulsoft.Base.Drawing.StiTextHorAlignment[
+              (item.align.charAt(0).toUpperCase() +
+                item.align.slice(1)) as keyof typeof Stimulsoft.Base.Drawing.StiTextHorAlignment
+            ]
+          : Stimulsoft.Base.Drawing.StiTextHorAlignment.Left;
         dataType && (cell.textFormat = dataType.format);
+        this.stiReportParams.style.dynamix.body.find(
+          (styleItem: any) => styleItem.reportProperty === 'word-wrap' && styleItem.value !== 'break-word'
+        )
+          ? (cell.wordWrap = false)
+          : (cell.wordWrap = true);
       }
+      cell.growToHeight = true;
       cell.height = this.defaultHeight;
       cell.width = this.pxToCm(item.width - 10 || 100);
       cell.left = left;
@@ -88,23 +106,153 @@ export class StimuReportService {
     Object.keys(style).forEach(item => {
       const styleComponent = new Stimulsoft.Report.Styles.StiStyle();
       styleComponent.name = item;
-      styleComponent.border = new Stimulsoft.Base.Drawing.StiBorder(
-        Stimulsoft.Base.Drawing.StiBorderSides.All,
-        Stimulsoft.System.Drawing.Color.black,
-        1,
-        Stimulsoft.Base.Drawing.StiPenStyle.Solid,
-        false,
-        4,
-        new Stimulsoft.Base.Drawing.StiSolidBrush(Stimulsoft.System.Drawing.Color.black),
-        false
-      );
+      styleComponent.border = new Stimulsoft.Base.Drawing.StiBorder();
+      styleComponent.border.size = 1;
+      styleComponent.border.side = Stimulsoft.Base.Drawing.StiBorderSides.All;
+      styleComponent.border.color = Stimulsoft.System.Drawing.Color.black;
+      styleComponent.border.style = Stimulsoft.Base.Drawing.StiPenStyle.Solid;
+
       style[item].forEach((element: any) => {
         switch (element.reportProperty) {
           case 'Border':
+            this.getBorder(element, styleComponent);
+            break;
+          case 'BorderStyle':
+            this.getBorderStyle(element, styleComponent);
+            break;
+          case 'BorderLeft':
+          case 'BorderRight':
+          case 'BorderTop':
+          case 'BorderBottom':
+            // this.getBorder()
+            break;
         }
       });
       this.report.styles.add(styleComponent);
     });
+  }
+
+  getBorder(element: any, styleComponent: Stimulsoft.Report.Styles.StiStyle) {
+    const value = element.value.split(' ');
+    value[0] && (styleComponent.border.size = value[0].replace('px', ''));
+    value[1] &&
+      (styleComponent.border.style =
+        Stimulsoft.Base.Drawing.StiPenStyle[
+          (value[1].charAt(0).toUpperCase() + value[1].slice(1)) as keyof typeof Stimulsoft.Base.Drawing.StiPenStyle
+        ]);
+    if (value[2] && value[2].includes('#')) {
+      const color = value[2].replace('#', '');
+      const red = +`0x${color.slice(0, 2)}`;
+      const green = +`0x${color.slice(2, 4)}`;
+      const blue = +`0x${color.slice(4, 6)}`;
+      const alpha = +`0x${color.slice(6, 8)}`;
+      alpha
+        ? (styleComponent.border.color = Stimulsoft.System.Drawing.Color.fromArgb(alpha, red, green, blue))
+        : (styleComponent.border.color = Stimulsoft.System.Drawing.Color.fromArgb2(red, green, blue));
+    } else if (value[2] && value[2].includes('rgb')) {
+      console.log(value[2]);
+      let color: any[] = [];
+      const regexPattern = /\brgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/;
+      const match = value[2].match(regexPattern);
+      console.log(match);
+
+      if (match) {
+        console.log('run');
+        const [, red, green, blue, alpha] = match.map(Number);
+        color = alpha !== undefined && !isNaN(alpha) ? [red, green, blue, alpha] : [red, green, blue];
+
+        console.log(color);
+
+        color.length === 4
+          ? (styleComponent.border.color = Stimulsoft.System.Drawing.Color.fromArgb(
+              +color[3],
+              +color[0],
+              +color[1],
+              +color[2]
+            ))
+          : (styleComponent.border.color = Stimulsoft.System.Drawing.Color.fromArgb2(+color[0], +color[1], +color[2]));
+      }
+    } else if (value[2]) {
+      const color = Stimulsoft.System.Drawing.Color[value[2] as keyof typeof Stimulsoft.System.Drawing.Color];
+      styleComponent.border.color = color as Stimulsoft.System.Drawing.Color;
+    }
+  }
+
+  getBorderStyle(element: any, styleComponent: Stimulsoft.Report.Styles.StiStyle){
+    const style = element.value.split(' ');
+    if (!style.length) {
+      return;
+    }
+
+    const penStyle = style.map((styleItem: string) => {
+      if (styleItem.includes('ed')) {
+        return styleItem.replace('ed', '');
+      }
+      return styleItem;
+    });
+
+    console.log(penStyle);
+
+    let top, right, bottom, left;
+    penStyle[0] &&
+      (top =
+        right =
+        bottom =
+        left =
+          Stimulsoft.Base.Drawing.StiPenStyle[
+            (penStyle[0].charAt(0).toUpperCase() +
+              penStyle[0].slice(1)) as keyof typeof Stimulsoft.Base.Drawing.StiPenStyle
+          ]);
+    penStyle[1] &&
+      (left = right =
+        Stimulsoft.Base.Drawing.StiPenStyle[
+          (penStyle[1].charAt(0).toUpperCase() +
+            penStyle[1].slice(1)) as keyof typeof Stimulsoft.Base.Drawing.StiPenStyle
+        ]);
+    penStyle[2] &&
+      (bottom =
+        Stimulsoft.Base.Drawing.StiPenStyle[
+          (penStyle[2].charAt(0).toUpperCase() +
+            penStyle[2].slice(1)) as keyof typeof Stimulsoft.Base.Drawing.StiPenStyle
+        ]);
+    penStyle[3] &&
+      (left =
+        Stimulsoft.Base.Drawing.StiPenStyle[
+          (penStyle[3].charAt(0).toUpperCase() +
+            penStyle[3].slice(1)) as keyof typeof Stimulsoft.Base.Drawing.StiPenStyle
+        ]);
+
+    console.log(left);
+    console.log(right);
+    console.log(bottom);
+    console.log(top);
+
+    const leftSide = new Stimulsoft.Base.Drawing.StiBorderSide(
+      styleComponent.border.color,
+      styleComponent.border.size,
+      left
+    );
+    const rightSide = new Stimulsoft.Base.Drawing.StiBorderSide(
+      styleComponent.border.color,
+      styleComponent.border.size,
+      right
+    );
+    const topSide = new Stimulsoft.Base.Drawing.StiBorderSide(
+      styleComponent.border.color,
+      styleComponent.border.size,
+      top
+    );
+    const bottomSide = new Stimulsoft.Base.Drawing.StiBorderSide(
+      styleComponent.border.color,
+      styleComponent.border.size,
+      bottom
+    );
+    styleComponent.border = new Stimulsoft.Base.Drawing.StiAdvancedBorder(
+      topSide,
+      bottomSide,
+      leftSide,
+      rightSide
+    );
   }
 
   createFotter() {
@@ -114,6 +262,11 @@ export class StimuReportService {
     const fotterRow = this.createAggregateRow(this.stiReportParams.style.common.fotterText);
     fotterRow.forEach((item: Stimulsoft.Report.Components.StiText) => {
       fotter.components.add(item);
+      this.stiReportParams.style.dynamix.fotter.find(
+        (styleItem: any) => styleItem.reportProperty === 'word-wrap' && styleItem.value !== 'break-word'
+      )
+        ? (item.wordWrap = false)
+        : (item.wordWrap = true);
       item.setComponentStyle('fotter');
     });
   }
@@ -132,6 +285,11 @@ export class StimuReportService {
 
       aggregateRow.forEach((element: Stimulsoft.Report.Components.StiText) => {
         headerBand.components.add(element);
+        this.stiReportParams.style.dynamix.group.find(
+          (styleItem: any) => styleItem.reportProperty === 'word-wrap' && styleItem.value !== 'break-word'
+        )
+          ? (element.wordWrap = false)
+          : (element.wordWrap = true);
         element.setComponentStyle('group');
       });
     });
@@ -148,6 +306,8 @@ export class StimuReportService {
         text.width = this.pxToCm(current.width - 10 || 100);
         text.left = left;
         text.text = aggregateText;
+        text.canGrow = true;
+        text.growToHeight = true;
         left += text.width;
         return [text];
       }
@@ -162,6 +322,14 @@ export class StimuReportService {
         text.height = this.defaultHeight;
         text.width = this.pxToCm(current.width - 10 || 100);
         text.left = left;
+        text.canGrow = true;
+        text.growToHeight = true;
+        text.horAlignment = current.align
+          ? Stimulsoft.Base.Drawing.StiTextHorAlignment[
+              (current.align.charAt(0).toUpperCase() +
+                current.align.slice(1)) as keyof typeof Stimulsoft.Base.Drawing.StiTextHorAlignment
+            ]
+          : Stimulsoft.Base.Drawing.StiTextHorAlignment.Left;
         text.text = `{${current.aggregate.charAt(0).toUpperCase()}${current.aggregate.slice(1)}(root.${
           current.binding
         })}`;
@@ -210,13 +378,14 @@ export class StimuReportService {
         index === 0 ? !item.level : item.level === index
       );
       const cells = rowItem.reduce((storage: any[], current: any, cellIndex) => {
-        console.log(current.width - 10);
+        console.log(current.width - 10 || 100);
         const cell = {
           value: current.header || current.binding,
           width: this.pxToCm(current.width - 10 || 100),
           height: this.defaultHeight,
           level: current.level,
           group: current.group || null,
+          align: current.align || 'left',
           left,
         };
 
@@ -282,6 +451,8 @@ export class StimuReportService {
       textbox.width = element.width;
       textbox.height = element.height;
       textbox.left = element.left;
+      textbox.canGrow = true;
+      textbox.growToHeight = true;
       textbox.top = top;
       return textbox;
     });
