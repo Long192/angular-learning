@@ -163,6 +163,14 @@
           "value": "middle"
         },
         {
+          "reportProperty": "BorderLeft",
+          "value": "1px solid red"
+        },
+        {
+          "reportProperty": "BorderRight",
+          "value": "1px solid black"
+        },
+        {
           "important": true,
           "gridProperty": "background-color",
           "reportProperty": "BackgroundColor",

@@ -115,7 +115,7 @@ export class StimuReportService {
       style[item].forEach((element: any) => {
         switch (element.reportProperty) {
           case 'Border':
-            this.getBorder(element, styleComponent);
+            this.getBorder(element, styleComponent.border);
             break;
           case 'BorderStyle':
             this.getBorderStyle(element, styleComponent);
@@ -124,7 +124,7 @@ export class StimuReportService {
           case 'BorderRight':
           case 'BorderTop':
           case 'BorderBottom':
-            // this.getBorder()
+            this.getBorderSide(element, styleComponent, element.reportProperty.replace('Border', ''));
             break;
         }
       });
@@ -132,14 +132,15 @@ export class StimuReportService {
     });
   }
 
-  getBorder(element: any, styleComponent: Stimulsoft.Report.Styles.StiStyle) {
+  getBorder(element: any, styleComponent: Stimulsoft.Base.Drawing.StiBorder | Stimulsoft.Base.Drawing.StiBorderSide) {
     const value = element.value.split(' ');
-    value[0] && (styleComponent.border.size = value[0].replace('px', ''));
-    value[1] &&
-      (styleComponent.border.style =
-        Stimulsoft.Base.Drawing.StiPenStyle[
-          (value[1].charAt(0).toUpperCase() + value[1].slice(1)) as keyof typeof Stimulsoft.Base.Drawing.StiPenStyle
-        ]);
+    value[0] && (styleComponent.size = value[0].replace('px', ''));
+    if (value[1]) {
+      const key = (value[1].charAt(0).toUpperCase() + value[1].slice(1)).replace('ed', '');
+      styleComponent.style =
+        Stimulsoft.Base.Drawing.StiPenStyle[key as keyof typeof Stimulsoft.Base.Drawing.StiPenStyle];
+    }
+
     if (value[2] && value[2].includes('#')) {
       const color = value[2].replace('#', '');
       const red = +`0x${color.slice(0, 2)}`;
@@ -147,38 +148,33 @@ export class StimuReportService {
       const blue = +`0x${color.slice(4, 6)}`;
       const alpha = +`0x${color.slice(6, 8)}`;
       alpha
-        ? (styleComponent.border.color = Stimulsoft.System.Drawing.Color.fromArgb(alpha, red, green, blue))
-        : (styleComponent.border.color = Stimulsoft.System.Drawing.Color.fromArgb2(red, green, blue));
+        ? (styleComponent.color = Stimulsoft.System.Drawing.Color.fromArgb(alpha, red, green, blue))
+        : (styleComponent.color = Stimulsoft.System.Drawing.Color.fromArgb2(red, green, blue));
     } else if (value[2] && value[2].includes('rgb')) {
-      console.log(value[2]);
       let color: any[] = [];
       const regexPattern = /\brgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/;
       const match = value[2].match(regexPattern);
-      console.log(match);
 
       if (match) {
-        console.log('run');
         const [, red, green, blue, alpha] = match.map(Number);
         color = alpha !== undefined && !isNaN(alpha) ? [red, green, blue, alpha] : [red, green, blue];
 
-        console.log(color);
-
         color.length === 4
-          ? (styleComponent.border.color = Stimulsoft.System.Drawing.Color.fromArgb(
+          ? (styleComponent.color = Stimulsoft.System.Drawing.Color.fromArgb(
               +color[3],
               +color[0],
               +color[1],
               +color[2]
             ))
-          : (styleComponent.border.color = Stimulsoft.System.Drawing.Color.fromArgb2(+color[0], +color[1], +color[2]));
+          : (styleComponent.color = Stimulsoft.System.Drawing.Color.fromArgb2(+color[0], +color[1], +color[2]));
       }
     } else if (value[2]) {
       const color = Stimulsoft.System.Drawing.Color[value[2] as keyof typeof Stimulsoft.System.Drawing.Color];
-      styleComponent.border.color = color as Stimulsoft.System.Drawing.Color;
+      styleComponent.color = color as Stimulsoft.System.Drawing.Color;
     }
   }
 
-  getBorderStyle(element: any, styleComponent: Stimulsoft.Report.Styles.StiStyle){
+  getBorderStyle(element: any, styleComponent: Stimulsoft.Report.Styles.StiStyle) {
     const style = element.value.split(' ');
     if (!style.length) {
       return;
@@ -190,8 +186,6 @@ export class StimuReportService {
       }
       return styleItem;
     });
-
-    console.log(penStyle);
 
     let top, right, bottom, left;
     penStyle[0] &&
@@ -222,11 +216,6 @@ export class StimuReportService {
             penStyle[3].slice(1)) as keyof typeof Stimulsoft.Base.Drawing.StiPenStyle
         ]);
 
-    console.log(left);
-    console.log(right);
-    console.log(bottom);
-    console.log(top);
-
     const leftSide = new Stimulsoft.Base.Drawing.StiBorderSide(
       styleComponent.border.color,
       styleComponent.border.size,
@@ -247,12 +236,39 @@ export class StimuReportService {
       styleComponent.border.size,
       bottom
     );
-    styleComponent.border = new Stimulsoft.Base.Drawing.StiAdvancedBorder(
-      topSide,
-      bottomSide,
-      leftSide,
-      rightSide
-    );
+    styleComponent.border = new Stimulsoft.Base.Drawing.StiAdvancedBorder(topSide, bottomSide, leftSide, rightSide);
+  }
+
+  getBorderSide(element: any, styleComponent: Stimulsoft.Report.Styles.StiStyle, side: string) {
+    if (!(styleComponent.border instanceof Stimulsoft.Base.Drawing.StiAdvancedBorder)) {
+      styleComponent.border = new Stimulsoft.Base.Drawing.StiAdvancedBorder();
+    }
+
+    if (styleComponent.border instanceof Stimulsoft.Base.Drawing.StiAdvancedBorder) {
+      const switchObj = [
+        {
+          side: 'Top',
+          border: styleComponent.border.topSide,
+        },
+        {
+          side: 'Left',
+          border: styleComponent.border.leftSide,
+        },
+        {
+          side: 'Bottom',
+          border: styleComponent.border.bottomSide,
+        },
+        {
+          side: 'Right',
+          border: styleComponent.border.rightSide,
+        },
+      ];
+
+      const borderSide = switchObj.find(item => item.side === side);
+      if (borderSide) {
+        this.getBorder(element, borderSide.border);
+      }
+    }
   }
 
   createFotter() {
@@ -377,7 +393,7 @@ export class StimuReportService {
       const rowItem = this.stiReportParams.column.filter((item: any) =>
         index === 0 ? !item.level : item.level === index
       );
-      const cells = rowItem.reduce((storage: any[], current: any, cellIndex) => {
+      const cells = rowItem.reduce((storage: any[], current: any) => {
         console.log(current.width - 10 || 100);
         const cell = {
           value: current.header || current.binding,
